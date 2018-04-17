@@ -21,14 +21,29 @@ SOURCES += \
     client/main.cpp \
     client/mainwindow.cpp \
     core/abstractuser.cpp \
-    core/loginhistory.cpp \
-    core/loginhistorymanager.cpp
+    core/loginrecord.cpp \
+    core/loginrecordmanager.cpp \
+    core/user.cpp \
+    core/administer.cpp \
+    core/browserecord.cpp \
+    core/borrowrecord.cpp \
+    core/bookcore.cpp \
+    core/book.cpp \
+    core/resource.cpp
 
 HEADERS += \
     client/mainwindow.h \
     core/abstractuser.h \
-    core/loginhistory.h \
-    core/loginhistorymanager.h
+    core/loginrecord.h \
+    core/loginrecordmanager.h \
+    core/user.h \
+    core/administer.h \
+    core/browserecord.h \
+    core/borrowrecord.h \
+    core/bookcore.h \
+    core/book.h \
+    core/resource.h \
+    core/xalanq.h
 
 DISTFILES += \
     .gitignore \
