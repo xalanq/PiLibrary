@@ -18,11 +18,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        client/main.cpp \
-        client/mainwindow.cpp
+    client/main.cpp \
+    client/mainwindow.cpp \
+    core/abstractuser.cpp \
+    core/loginhistory.cpp \
+    core/loginhistorymanager.cpp
 
 HEADERS += \
-        client/mainwindow.h
+    client/mainwindow.h \
+    core/abstractuser.h \
+    core/loginhistory.h \
+    core/loginhistorymanager.h
 
 DISTFILES += \
     .gitignore \
