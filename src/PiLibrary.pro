@@ -29,7 +29,9 @@ SOURCES += \
     core/borrowrecord.cpp \
     core/bookcore.cpp \
     core/book.cpp \
-    core/resource.cpp
+    core/resource.cpp \
+    core/browserecordmanager.cpp \
+    core/borrowrecordmanager.cpp
 
 HEADERS += \
     client/mainwindow.h \
@@ -43,7 +45,12 @@ HEADERS += \
     core/bookcore.h \
     core/book.h \
     core/resource.h \
-    core/xalanq.h
+    core/browserecordmanager.h \
+    core/core.h \
+    core/borrowrecordmanager.h \
+    core/holdbook.h \
+    client/client.h \
+    server/server.h
 
 DISTFILES += \
     .gitignore \

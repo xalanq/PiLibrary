@@ -1,14 +1,11 @@
 #ifndef BORROWRECORD_H
 #define BORROWRECORD_H
 
-#include "xalanq.h"
+#include "core.h"
 #include <ctime>
 
 class BorrowRecord {
 public:
-    X::uint getUserid() const;
-    void setUserid(const X::uint &value);
-
     X::uint getBookid() const;
     void setBookid(const X::uint &value);
 
@@ -21,7 +18,6 @@ public:
     void setEndTime(const std::time_t &value);
 
 private:
-    X::uint userid;
     X::uint bookid;
     std::time_t beginTime;
     std::time_t endTime;

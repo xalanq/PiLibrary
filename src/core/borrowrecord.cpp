@@ -1,13 +1,5 @@
 #include "borrowrecord.h"
 
-X::uint BorrowRecord::getUserid() const {
-    return userid;
-}
-
-void BorrowRecord::setUserid(const X::uint &value) {
-    userid = value;
-}
-
 X::uint BorrowRecord::getBookid() const {
     return bookid;
 }

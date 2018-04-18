@@ -1,7 +1,7 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
-#include "xalanq.h"
+#include "core.h"
 
 namespace R {
     void remove(const X::string &path);

@@ -1,7 +1,7 @@
 #ifndef BOOKCORE_H
 #define BOOKCORE_H
 
-#include "xalanq.h"
+#include "core.h"
 
 class BookCore {
 public:

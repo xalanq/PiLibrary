@@ -15,3 +15,7 @@ std::time_t BrowseRecord::getTime() const {
 void BrowseRecord::setTime(const std::time_t &value) {
     time = value;
 }
+
+bool BrowseRecord::operator < (const BrowseRecord &a) const {
+    return time == a.time ? bookid < a.bookid : time < a.time;
+}

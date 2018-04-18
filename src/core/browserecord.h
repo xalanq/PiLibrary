@@ -1,7 +1,7 @@
 #ifndef BROWSERECORD_H
 #define BROWSERECORD_H
 
-#include "xalanq.h"
+#include "core.h"
 #include <ctime>
 
 class BrowseRecord {
@@ -11,6 +11,8 @@ public:
 
     std::time_t getTime() const;
     void setTime(const std::time_t &value);
+
+    bool operator < (const BrowseRecord &a) const;
 
 private:
     X::uint bookid;

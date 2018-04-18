@@ -1,7 +1,7 @@
 #ifndef ABSTRACTUSER_H
 #define ABSTRACTUSER_H
 
-#include "xalanq.h"
+#include "core.h"
 #include "loginrecordmanager.h"
 
 class AbstractUser {

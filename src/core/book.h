@@ -1,7 +1,7 @@
 #ifndef BOOK_H
 #define BOOK_H
 
-#include "xalanq.h"
+#include "core.h"
 #include "bookcore.h"
 #include <map>
 

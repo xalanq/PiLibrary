@@ -1,7 +1,7 @@
 #ifndef LOGINRECORD_H
 #define LOGINRECORD_H
 
-#include "xalanq.h"
+#include "core.h"
 #include <ctime>
 
 class LoginRecord {

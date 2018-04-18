@@ -1,7 +1,7 @@
 #ifndef ADMINISTER_H
 #define ADMINISTER_H
 
-#include "xalanq.h"
+#include "core.h"
 #include "abstractuser.h"
 
 class Administer : public AbstractUser
