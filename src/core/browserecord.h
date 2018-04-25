@@ -1,7 +1,7 @@
 #ifndef BROWSERECORD_H
 #define BROWSERECORD_H
 
-#include "core.h"
+#include "xcore.h"
 #include <ctime>
 
 class BrowseRecord {

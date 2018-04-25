@@ -31,7 +31,12 @@ SOURCES += \
     core/book.cpp \
     core/resource.cpp \
     core/browserecordmanager.cpp \
-    core/borrowrecordmanager.cpp
+    core/borrowrecordmanager.cpp \
+    server/server.cpp \
+    server/sessionmanager.cpp \
+    server/socketwrapper.cpp \
+    server/socketinfo.cpp \
+    server/session.cpp
 
 HEADERS += \
     client/mainwindow.h \
@@ -46,15 +51,24 @@ HEADERS += \
     core/book.h \
     core/resource.h \
     core/browserecordmanager.h \
-    core/core.h \
     core/borrowrecordmanager.h \
     core/holdbook.h \
-    client/client.h \
-    server/server.h
+    server/xserver.h \
+    core/xcore.h \
+    client/xclient.h \
+    server/server.h \
+    server/sessionmanager.h \
+    server/socketwrapper.h \
+    server/socketinfo.h \
+    server/session.h
 
 DISTFILES += \
     .gitignore \
     LICENSE \
     README.md \
-    client/.gitignore \
-    client/README.md
+    client/README.md \
+    server/README.md \
+    core/README.md
+
+INCLUDEPATH += E:/boost/boost_1_65_1
+DEPENDPATH += E:/boost/boost_1_65_1

@@ -1,7 +1,7 @@
 #ifndef BORROWRECORD_H
 #define BORROWRECORD_H
 
-#include "core.h"
+#include "xcore.h"
 #include <ctime>
 
 class BorrowRecord {

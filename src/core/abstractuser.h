@@ -1,7 +1,7 @@
 #ifndef ABSTRACTUSER_H
 #define ABSTRACTUSER_H
 
-#include "core.h"
+#include "xcore.h"
 #include "loginrecordmanager.h"
 
 class AbstractUser {

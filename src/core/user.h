@@ -1,7 +1,7 @@
 #ifndef USER_H
 #define USER_H
 
-#include "core.h"
+#include "xcore.h"
 #include "abstractuser.h"
 #include "loginrecordmanager.h"
 #include "borrowrecordmanager.h"

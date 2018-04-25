@@ -1,5 +1,5 @@
-#ifndef CORE_H
-#define CORE_H
+#ifndef XCORE_H
+#define XCORE_H
 
 #include <string>
 
@@ -11,6 +11,12 @@ namespace X {
     const string &website = "blog.xalanq.com";
     const string &github = "github.com/xalanq/PiLibrary";
     const string &server_port = "2333";
+
+    namespace ErrorCode {
+        enum ErrorCode {
+            LoginFailed = 1 // 登录失败
+        };
+    }
 }
 
-#endif // CORE_H
+#endif // XCORE_H

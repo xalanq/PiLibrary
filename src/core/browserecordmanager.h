@@ -1,7 +1,7 @@
 #ifndef BROWSERECORDMANAGER_H
 #define BROWSERECORDMANAGER_H
 
-#include "core.h"
+#include "xcore.h"
 #include "browserecord.h"
 #include <set>
 #include <vector>

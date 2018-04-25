@@ -1,7 +1,7 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
-#include "core.h"
+#include "xcore.h"
 
 namespace R {
     void remove(const X::string &path);

@@ -1,7 +1,7 @@
 #ifndef LOGINRECORDMANAGER_H
 #define LOGINRECORDMANAGER_H
 
-#include "core.h"
+#include "xcore.h"
 #include "loginrecord.h"
 #include <set>
 #include <vector>

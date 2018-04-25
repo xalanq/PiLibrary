@@ -1,7 +1,7 @@
 #ifndef BORROWRECORDMANAGER_H
 #define BORROWRECORDMANAGER_H
 
-#include "core.h"
+#include "xcore.h"
 #include "borrowrecord.h"
 #include <set>
 #include <vector>
