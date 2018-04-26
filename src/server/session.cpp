@@ -14,7 +14,7 @@ X::uint Session::getRandToken() {
 }
 
 std::time_t Session::getNowTime() {
-    return time();
+    return time(0);
 }
 
 X::uint Session::getToken() const {

@@ -1,15 +1,13 @@
 #include "socketwrapper.h"
 
-SocketWrapper::SocketWrapper(ip::tcp::socket socket) :
-    socket(socket),
+SocketWrapper::SocketWrapper(boost::asio::ip::tcp::socket socket) :
+    socket(std::move(socket)),
     info(),
     started(false) {
 
 }
 
 void SocketWrapper::start() {
-    manager.add(shared_from_this());
-    info.setLastPing(time());
     started = true;
     doLogin();
 }
@@ -19,7 +17,6 @@ void SocketWrapper::stop() {
         return;
     started = false;
     socket.close();
-    manager.remove(shared_from_this());
 }
 
 void SocketWrapper::doLogin() {

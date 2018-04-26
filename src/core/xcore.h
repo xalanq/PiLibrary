@@ -2,15 +2,17 @@
 #define XCORE_H
 
 #include <string>
+#include <iostream>
+
+using std::cerr;
 
 namespace X {
     using std::string;
     typedef unsigned int uint;
-    const string author[] = {"xalanq", "changran"};
-    const string email[] = {"xalanq@gmail.com", "chang-r17@mails.tsinghua.edu.cn"};
-    const string &website = "blog.xalanq.com";
-    const string &github = "github.com/xalanq/PiLibrary";
-    const string &server_port = "2333";
+    extern const string author[];
+    extern const string email[];
+    extern const string &website;
+    extern const string &github;
 
     namespace ErrorCode {
         enum ErrorCode {

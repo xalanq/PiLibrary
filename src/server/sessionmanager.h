@@ -24,10 +24,26 @@ public:
     ptr findUserid(const X::uint &userid);
     X::uint getRandToken();
 
+    struct compareAlive {
+        bool operator () (const ptr &a, const ptr &b) const {
+            return a->getAlive() < b->getAlive();
+        }
+    };
+    struct compareToken {
+        bool operator () (const ptr &a, const ptr &b) const {
+            return a->getToken() < b->getToken();
+        }
+    };
+    struct compareUserid {
+        bool operator () (const ptr &a, const ptr &b) const {
+            return a->getUserid() < b->getUserid();
+        }
+    };
+
 private:
-    std::multiset<ptr, [](const ptr &a, const ptr &b) { return a->getAlive() < b->getAlive(); }> dataAlive;
-    std::set<ptr, [](const ptr &a, const ptr &b) { return a->getToken() < b->getToken(); }> dataToken;
-    std::set<ptr, [](const ptr &a, const ptr &b) { return a->getUserid() < b->getUserid(); }> dataUserid;
+    std::multiset<ptr, compareAlive> dataAlive;
+    std::set<ptr, compareToken> dataToken;
+    std::set<ptr, compareUserid> dataUserid;
 };
 
 #endif // SESSIONMANAGER_H

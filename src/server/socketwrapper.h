@@ -7,14 +7,12 @@
 #include <boost/asio.hpp>
 #include <ctime>
 
-class SocketWrapper : public std::enable_shared_from_this<chat_session> {
+class SocketWrapper : public std::enable_shared_from_this<SocketWrapper> {
 public:
-    using boost::asio;
-    using boost::asio::ip;
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
 
-    SocketWrapper(ip::tcp::socket socket, SessionManager &manager);
+    SocketWrapper(boost::asio::ip::tcp::socket socket);
     void start();
     void stop();
     bool isStarted() const;
@@ -22,7 +20,7 @@ public:
 private:
     void doLogin();
 
-    ip::tcp::socket socket;
+    boost::asio::ip::tcp::socket socket;
     SocketInfo info;
     bool started;
 };

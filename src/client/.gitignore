@@ -1,0 +1,8 @@
+.vs
+x64
+debug
+release
+.qmake.stash
+client.vcxproj
+client.vcxproj.filters
+client.vcxproj.user

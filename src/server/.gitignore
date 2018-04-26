@@ -1,0 +1,8 @@
+config.json
+.vs
+x64
+debug
+release
+server.vcxproj
+server.vcxproj.filters
+server.vcxproj.user

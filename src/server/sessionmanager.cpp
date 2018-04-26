@@ -1,7 +1,7 @@
 #include "sessionmanager.h"
 
 SessionManager::SessionManager() {
-    srand(time() + clock());
+    srand(time(0) + clock());
 }
 
 void SessionManager::removeExpired() {
@@ -20,12 +20,12 @@ bool SessionManager::add(const SessionManager::ptr &p) {
 }
 
 bool SessionManager::add(const Session &session) {
-    auto p = std::make_shared<Session> (new Session(session));
+    auto p = std::make_shared<Session> (session);
     return add(p);
 }
 
 bool SessionManager::add(const X::uint &token, const X::uint &userid, const std::time_t &alive) {
-    auto p = std::make_shared<Session> (new Session(token, userid, alive));
+    auto p = std::make_shared<Session> (token, userid, alive);
     return add(p);
 }
 
@@ -64,7 +64,7 @@ bool SessionManager::setAliveTime(const X::uint &token, const time_t &alive) {
 }
 
 SessionManager::ptr SessionManager::findToken(const X::uint &token) {
-    auto p = std::make_shared<Session>(new Session(token));
+    auto p = std::make_shared<Session> (token);
     auto it = dataToken.find(p);
     if (it == dataToken.end())
         return nullptr;
@@ -72,7 +72,7 @@ SessionManager::ptr SessionManager::findToken(const X::uint &token) {
 }
 
 SessionManager::ptr SessionManager::findUserid(const X::uint &userid) {
-    auto p = std::make_shared<Session>(new Session(0, userid));
+    auto p = std::make_shared<Session> (0, userid);
     auto it = dataUserid.find(p);
     if (it == dataUserid.end())
         return nullptr;
