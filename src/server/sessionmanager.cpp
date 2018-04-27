@@ -1,7 +1,8 @@
 #include "sessionmanager.h"
 
-SessionManager::SessionManager() {
-    srand(time(0) + clock());
+SessionManager::SessionManager() :
+    eng(std::random_device()()) {
+
 }
 
 void SessionManager::removeExpired() {
@@ -13,6 +14,7 @@ void SessionManager::removeExpired() {
 }
 
 bool SessionManager::add(const SessionManager::ptr &p) {
+    removeExpired();
     auto pr = dataToken.insert(p);
     dataAlive.insert(p);
     dataUserid.insert(p);
@@ -24,7 +26,7 @@ bool SessionManager::add(const Session &session) {
     return add(p);
 }
 
-bool SessionManager::add(const X::uint &token, const X::uint &userid, const std::time_t &alive) {
+bool SessionManager::add(const X::ull &token, const X::uint &userid, const std::time_t &alive) {
     auto p = std::make_shared<Session> (token, userid, alive);
     return add(p);
 }
@@ -35,7 +37,7 @@ void SessionManager::remove(const SessionManager::ptr &p) {
     dataUserid.erase(p);
 }
 
-bool SessionManager::removeByToken(const X::uint &token) {
+bool SessionManager::removeByToken(const X::ull &token) {
     auto p = findToken(token);
     if (p == nullptr)
         return 0;
@@ -51,7 +53,7 @@ bool SessionManager::removeByUserid(const X::uint &userid) {
     return 1;
 }
 
-bool SessionManager::setAliveTime(const X::uint &token, const time_t &alive) {
+bool SessionManager::setAliveTime(const X::ull &token, const time_t &alive) {
     auto p = findToken(token);
     if (p == nullptr)
         return 0;
@@ -63,8 +65,9 @@ bool SessionManager::setAliveTime(const X::uint &token, const time_t &alive) {
     return 1;
 }
 
-SessionManager::ptr SessionManager::findToken(const X::uint &token) {
+SessionManager::ptr SessionManager::findToken(const X::ull &token) {
     auto p = std::make_shared<Session> (token);
+    removeExpired();
     auto it = dataToken.find(p);
     if (it == dataToken.end())
         return nullptr;
@@ -73,14 +76,20 @@ SessionManager::ptr SessionManager::findToken(const X::uint &token) {
 
 SessionManager::ptr SessionManager::findUserid(const X::uint &userid) {
     auto p = std::make_shared<Session> (0, userid);
+    removeExpired();
     auto it = dataUserid.find(p);
     if (it == dataUserid.end())
         return nullptr;
     return *it;
 }
 
-X::uint SessionManager::getRandToken() {
-    X::uint token = Session::getRandToken();
-    for (; findToken(token) != nullptr; token = Session::getRandToken());
+X::ull SessionManager::getRandToken() {
+    auto getter = [this] {
+        X::ull token = distr(eng);
+        for (; token == 0; ++token);
+        return token;
+    };
+    X::ull token = getter();
+    for (; findToken(token) != nullptr; token = getter());
     return token;
 }

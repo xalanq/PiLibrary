@@ -9,6 +9,7 @@ using std::cerr;
 namespace X {
     using std::string;
     typedef unsigned int uint;
+    typedef unsigned long long ull;
     extern const string author[];
     extern const string email[];
     extern const string &website;

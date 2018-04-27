@@ -4,6 +4,7 @@
 #include "xserver.h"
 #include "socketwrapper.h"
 #include "sessionmanager.h"
+#include "usermanager.h"
 #include <memory>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
@@ -24,7 +25,8 @@ private:
     boost::asio::ip::tcp::acceptor acceptor;
     boost::asio::ip::tcp::socket socket;
     int thread_number;
-    SessionManager manager;
+    SessionManager sessionManager;
+    UserManager userManager;
 };
 
 #endif // SERVER_H

@@ -4,7 +4,9 @@ Server::Server(const X::string &url, const int &port, const X::string &sql_url, 
     service(),
     acceptor(service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(url), port)),
     socket(service),
-    thread_number(thread_number) {
+    thread_number(thread_number),
+    sessionManager(),
+    userManager(sql_url, sql_port) {
 
 }
 
@@ -33,7 +35,7 @@ void Server::doAccept() {
     acceptor.async_accept(socket,
         [this](const error_code &ec) {
             if (!ec)
-                std::make_shared<SocketWrapper> (std::move(socket))->start();
+                std::make_shared<SocketWrapper> (std::move(socket), sessionManager, userManager)->start();
             doAccept();
         }
     );

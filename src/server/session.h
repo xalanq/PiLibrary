@@ -7,13 +7,12 @@
 
 class Session {
 public:
-    Session(const X::uint &token = 0, const X::uint &userid = 0, const std::time_t &alive = 0);
+    Session(const X::ull &token = 0, const X::uint &userid = 0, const std::time_t &alive = 0);
 
-    static X::uint getRandToken();
     static time_t getNowTime();
 
-    X::uint getToken() const;
-    void setToken(const X::uint &value);
+    X::ull getToken() const;
+    void setToken(const X::ull &value);
 
     X::uint getUserid() const;
     void setUserid(const X::uint &value);
@@ -22,7 +21,7 @@ public:
     void setAlive(const std::time_t &value);
 
 private:
-    X::uint token;
+    X::ull token;
     X::uint userid;
     std::time_t alive;
 };
