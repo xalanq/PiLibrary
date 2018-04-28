@@ -9,32 +9,35 @@ SocketWrapper::SocketWrapper(boost::asio::ip::tcp::socket socket, SessionManager
 }
 
 void SocketWrapper::start() {
+    cerr << "connected from " << socket.remote_endpoint().address() << '\n';
     doFilter();
 }
 
 void SocketWrapper::stop() {
+    cerr << "closing socket from " << socket.remote_endpoint().address() << '\n';
     socket.close();
 }
 
 void SocketWrapper::doFilter() {
-    info.setMatchIndentifierPosition(0);
+    info.setSize(SocketInfo::HEADER_SIZE);
     auto self(shared_from_this());
     boost::asio::async_read(
         socket,
         boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
         [this, self](const error_code &ec, size_t bytes) -> size_t {
-            if (info.matchIdentifier(bytes))
+            if (ec || (bytes > 0 && info.getBuffer()[bytes - 1] == SocketInfo::IDENTIFIER))
                 return 0;
-            info.setMatchIndentifierPosition(bytes);
             return 1;
         },
         [this, self](const error_code &ec, size_t bytes) {
+            cerr << "(doFilter), bytes: " << bytes << "\n";
             if (ec) {
                 cerr << "(doFilter) Error from " << socket.remote_endpoint().address() << " : " << system_error(ec).what() << '\n';
                 stop();
                 return;
             }
-            if (bytes >= SocketInfo::IDENTIFIER_SIZE && info.matchIdentifier(bytes)) {
+            cerr << "(doFilter) bytes:" << bytes << '\n';
+            if (bytes > 0 && info.getBuffer()[bytes - 1] == SocketInfo::IDENTIFIER) {
                 doHeader();
                 return;
             }
@@ -51,6 +54,7 @@ void SocketWrapper::doHeader() {
         boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
         boost::asio::transfer_exactly(SocketInfo::HEADER_SIZE),
         [this, self](const error_code &ec, size_t bytes) {
+            cerr << "(doHeader)\n";
             if (ec) {
                 cerr << "(doHeader) Error from " << socket.remote_endpoint().address() << " : " << system_error(ec).what() << '\n';
                 stop();
@@ -58,6 +62,11 @@ void SocketWrapper::doHeader() {
             }
             X::ull token = info.decodeHeaderToken();
             X::uint length = info.decodeHeaderLength();
+            cerr << "bytes: " << bytes << '\n';
+            for (int i = 0; i < SocketInfo::HEADER_SIZE; ++i)
+                cerr << int(info.getBuffer()[i]) << ' ';
+            cerr << '\n';
+            cerr << "token: " << token << ", length: " << length << '\n';
             if (length > SocketInfo::BODY_SIZE) {
                 cerr << "(doHeader) Error from " << socket.remote_endpoint().address() << " : body size is too big.\n";
                 doFilter();
@@ -76,6 +85,7 @@ void SocketWrapper::doBody(X::ull token, X::uint length) {
         boost::asio::buffer(info.getBuffer(), length),
         boost::asio::transfer_exactly(length),
         [this, self, token, length](const error_code &ec, size_t bytes) {
+            cerr << "(doBody)\n";
             if (ec) {
                 cerr << "(doBody) Error from " << socket.remote_endpoint().address() << " : " << system_error(ec).what() << '\n';
                 stop();
@@ -106,6 +116,7 @@ void SocketWrapper::doBody(X::ull token, X::uint length) {
                 int priority = pt.get<int>("priority", 0);
                 cerr << "(doBody) Login from " << socket.remote_endpoint().address() << " : [" << username << ", " << password << ", " << priority << "]\n";
                 userManager.registerUser(username, password, priority);
+                doFilter();
             }
         }
     );

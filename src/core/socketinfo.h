@@ -10,12 +10,11 @@
 class SocketInfo {
 public:
     enum {
-        IDENTIFIER_SIZE = 4, 
-        HEADER_SIZE = IDENTIFIER_SIZE + sizeof(X::uint) + sizeof(X::ull), 
+        HEADER_SIZE = sizeof(X::ull) + sizeof(X::uint), 
         BODY_SIZE = 1024, 
         PACKET_SIZE = 1024 * 24
     };
-    static const char IDENTIFIER[IDENTIFIER_SIZE + 1];
+    static const char IDENTIFIER;
 
     SocketInfo();
     ~SocketInfo();
@@ -34,11 +33,9 @@ public:
     void encodeIndentifier();
     void encodeHeader(const X::ull &token, const X::uint &length);
 
-    X::uint encodeBody(const boost::property_tree::ptree &pt);
+    static X::string encodePtree(const boost::property_tree::ptree &pt);
+    void encodeBody(const X::string &str);
     void decodeBody(const X::uint &length, boost::property_tree::ptree &pt) const;
-
-    bool matchIdentifier(const size_t &length) const;
-    void setMatchIndentifierPosition(const size_t &pos);
 
     const char *getBuffer() const;
     char *getBuffer();
@@ -46,7 +43,6 @@ public:
 private:
     char *buffer;
     int size;
-    size_t matchIndentifierPosition;
 };
 
 #endif // SOCKETINFO_H
