@@ -7,11 +7,11 @@
 
 class Book : public BookCore {
 public:
-    void addResource(const X::string &name, const X::string &path);
-    void removeResource(const X::string &name);
+    void addResource(const string &name, const string &path);
+    void removeResource(const string &name);
 
 private:
-    std::map<X::string, X::string> resource;
+    std::map<string, string> resource;
 };
 
 #endif // BOOK_H

@@ -1,7 +1,8 @@
 #include "sessionmanager.h"
 
-SessionManager::SessionManager() :
-    eng(std::random_device()()) {
+SessionManager::SessionManager(const X::uint &defaulAlive) :
+    eng(std::random_device()()),
+    defaultAlive(defaultAlive) {
 
 }
 
@@ -10,6 +11,8 @@ void SessionManager::removeExpired() {
         auto p = *dataAlive.begin();
         if (p->getAlive() < Session::getNowTime())
             remove(p);
+        else
+            break;
     }
 }
 
@@ -92,4 +95,8 @@ X::ull SessionManager::getRandToken() {
     X::ull token = getter();
     for (; findToken(token) != nullptr; token = getter());
     return token;
+}
+
+X::uint SessionManager::getDefaultAlive() const {
+    return defaultAlive;
 }

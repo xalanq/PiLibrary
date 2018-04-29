@@ -1,10 +1,10 @@
 #include "loginrecord.h"
 
-X::string LoginRecord::getIp() const {
+LoginRecord::string LoginRecord::getIp() const {
     return ip;
 }
 
-void LoginRecord::setIp(const X::string &value) {
+void LoginRecord::setIp(const string &value) {
     ip = value;
 }
 

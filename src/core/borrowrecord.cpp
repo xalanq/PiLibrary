@@ -1,10 +1,10 @@
 #include "borrowrecord.h"
 
-X::uint BorrowRecord::getBookid() const {
+BorrowRecord::uint BorrowRecord::getBookid() const {
     return bookid;
 }
 
-void BorrowRecord::setBookid(const X::uint &value) {
+void BorrowRecord::setBookid(const uint &value) {
     bookid = value;
 }
 

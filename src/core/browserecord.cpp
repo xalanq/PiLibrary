@@ -1,10 +1,10 @@
 #include "browserecord.h"
 
-X::uint BrowseRecord::getBookid() const {
+BrowseRecord::uint BrowseRecord::getBookid() const {
     return bookid;
 }
 
-void BrowseRecord::setBookid(const X::uint &value) {
+void BrowseRecord::setBookid(const uint &value) {
     bookid = value;
 }
 

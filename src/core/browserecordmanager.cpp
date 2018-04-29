@@ -18,7 +18,7 @@ int BrowseRecordManager::size() {
 
 std::vector<BrowseRecord> BrowseRecordManager::getData() const {
     std::vector<BrowseRecord> ret;
-    for (auto i : data)
+    for (const auto &i : data)
         ret.push_back(i);
     return ret;
 }

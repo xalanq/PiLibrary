@@ -16,32 +16,54 @@ int main() {
         boost::property_tree::ptree pt;
         pt.put("username", "xalanq");
         pt.put("password", "hash(123456)");
-        pt.put<int>("priority", 1);
         X::string str = SocketInfo::encodePtree(pt);
         cerr << "str: " << str << '\n';
 
+        auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
+
         SocketInfo info;
-        info.setSize(1 + SocketInfo::HEADER_SIZE);
-        info.encodeHeader(0, str.size());
-        for (int i = 0; i < SocketInfo::HEADER_SIZE + 1; ++i)
+        info.setSize(size);
+        info.encode(0, str.size(), X::Login, str);
+        /*
+        for (auto i = 0; i < size; ++i)
             cerr << int(info.getBuffer()[i]) << ' ';
         cerr << '\n';
+        */
 
-        cerr << "sending header\n";
+        /*
+        cerr << "sending\n";
         boost::asio::write(
             s,
-            boost::asio::buffer(info.getBuffer(), 1 + SocketInfo::HEADER_SIZE)
+            boost::asio::buffer(info.getBuffer(), size)
         );
-
-        cerr << "sending body\n";
-        info.setSize(SocketInfo::BODY_SIZE);
-        info.encodeBody(str);
-        boost::asio::write(
-            s,
-            boost::asio::buffer(info.getBuffer(), str.size())
-        );
-
         cerr << "complete\n";
+        */
+
+        // pt.put("username", "xalanq");
+        srand(time(0));
+        pt.put("username", "xalanq" + std::to_string(rand() % 10));
+        pt.put("password", "hash(123456)");
+        pt.put("email", "xalanq@gmail.com");
+        str = SocketInfo::encodePtree(pt);
+        cerr << "str: " << str << '\n';
+
+        size = SocketInfo::HEADER_SIZE + 1 + str.size();
+
+        info.setSize(size);
+        info.encode(0, str.size(), X::Register, str);
+        /*
+        for (auto i = 0; i < size; ++i)
+            cerr << int(info.getBuffer()[i]) << ' ';
+        cerr << '\n';
+        */
+
+        cerr << "sending\n";
+        boost::asio::write(
+            s,
+            boost::asio::buffer(info.getBuffer(), size)
+        );
+        cerr << "complete\n";
+
         s.close();
     } catch(std::exception &e) {
         cerr << e.what() << '\n';

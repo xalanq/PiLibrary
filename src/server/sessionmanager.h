@@ -12,7 +12,7 @@ class SessionManager {
 public:
     typedef std::shared_ptr<Session> ptr;
 
-    SessionManager();
+    SessionManager(const X::uint &defaulAlive);
     void removeExpired();
     bool add(const ptr &p);
     bool add(const Session &session);
@@ -24,6 +24,7 @@ public:
     ptr findToken(const X::ull &token);
     ptr findUserid(const X::uint &userid);
     X::ull getRandToken();
+    X::uint getDefaultAlive() const;
 
     struct compareAlive {
         bool operator () (const ptr &a, const ptr &b) const {
@@ -45,8 +46,9 @@ private:
     std::multiset<ptr, compareAlive> dataAlive;
     std::set<ptr, compareToken> dataToken;
     std::set<ptr, compareUserid> dataUserid;
-    std::mt19937_64 eng;
     std::uniform_int_distribution<X::ull> distr;
+    std::mt19937_64 eng;
+    X::uint defaultAlive;
 };
 
 #endif // SESSIONMANAGER_H

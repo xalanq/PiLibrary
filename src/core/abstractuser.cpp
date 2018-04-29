@@ -2,35 +2,35 @@
 
 AbstractUser::~AbstractUser() { }
 
-X::string AbstractUser::getUserid() const {
+AbstractUser::uint AbstractUser::getUserid() const {
     return userid;
 }
 
-void AbstractUser::setUserid(const X::string &value) {
+void AbstractUser::setUserid(const uint &value) {
     userid = value;
 }
 
-X::string AbstractUser::getUsername() const {
+AbstractUser::string AbstractUser::getUsername() const {
     return username;
 }
 
-void AbstractUser::setUsername(const X::string &value) {
+void AbstractUser::setUsername(const string &value) {
     username = value;
 }
 
-X::string AbstractUser::getPassword() const {
+AbstractUser::string AbstractUser::getPassword() const {
     return password;
 }
 
-void AbstractUser::setPassword(const X::string &value) {
+void AbstractUser::setPassword(const string &value) {
     password = value;
 }
 
-int AbstractUser::getPriority() const {
+AbstractUser::uint AbstractUser::getPriority() const {
     return priority;
 }
 
-void AbstractUser::setPriority(int value) {
+void AbstractUser::setPriority(const uint &value) {
     priority = value;
 }
 

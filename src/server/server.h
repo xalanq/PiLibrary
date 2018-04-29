@@ -14,8 +14,8 @@ public:
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
 
-    Server(const X::string &url, const int &port, const X::string &sql_url, const int &sql_port, const int &thread_number);
-    static std::shared_ptr<Server> start(const X::string &url, const int &port, const X::string &sql_url, const int &sql_port, const int &thread_number);
+    Server(const X::string &url, const int &port, const X::string &mongo_url, const X::string &mongo_db_name, const X::uint &default_alive, const int &thread_number);
+    static std::shared_ptr<Server> start(const X::string &url, const int &port, const X::string &mongo_url, const X::string &mongo_db_name, const X::uint &default_alive, const int &thread_number);
 
 private:
     void start();
@@ -25,8 +25,8 @@ private:
     boost::asio::ip::tcp::acceptor acceptor;
     boost::asio::ip::tcp::socket socket;
     int thread_number;
-    SessionManager sessionManager;
     UserManager userManager;
+    SessionManager sessionManager;
 };
 
 #endif // SERVER_H

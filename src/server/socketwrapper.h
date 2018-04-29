@@ -15,19 +15,32 @@ class SocketWrapper : public std::enable_shared_from_this<SocketWrapper> {
 public:
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
+    typedef boost::property_tree::ptree ptree;
+    typedef X::ull ull;
+    typedef X::uint uint;
+    typedef X::string string;
+    typedef X::ErrorCode ErrorCode;
+    typedef X::ActionCode ActionCode;
 
     SocketWrapper(boost::asio::ip::tcp::socket socket, SessionManager &sessionManager, UserManager &userManager);
     void start();
     void stop();
 
 private:
-    void doFilter();
-    void doHeader();
-    void doBody(X::ull token, X::uint length);
-    void doMain(boost::property_tree::ptree pt, X::ull token, X::uint userid);
+    void read();
+    void readHeader();
+    void readBody(ull token, uint length, ActionCode ac);
+
+    void write(const ull &token, const ptree &pt, const ActionCode &ac);
+
+    void doLogin(const ptree &pt, const ull &token);
+    void writeLogin(const ull &token, ErrorCode ec = X::NoError);
+
+    void doRegister(const ptree &pt, const ull &token);
+    void writeRegister(ErrorCode ec = X::NoError);
 
     boost::asio::ip::tcp::socket socket;
-    SocketInfo info;
+    SocketInfo infoIn;
     SessionManager &sessionManager;
     UserManager &userManager;
 };

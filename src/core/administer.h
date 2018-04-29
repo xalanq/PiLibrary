@@ -16,11 +16,11 @@ public:
         EDIT_ADMINISTER = 32
     };
 
-    X::uint getAuthority() const;
-    void setAuthority(const X::uint &value);
+    uint getAuthority() const;
+    void setAuthority(const uint &value);
 
 private:
-    X::uint authority;
+    uint authority;
 };
 
 #endif // ADMINISTER_H

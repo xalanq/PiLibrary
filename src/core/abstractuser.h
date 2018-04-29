@@ -6,19 +6,28 @@
 
 class AbstractUser {
 public:
+    enum Priority {
+        User = 1,
+        Administer = 50,
+        SuperAdminister = 100
+    };
+    typedef X::ull ull;
+    typedef X::uint uint;
+    typedef X::string string;
+
     virtual ~AbstractUser() = 0;
 
-    X::string getUserid() const;
-    void setUserid(const X::string &value);
+    uint getUserid() const;
+    void setUserid(const uint &value);
 
-    X::string getUsername() const;
-    void setUsername(const X::string &value);
+    string getUsername() const;
+    void setUsername(const string &value);
 
-    X::string getPassword() const;
-    void setPassword(const X::string &value);
+    string getPassword() const;
+    void setPassword(const string &value);
 
-    int getPriority() const;
-    void setPriority(int value);
+    uint getPriority() const;
+    void setPriority(const uint &value);
 
     void addLoginRecord(const LoginRecord &record);
     void removeLoginRecord(const LoginRecord &record);
@@ -26,10 +35,10 @@ public:
     LoginRecordManager getLoginRecordManager() const;
 
 private:
-    X::string userid;
-    X::string username;
-    X::string password;
-    int priority;
+    uint userid;
+    string username;
+    string password;
+    uint priority;
     LoginRecordManager loginRecordManager;
 };
 

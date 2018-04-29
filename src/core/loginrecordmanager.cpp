@@ -18,7 +18,7 @@ int LoginRecordManager::size() {
 
 std::vector<LoginRecord> LoginRecordManager::getData() const {
     std::vector<LoginRecord> ret;
-    for (auto i : data)
+    for (const auto &i : data)
         ret.push_back(i);
     return ret;
 }

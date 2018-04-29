@@ -76,13 +76,14 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>E:\Boost\boost_1_67_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\mongo\mongo-c-driver\include\libmongoc-1.0;E:\mongo\mongo-c-driver\include\libbson-1.0;E:\Boost\boost_1_67_0;E:\mongo\mongo-cxx-driver\include\mongocxx\v_noabi;E:\mongo\mongo-cxx-driver\include\bsoncxx\v_noabi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>E:\Boost\boost_1_67_0\lib64-msvc-14.1;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\mongo\mongo-c-driver\lib;E:\Boost\boost_1_67_0\lib64-msvc-14.1;E:\mongo\mongo-cxx-driver\bin;E:\mongo\mongo-cxx-driver\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>bsoncxx.lib;mongocxx.lib;mongoc-static-1.0.lib;mongoc-1.0.lib;bson-static-1.0.lib;bson-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -102,11 +103,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\Boost\boost_1_67_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\mongo\mongo-c-driver\include\libmongoc-1.0;E:\mongo\mongo-c-driver\include\libbson-1.0;E:\Boost\boost_1_67_0;E:\mongo\mongo-cxx-driver\include\mongocxx\v_noabi;E:\mongo\mongo-cxx-driver\include\bsoncxx\v_noabi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>E:\Boost\boost_1_67_0\lib64-msvc-14.1;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\mongo\mongo-c-driver\lib;E:\Boost\boost_1_67_0\lib64-msvc-14.1;E:\mongo\mongo-cxx-driver\bin;E:\mongo\mongo-cxx-driver\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>bsoncxx.lib;mongocxx.lib;mongoc-static-1.0.lib;mongoc-1.0.lib;bson-static-1.0.lib;bson-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,6 +143,13 @@
     <ClInclude Include="socketwrapper.h" />
     <ClInclude Include="usermanager.h" />
     <ClInclude Include="xserver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\bsoncxx.dll" />
+    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\concrt140.dll" />
+    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\mongocxx.dll" />
+    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\msvcp140.dll" />
+    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\vcruntime140.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

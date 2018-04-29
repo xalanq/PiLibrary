@@ -6,8 +6,12 @@
 
 class LoginRecord {
 public:
-    X::string getIp() const;
-    void setIp(const X::string &value);
+    typedef X::uint uint;
+    typedef X::ull ull;
+    typedef X::string string;
+
+    string getIp() const;
+    void setIp(const string &value);
 
     std::time_t getTime() const;
     void setTime(const std::time_t &value);
@@ -15,7 +19,7 @@ public:
     bool operator < (const LoginRecord &b) const;
 
 private:
-    X::string ip;
+    string ip;
     std::time_t time;
 };
 

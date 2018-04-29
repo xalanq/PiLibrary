@@ -9,8 +9,14 @@
 
 class SocketInfo {
 public:
+    typedef X::ull ull;
+    typedef X::uint uint;
+    typedef X::string string;
+    typedef X::ActionCode ActionCode;
+    typedef boost::property_tree::ptree ptree;
+
     enum {
-        HEADER_SIZE = sizeof(X::ull) + sizeof(X::uint), 
+        HEADER_SIZE = sizeof(ull) + sizeof(uint) + sizeof(ActionCode), 
         BODY_SIZE = 1024, 
         PACKET_SIZE = 1024 * 24
     };
@@ -21,28 +27,30 @@ public:
     SocketInfo(const SocketInfo &) = delete;
     SocketInfo &operator = (const SocketInfo &) = delete;
 
-    void setSize(const X::uint &size);
-    int getSize() const;
+    void setSize(const size_t &size);
+    size_t getSize() const;
 
-    X::ull decodeHeaderToken() const;
-    void encodeHeaderToken(const X::ull &token);
-
-    X::uint decodeHeaderLength() const;
-    void encodeHeaderLength(const X::uint &length);
+    ull decodeHeaderToken() const;
+    uint decodeHeaderLength() const;
+    ActionCode decodeHeaderActionCode() const;
+    void decodeBody(const uint &length, ptree &pt) const;
 
     void encodeIndentifier();
-    void encodeHeader(const X::ull &token, const X::uint &length);
+    void encodeHeaderToken(const ull &token);
+    void encodeHeaderLength(const uint &length);
+    void encodeHeaderActionCode(const ActionCode &ac);
+    void encodeBody(const string &str);
+    void encode(const ull &token, const uint &bodyLength, const ActionCode &ac, const string &str);
+    void encode(const ull &token, const uint &bodyLength, const ActionCode &ac, const ptree &pt);
 
-    static X::string encodePtree(const boost::property_tree::ptree &pt);
-    void encodeBody(const X::string &str);
-    void decodeBody(const X::uint &length, boost::property_tree::ptree &pt) const;
+    static std::string encodePtree(const ptree &pt);
 
     const char *getBuffer() const;
     char *getBuffer();
 
 private:
     char *buffer;
-    int size;
+    size_t size;
 };
 
 #endif // SOCKETINFO_H

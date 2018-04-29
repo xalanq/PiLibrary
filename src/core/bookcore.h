@@ -6,40 +6,43 @@
 class BookCore {
 public:
     virtual ~BookCore() = 0;
+    typedef X::ull ull;
+    typedef X::uint uint;
+    typedef X::string string;
 
-    X::uint getBookid() const;
-    void setBookid(const X::uint &value);
+    uint getBookid() const;
+    void setBookid(const uint &value);
 
-    X::string getTitle() const;
-    void setTitle(const X::string &value);
+    string getTitle() const;
+    void setTitle(const string &value);
 
-    X::string getAuthor() const;
-    void setAuthor(const X::string &value);
+    string getAuthor() const;
+    void setAuthor(const string &value);
 
-    X::string getISBN() const;
-    void setISBN(const X::string &value);
+    string getISBN() const;
+    void setISBN(const string &value);
 
-    X::string getPublisher() const;
-    void setPublisher(const X::string &value);
+    string getPublisher() const;
+    void setPublisher(const string &value);
 
-    X::uint getAmount() const;
-    void setAmount(const X::uint &value);
+    uint getAmount() const;
+    void setAmount(const uint &value);
 
-    X::string getIntroduction() const;
-    void setIntroduction(const X::string &value);
+    string getIntroduction() const;
+    void setIntroduction(const string &value);
 
-    int getPriority() const;
-    void setPriority(int value);
+    uint getPriority() const;
+    void setPriority(const uint &value);
 
 private:
-    X::uint bookid;
-    X::string title;
-    X::string author;
-    X::string ISBN;
-    X::string publisher;
-    X::uint amount;
-    X::string introduction;
-    int priority;
+    uint bookid;
+    string title;
+    string author;
+    string ISBN;
+    string publisher;
+    uint amount;
+    string introduction;
+    uint priority;
 };
 
 #endif // BOOKCORE_H

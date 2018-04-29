@@ -15,11 +15,30 @@ namespace X {
     extern const string &website;
     extern const string &github;
 
-    namespace ErrorCode {
-        enum ErrorCode {
-            LoginFailed = 1 // 登录失败
-        };
-    }
+    enum ErrorCode {
+        NoError = 0,
+
+        LoginFailed,
+        NoSuchUser,
+        AlreadyLogin,
+
+        RegisterFailed,
+        InvalidUsername,
+        InvalidPassword,
+        InvalidEmail,
+        AlreadyRegister
+    };
+
+    enum ActionCode {
+        NoAction = 0,
+        Login,
+        LoginFeedback,
+        Register,
+        RegisterFeedback
+    };
+
+    extern string what(const ErrorCode &ec);
+    extern string what(const ActionCode &ac);
 }
 
 #endif // XCORE_H

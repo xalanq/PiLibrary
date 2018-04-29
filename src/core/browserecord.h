@@ -6,8 +6,12 @@
 
 class BrowseRecord {
 public:
-    X::uint getBookid() const;
-    void setBookid(const X::uint &value);
+    typedef X::ull ull;
+    typedef X::uint uint;
+    typedef X::string string;
+    
+    uint getBookid() const;
+    void setBookid(const uint &value);
 
     std::time_t getTime() const;
     void setTime(const std::time_t &value);
@@ -15,7 +19,7 @@ public:
     bool operator < (const BrowseRecord &a) const;
 
 private:
-    X::uint bookid;
+    uint bookid;
     std::time_t time;
 };
 

@@ -1,19 +1,19 @@
 #include "server.h"
 
-Server::Server(const X::string &url, const int &port, const X::string &sql_url, const int &sql_port, const int &thread_number) :
+Server::Server(const X::string &url, const int &port, const X::string &mongo_url, const X::string &mongo_db_name, const X::uint &default_alive, const int &thread_number) :
     service(),
     acceptor(service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(url), port)),
     socket(service),
     thread_number(thread_number),
-    sessionManager(),
-    userManager(sql_url, sql_port) {
+    userManager(mongo_url.c_str(), mongo_db_name.c_str()),
+    sessionManager(default_alive) {
 
 }
 
-std::shared_ptr<Server> Server::start(const X::string &url, const int &port, const X::string &sql_url, const int &sql_port, const int &thread_number) {
-    auto server = std::make_shared<Server> (url, port, sql_url, sql_port, thread_number);
+std::shared_ptr<Server> Server::start(const X::string &url, const int &port, const X::string &mongo_url, const X::string &mongo_db_name, const X::uint &default_alive, const int &thread_number) {
+    auto server = std::make_shared<Server> (url, port, mongo_url, mongo_db_name, default_alive, thread_number);
     cerr << "Listening: " << url << ":" << port << '\n';
-    cerr << "SQL: " << sql_url << ":" << sql_port << '\n';
+    cerr << "mongo_url: " << mongo_url << ", database name:" << mongo_db_name << '\n';
     cerr << "Thread number: " << thread_number << '\n';
     server->start();
     return server;

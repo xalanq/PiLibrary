@@ -18,7 +18,7 @@ int BorrowRecordManager::size() {
 
 std::vector<BorrowRecord> BorrowRecordManager::getData() const {
     std::vector<BorrowRecord> ret;
-    for (auto i : data)
+    for (const auto &i : data)
         ret.push_back(i);
     return ret;
 }

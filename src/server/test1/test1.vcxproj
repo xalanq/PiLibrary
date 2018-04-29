@@ -79,7 +79,9 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>E:\Boost\boost_1_67_0\lib64-msvc-14.1;$(SolutionDir)x64\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>server.obj;session.obj;sessionmanager.obj;socketinfo.obj;socketwrapper.obj;usermanager.obj;xcore.obj;xserver.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>socketinfo.obj;
+xcore.obj;
+xserver.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -91,7 +93,9 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>E:\Boost\boost_1_67_0\lib64-msvc-14.1;$(SolutionDir)x64\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>server.obj;session.obj;sessionmanager.obj;socketinfo.obj;socketwrapper.obj;usermanager.obj;xcore.obj;xserver.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>socketinfo.obj;
+xcore.obj;
+xserver.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
