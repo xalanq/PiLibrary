@@ -23,6 +23,9 @@ public:
     string getUsername() const;
     void setUsername(const string &value);
 
+    string getNickname() const;
+    void setNickname(const string &value);
+
     string getPassword() const;
     void setPassword(const string &value);
 
@@ -36,6 +39,7 @@ public:
 
 private:
     uint userid;
+    string nickname;
     string username;
     string password;
     uint priority;

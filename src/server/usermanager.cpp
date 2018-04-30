@@ -10,6 +10,20 @@ UserManager::~UserManager() {
 
 }
 
+UserManager::string UserManager::to_json(bsoncxx::document::value &document) {
+    std::string ret;
+    bson_t bson;
+    auto view = document.view();
+    bson_init_static(&bson, view.data(), view.length());
+    size_t size;
+    auto result = bson_as_json(&bson, &size);
+    if (!result)
+        return "";
+    ret = std::string(result);
+    bson_free(result);
+    return std::move(ret);
+}
+
 bool UserManager::isUser(const uint &userid) {
     using namespace mongo;
     auto client = pool.acquire();
@@ -40,19 +54,29 @@ UserManager::uint UserManager::getPriority(const uint &userid) {
 }
 
 // return userid
-UserManager::uint UserManager::loginUser(const string &username, const string &password) {
+UserManager::ptree UserManager::loginUser(const string &username, const string &password) {
     using namespace mongo;
     auto client = pool.acquire();
-    auto doc = (*client)[db_name]["user"].find_one(make_document(
-        kvp("username", bsoncxx::types::b_utf8(username)),
-        kvp("password", bsoncxx::types::b_utf8(password))
+    mongocxx::options::find opt;
+    opt.projection(make_document(
+        kvp("_id", 0),
+        kvp("password", 0),
+        kvp("loginRecord", 0)
     ));
-    if (!doc)
-        return 0;
-    return uint(doc->view()["userid"].get_int32().value);
+    auto doc = (*client)[db_name]["user"].find_one(
+        make_document(
+            kvp("username", bsoncxx::types::b_utf8(username)),
+            kvp("password", bsoncxx::types::b_utf8(password))
+        ),
+        opt
+    );
+    ptree pt;
+    if (doc)
+        SocketInfo::decodePtree(to_json(*doc), pt);
+    return pt;
 }
 
-UserManager::ErrorCode UserManager::checkRegister(const string &username, const string &password, const string &email) {
+UserManager::ErrorCode UserManager::checkRegister(const string &username, const string &nickname, const string &password, const string &email) {
     static const std::regex patternUsername("[\\w\\.\\-]+");
     static const std::regex patternEmail("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
     if (username.size() > 100 || !std::regex_match(username, patternUsername))
@@ -61,11 +85,13 @@ UserManager::ErrorCode UserManager::checkRegister(const string &username, const 
         return X::InvalidPassword;
     if (email.size() > 100 || !std::regex_match(email, patternEmail))
         return X::InvalidEmail;
+    if (nickname.size() < 1 || nickname.size() > 100)
+        return X::InvalidNickname;
     return X::NoError;
 }
 
-UserManager::ErrorCode UserManager::registerUser(const string &username, const string &password, const string &email) {
-    auto ec = checkRegister(username, password, email);
+UserManager::ErrorCode UserManager::registerUser(const string &username, const string &nickname, const string &password, const string &email) {
+    auto ec = checkRegister(username, nickname, password, email);
     if (!ec && isUser(username))
         ec = X::AlreadyRegister;
     if (!ec) {
@@ -74,22 +100,24 @@ UserManager::ErrorCode UserManager::registerUser(const string &username, const s
         auto info = (*client)[db_name]["info"].find_one({});
         uint userid = 1;
         if (info) {
-            userid = uint(info->view()["user_count"].get_int32().value) + 1;
+            userid = uint(info->view()["userCount"].get_int32().value) + 1;
             (*client)[db_name]["info"].update_one(
                 {},
-                make_document(kvp("$set", make_document(kvp("user_count", int(userid)))))
+                make_document(kvp("$set", make_document(kvp("userCount", int(userid)))))
             );
         } else {
             (*client)[db_name]["info"].insert_one(make_document(
-                kvp("user_count", int(1))
+                kvp("userCount", int(1))
             ));
         }
         auto res = (*client)[db_name]["user"].insert_one(make_document(
             kvp("userid", int(userid)),
             kvp("username", bsoncxx::types::b_utf8(username)),
+            kvp("nickname", bsoncxx::types::b_utf8(nickname)),
             kvp("password", bsoncxx::types::b_utf8(password)),
             kvp("email", bsoncxx::types::b_utf8(email)),
-            kvp("priority", int(AbstractUser::User))
+            kvp("priority", int(AbstractUser::User)),
+            kvp("loginRecord", make_array())
         ));
     }
     return ec;

@@ -11,15 +11,6 @@ using namespace boost::property_tree;
 
 int main() {
     mongocxx::instance _ {};
-    /*
-    mongocxx::uri uri {"mongodb://localhost:23332/?minPoolSize=32&maxPoolSize=32"};
-    mongocxx::pool pool {uri};
-    auto client = pool.acquire();
-    auto doc = (*client)["pi"]["user"].find_one({});
-    cerr << doc->view()["username"].get_utf8().value;
-    while (1);
-    return 0;
-    */
     ptree pt;
     ifstream f("config.json");
     bool ok = bool(f);

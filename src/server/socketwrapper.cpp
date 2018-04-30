@@ -5,7 +5,7 @@
 
 SocketWrapper::SocketWrapper(boost::asio::ip::tcp::socket socket, SessionManager &sessionManager, UserManager &userManager) :
     socket(std::move(socket)),
-    infoIn(),
+    info(),
     sessionManager(sessionManager),
     userManager(userManager) {
 
@@ -22,13 +22,13 @@ void SocketWrapper::stop() {
 }
 
 void SocketWrapper::read() {
-    infoIn.setSize(SocketInfo::HEADER_SIZE);
+    info.setSize(SocketInfo::HEADER_SIZE);
     auto self(shared_from_this());
     boost::asio::async_read(
         socket,
-        boost::asio::buffer(infoIn.getBuffer(), SocketInfo::HEADER_SIZE),
+        boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
         [this, self](const error_code &ec, size_t bytes) -> size_t {
-            if (ec || (bytes > 0 && infoIn.getBuffer()[bytes - 1] == SocketInfo::IDENTIFIER))
+            if (ec || (bytes > 0 && info.getBuffer()[bytes - 1] == SocketInfo::IDENTIFIER))
                 return 0;
             return 1;
         },
@@ -38,7 +38,7 @@ void SocketWrapper::read() {
                 stop();
                 return;
             }
-            if (bytes > 0 && infoIn.getBuffer()[bytes - 1] == SocketInfo::IDENTIFIER)
+            if (bytes > 0 && info.getBuffer()[bytes - 1] == SocketInfo::IDENTIFIER)
                 readHeader();
             else
                 read();
@@ -47,11 +47,11 @@ void SocketWrapper::read() {
 }
 
 void SocketWrapper::readHeader() {
-    infoIn.setSize(SocketInfo::HEADER_SIZE);
+    info.setSize(SocketInfo::HEADER_SIZE);
     auto self(shared_from_this());
     boost::asio::async_read(
         socket,
-        boost::asio::buffer(infoIn.getBuffer(), SocketInfo::HEADER_SIZE),
+        boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
         boost::asio::transfer_exactly(SocketInfo::HEADER_SIZE),
         [this, self](const error_code &ec, size_t bytes) {
             if (ec) {
@@ -59,9 +59,9 @@ void SocketWrapper::readHeader() {
                 stop();
                 return;
             }
-            auto token = infoIn.decodeHeaderToken();
-            auto length = infoIn.decodeHeaderLength();
-            auto ac = infoIn.decodeHeaderActionCode();
+            auto token = info.decodeHeaderToken();
+            auto length = info.decodeHeaderLength();
+            auto ac = info.decodeHeaderActionCode();
             _from(readHeader) << "token: " << token << ", length: " << length << ", action_code: " << X::what(ac) << '\n';
             if (length > SocketInfo::BODY_SIZE) {
                 _from(readHeader) << "body size is too big.\n";
@@ -74,11 +74,11 @@ void SocketWrapper::readHeader() {
 }
 
 void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
-    infoIn.setSize(length);
+    info.setSize(length);
     auto self(shared_from_this());
     boost::asio::async_read(
         socket,
-        boost::asio::buffer(infoIn.getBuffer(), length),
+        boost::asio::buffer(info.getBuffer(), length),
         boost::asio::transfer_exactly(length),
         [this, self, token, ac](const error_code &ec, size_t bytes) {
             if (ec) {
@@ -88,7 +88,7 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
             }
             ptree pt;
             try {
-                infoIn.decodeBody(bytes, pt);
+                info.decodeBody(bytes, pt);
             } catch (std::exception &e) {
                 _from(readBody) << "can't decode body. " << e.what() << '\n';
                 read();
@@ -98,7 +98,8 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
                 doLogin(pt, token);
             else if (ac == X::Register)
                 doRegister(pt, token);
-            read();
+            else if (ac == X::Logout)
+                doLogout(pt, token);
         }
     );
 }
@@ -107,21 +108,21 @@ void SocketWrapper::write(const ull &token, const ptree &pt, const ActionCode &a
     auto self(shared_from_this());
     string str = SocketInfo::encodePtree(pt);
     auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
-    auto info = std::make_shared<SocketInfo>();
-    info->setSize(size);
-    info->encode(token, str.size(), X::LoginFeedback, str);
+    info.setSize(size);
+    info.encode(token, str.size(), X::LoginFeedback, str);
     _to(write) << "sending feedback, size = " << size << '\n';
 
     boost::asio::async_write(
         socket,
-        boost::asio::buffer(info->getBuffer(), size),
-        [this, self, info](const error_code &ec, size_t bytes) {
+        boost::asio::buffer(info.getBuffer(), size),
+        [this, self](const error_code &ec, size_t bytes) {
             if (ec) {
                 _to(write) << system_error(ec).what() << '\n';
                 stop();
                 return;
             }
             _to(write) << "succeed to send\n";
+            read();
         }
     );
 }
@@ -129,30 +130,31 @@ void SocketWrapper::write(const ull &token, const ptree &pt, const ActionCode &a
 void SocketWrapper::doLogin(const ptree &pt, const ull &token) {
     if (token != 0) {
         _from(doLogin) << "token != 0\n";
-        writeLogin(0, X::LoginFailed);
+        writeLogin(0, ptree(), X::LoginFailed);
         return;
     }
     string username = pt.get("username", "");
     string password = pt.get("password", "");
     _from(doLogin) << "username: " << username << ", password: " << password << '\n';
-    auto userid = userManager.loginUser(username, password);
-    _from(doLogin) << "userid: " << userid << '\n';
-    if (userid == 0) {
-        writeLogin(0, X::NoSuchUser);
+    auto info = userManager.loginUser(username, password);
+    if (info.empty()) {
+        _from(doLogin) << "info is empty\n";
+        writeLogin(0, std::move(info), X::NoSuchUser);
     } else {
         auto token = sessionManager.getRandToken();
-        _from(doLogin) << "token: " << token << '\n';
+        auto userid = info.get<uint> ("userid", 0);
+        _from(doLogin) << "token: " << token << ", userid: " << userid << '\n';
         if (sessionManager.add(token, userid, Session::getNowTime() + sessionManager.getDefaultAlive())) {
-            writeLogin(token);
+            _from(doLogin) << "login successfully\n";
+            writeLogin(token, std::move(info), X::NoError);
         } else {
             _from(doLogin) << "failed to add a new session, already exist\n";
-            writeLogin(0, X::AlreadyLogin);
+            writeLogin(0, ptree(), X::AlreadyLogin);
         }
     }
 }
 
-void SocketWrapper::writeLogin(const ull &token, ErrorCode ec) {
-    ptree pt;
+void SocketWrapper::writeLogin(const ull &token, ptree pt, ErrorCode ec) {
     pt.put("error_code", ec);
     write(token, pt, X::LoginFeedback);
 }
@@ -164,11 +166,12 @@ void SocketWrapper::doRegister(const ptree &pt, const ull &token) {
         return;
     }
     string username = pt.get("username", "");
+    string nickname = pt.get("nickname", "");
     string password = pt.get("password", "");
     string email = pt.get("email", "");
-    _from(doRegister) << "username: " << username << ", password: " << password << ", email: " << email << '\n';
+    _from(doRegister) << "username: " << username << ", nickname: " << nickname << ", password: " << password << ", email: " << email << '\n';
 
-    auto ec = userManager.registerUser(username, password, email);
+    auto ec = userManager.registerUser(username, nickname, password, email);
     if (!ec)
         _from(doRegister) << "success to register\n";
     else
@@ -180,4 +183,22 @@ void SocketWrapper::writeRegister(ErrorCode ec) {
     ptree pt;
     pt.put("error_code", ec);
     write(0, pt, X::RegisterFeedback);
+}
+
+void SocketWrapper::doLogout(const ptree &pt, const ull &token) {
+    auto ec = X::NoError;
+    if (token == 0) {
+        _from(doLogout) << "token = 0\n";
+        ec = X::NotLogin;
+    } else if (!sessionManager.removeByToken(token)) {
+        _from(doLogout) << "token is invalid\n";
+        ec = X::InvalidToken;
+    }
+    writeLogout(ec);
+}
+
+void SocketWrapper::writeLogout(ErrorCode ec) {
+    ptree pt;
+    pt.put("error_code", ec);
+    write(0, pt, X::LogoutFeedback);
 }

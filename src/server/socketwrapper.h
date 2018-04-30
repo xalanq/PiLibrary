@@ -11,6 +11,7 @@
 #include <ctime>
 #include <exception>
 
+// one read and one write as a turn
 class SocketWrapper : public std::enable_shared_from_this<SocketWrapper> {
 public:
     typedef boost::system::system_error system_error;
@@ -34,13 +35,16 @@ private:
     void write(const ull &token, const ptree &pt, const ActionCode &ac);
 
     void doLogin(const ptree &pt, const ull &token);
-    void writeLogin(const ull &token, ErrorCode ec = X::NoError);
+    void writeLogin(const ull &token, ptree pt, ErrorCode ec = X::NoError);
 
     void doRegister(const ptree &pt, const ull &token);
     void writeRegister(ErrorCode ec = X::NoError);
 
+    void doLogout(const ptree &pt, const ull &token);
+    void writeLogout(ErrorCode ec = X::NoError);
+
     boost::asio::ip::tcp::socket socket;
-    SocketInfo infoIn;
+    SocketInfo info;
     SessionManager &sessionManager;
     UserManager &userManager;
 };

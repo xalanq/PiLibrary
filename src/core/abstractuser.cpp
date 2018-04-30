@@ -18,6 +18,14 @@ void AbstractUser::setUsername(const string &value) {
     username = value;
 }
 
+AbstractUser::string AbstractUser::getNickname() const {
+    return nickname;
+}
+
+void AbstractUser::setNickname(const string &value) {
+    nickname = value;
+}
+
 AbstractUser::string AbstractUser::getPassword() const {
     return password;
 }

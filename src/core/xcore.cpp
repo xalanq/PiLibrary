@@ -20,31 +20,41 @@ namespace X {
             return "Register Failed";
         case InvalidUsername:
             return "Invalid Username";
+        case InvalidNickname:
+            return "Invalid Nickname";
         case InvalidPassword:
             return "Invalid Password";
         case InvalidEmail:
             return "Invalid Email";
         case AlreadyRegister:
             return "Already Register";
+        case NotLogin:
+            return "No Login";
+        case InvalidToken:
+            return "Invalid Token";
         default:
-            return "NoSuchError";
+            return "No Such Error";
         }
     }
 
     string what(const ActionCode &ac) {
         switch (ac) {
         case NoAction:
-            return "NoAction";
+            return "No Action";
         case Login:
             return "Login";
         case LoginFeedback:
-            return "LoginFeedback";
+            return "Login Feedback";
         case Register:
             return "Register";
         case RegisterFeedback:
-            return "RegisterFeedback";
+            return "Register Feedback";
+        case Logout:
+            return "Logout";
+        case LogoutFeedback:
+            return "Logout Feedback";
         default:
-            return "NoSuchAction";
+            return "No Such Action";
         }
     }
 

@@ -24,9 +24,13 @@ namespace X {
 
         RegisterFailed,
         InvalidUsername,
+        InvalidNickname,
         InvalidPassword,
         InvalidEmail,
-        AlreadyRegister
+        AlreadyRegister,
+
+        NotLogin,
+        InvalidToken
     };
 
     enum ActionCode {
@@ -34,7 +38,9 @@ namespace X {
         Login,
         LoginFeedback,
         Register,
-        RegisterFeedback
+        RegisterFeedback,
+        Logout,
+        LogoutFeedback
     };
 
     extern string what(const ErrorCode &ec);

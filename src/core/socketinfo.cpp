@@ -78,7 +78,13 @@ void SocketInfo::encode(const ull &token, const uint &bodyLength, const ActionCo
 std::string SocketInfo::encodePtree(const ptree &pt) {
     std::stringstream ss;
     boost::property_tree::write_json(ss, pt, false);
-    return ss.str();
+    return std::move(ss.str());
+}
+
+void SocketInfo::decodePtree(const string &str, ptree &pt) {
+    std::stringstream ss;
+    ss << str;
+    boost::property_tree::read_json(ss, pt);
 }
 
 const char *SocketInfo::getBuffer() const {

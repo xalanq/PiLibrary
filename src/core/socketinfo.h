@@ -44,6 +44,7 @@ public:
     void encode(const ull &token, const uint &bodyLength, const ActionCode &ac, const ptree &pt);
 
     static std::string encodePtree(const ptree &pt);
+    static void decodePtree(const string &str, ptree &pt);
 
     const char *getBuffer() const;
     char *getBuffer();

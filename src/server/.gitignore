@@ -1,5 +1,6 @@
 config.json
 .vs
 x64
+Debug()
 server.vcxproj.filters
 server.vcxproj.user
