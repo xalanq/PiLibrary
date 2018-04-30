@@ -5,8 +5,11 @@
 #include "../core/socketinfo.h"
 #include "../core/abstractuser.h"
 
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/stream/array.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bson.h>
@@ -25,6 +28,13 @@ namespace mongo {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
     using bsoncxx::builder::basic::make_array;
+    using bsoncxx::builder::stream::document;
+    using bsoncxx::builder::stream::array;
+    using bsoncxx::builder::stream::open_document;
+    using bsoncxx::builder::stream::close_document;
+    using bsoncxx::builder::stream::open_array;
+    using bsoncxx::builder::stream::close_array;
+    using bsoncxx::builder::stream::finalize;
     using bsoncxx::stdx::string_view;
     using mongocxx::collection;
     using mongocxx::validation_criteria;
@@ -48,12 +58,16 @@ public:
 
     bool isUser(const uint &userid);
     bool isUser(const string &username);
+
     uint getPriority(const uint &userid);
 
-    ptree loginUser(const string &username, const string &password);
+    ptree loginUser(const ptree &pt);
 
     ErrorCode checkRegister(const string &username, const string &nickname, const string &password, const string &email);
-    ErrorCode registerUser(const string &username, const string &nickname, const string &password, const string &email);
+    ErrorCode registerUser(const ptree &pt);
+
+    ptree getBookCore(const ptree &pt);
+    ErrorCode setBookCore(const ptree &pt);
 
 private:
     mongo::pool pool;

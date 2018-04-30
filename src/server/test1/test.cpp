@@ -6,7 +6,9 @@
 using boost::asio::ip::tcp;
 boost::asio::io_service io_service;
 
+// for login, logout, register
 int main() {
+    srand(time(0) + clock());
     try {
         tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), 2333);
         for (int op; std::cin >> op; ) {
@@ -74,7 +76,6 @@ int main() {
                 );
                 cerr << "complete\n";
             } else {
-                srand(time(0));
                 pt.put("username", "xalanq" + std::to_string(rand() % 10));
                 pt.put("nickname", "Alan Clarke");
                 pt.put("password", "hash(123456)");
@@ -95,7 +96,7 @@ int main() {
             }
             s.close();
         }
-    } catch(std::exception &e) {
+    } catch (std::exception &e) {
         cerr << e.what() << '\n';
     }
 

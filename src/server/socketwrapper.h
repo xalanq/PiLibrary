@@ -35,13 +35,19 @@ private:
     void write(const ull &token, const ptree &pt, const ActionCode &ac);
 
     void doLogin(const ptree &pt, const ull &token);
-    void writeLogin(const ull &token, ptree pt, ErrorCode ec = X::NoError);
+    void writeLogin(const ull &token, ptree pt, const ErrorCode &ec = X::NoError);
 
     void doRegister(const ptree &pt, const ull &token);
-    void writeRegister(ErrorCode ec = X::NoError);
+    void writeRegister(const ErrorCode &ec = X::NoError);
 
     void doLogout(const ptree &pt, const ull &token);
-    void writeLogout(ErrorCode ec = X::NoError);
+    void writeLogout(const ErrorCode &ec = X::NoError);
+
+    void doGetBook(const ptree &pt, const ull &token);
+    void writeGetBook(const ull &token, ptree pt, const ErrorCode &ec = X::NoError);
+
+    void doSetBook(const ptree &pt, const ull &token);
+    void writeSetBook(const ull &token, const ErrorCode &ec = X::NoError);
 
     boost::asio::ip::tcp::socket socket;
     SocketInfo info;

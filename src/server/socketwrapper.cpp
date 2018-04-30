@@ -63,7 +63,8 @@ void SocketWrapper::readHeader() {
             auto length = info.decodeHeaderLength();
             auto ac = info.decodeHeaderActionCode();
             _from(readHeader) << "token: " << token << ", length: " << length << ", action_code: " << X::what(ac) << '\n';
-            if (length > SocketInfo::BODY_SIZE) {
+            auto p = sessionManager.findToken(token);
+            if ((p == nullptr || p->getPriority() < AbstractUser::ADMINISTER) && bytes > SocketInfo::BODY_SIZE) {
                 _from(readHeader) << "body size is too big.\n";
                 read();
                 return;
@@ -100,6 +101,10 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
                 doRegister(pt, token);
             else if (ac == X::Logout)
                 doLogout(pt, token);
+            else if (ac == X::GetBook)
+                doGetBook(pt, token);
+            else if (ac == X::SetBook)
+                doSetBook(pt, token);
         }
     );
 }
@@ -128,33 +133,36 @@ void SocketWrapper::write(const ull &token, const ptree &pt, const ActionCode &a
 }
 
 void SocketWrapper::doLogin(const ptree &pt, const ull &token) {
+    auto tr = ptree();
+    auto ec = X::NoError;
+    ull tk = 0;
     if (token != 0) {
         _from(doLogin) << "token != 0\n";
-        writeLogin(0, ptree(), X::LoginFailed);
-        return;
-    }
-    string username = pt.get("username", "");
-    string password = pt.get("password", "");
-    _from(doLogin) << "username: " << username << ", password: " << password << '\n';
-    auto info = userManager.loginUser(username, password);
-    if (info.empty()) {
-        _from(doLogin) << "info is empty\n";
-        writeLogin(0, std::move(info), X::NoSuchUser);
+        ec = X::LoginFailed;
     } else {
-        auto token = sessionManager.getRandToken();
-        auto userid = info.get<uint> ("userid", 0);
-        _from(doLogin) << "token: " << token << ", userid: " << userid << '\n';
-        if (sessionManager.add(token, userid, Session::getNowTime() + sessionManager.getDefaultAlive())) {
-            _from(doLogin) << "login successfully\n";
-            writeLogin(token, std::move(info), X::NoError);
+        _from(doLogin);
+        auto p = userManager.loginUser(pt);
+        if (p.empty()) {
+            _from(doLogin) << "p is empty\n";
+            ec = X::NoSuchUser;
         } else {
-            _from(doLogin) << "failed to add a new session, already exist\n";
-            writeLogin(0, ptree(), X::AlreadyLogin);
+            tk = sessionManager.getRandToken();
+            auto userid = p.get<uint>("userid", 0);
+            auto priority = p.get<uint>("priority", 0);
+            _from(doLogin) << "token: " << tk << ", userid: " << userid << '\n';
+            if (sessionManager.add(tk, userid, Session::getNowTime() + sessionManager.getDefaultAlive(), priority)) {
+                _from(doLogin) << "login successfully\n";
+                tr = std::move(p);
+            } else {
+                _from(doLogin) << "failed to add a new session, already exist\n";
+                ec = X::AlreadyLogin;
+            }
         }
     }
+    writeLogin(tk, std::move(tr), ec);
 }
 
-void SocketWrapper::writeLogin(const ull &token, ptree pt, ErrorCode ec) {
+void SocketWrapper::writeLogin(const ull &token, ptree pt, const ErrorCode &ec) {
     pt.put("error_code", ec);
     write(token, pt, X::LoginFeedback);
 }
@@ -165,21 +173,16 @@ void SocketWrapper::doRegister(const ptree &pt, const ull &token) {
         writeRegister(X::RegisterFailed);
         return;
     }
-    string username = pt.get("username", "");
-    string nickname = pt.get("nickname", "");
-    string password = pt.get("password", "");
-    string email = pt.get("email", "");
-    _from(doRegister) << "username: " << username << ", nickname: " << nickname << ", password: " << password << ", email: " << email << '\n';
-
-    auto ec = userManager.registerUser(username, nickname, password, email);
+    _from(doRegister);
+    auto ec = userManager.registerUser(pt);
     if (!ec)
-        _from(doRegister) << "success to register\n";
+        _from(doRegister) << "succeed to register\n";
     else
         _from(doRegister) << "fail to register: " << X::what(ec) << '\n';
     writeRegister(ec);
 }
 
-void SocketWrapper::writeRegister(ErrorCode ec) {
+void SocketWrapper::writeRegister(const ErrorCode &ec) {
     ptree pt;
     pt.put("error_code", ec);
     write(0, pt, X::RegisterFeedback);
@@ -197,8 +200,84 @@ void SocketWrapper::doLogout(const ptree &pt, const ull &token) {
     writeLogout(ec);
 }
 
-void SocketWrapper::writeLogout(ErrorCode ec) {
+void SocketWrapper::writeLogout(const ErrorCode &ec) {
     ptree pt;
     pt.put("error_code", ec);
     write(0, pt, X::LogoutFeedback);
+}
+
+void SocketWrapper::doGetBook(const ptree &pt, const ull &token) {
+    auto tr = ptree();
+    auto ec = X::NoError;
+    ull tk = 0;
+    if (token == 0) {
+        _from(doGetBook) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doGetBook) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            _from(doGetBook);
+            auto p = userManager.getBookCore(pt);
+            if (p.empty()) {
+                _from(doGetBook) << "p is empty\n";
+                ec = X::InvalidBook;
+            } else {
+                auto bookPriority = p.get<uint>("priority", AbstractUser::SUPER_ADMINISTER);
+                auto priority = it->getPriority();
+                _from(doGetBook) << "userid: " << it->getUserid() << ", priority: " << priority << ", bookPriority: " << bookPriority << '\n';
+                if (bookPriority > priority)
+                    ec = X::NoPermission;
+                else
+                    tr = std::move(p);
+            }
+        }
+    }
+    writeGetBook(tk, std::move(tr), ec);
+}
+
+void SocketWrapper::writeGetBook(const ull &token, ptree pt, const ErrorCode &ec) {
+    pt.put("error_code", ec);
+    write(token, pt, X::GetBookFeedback);
+}
+
+void SocketWrapper::doSetBook(const ptree &pt, const ull &token) {
+    auto ec = X::NoError;
+    ull tk = 0;
+    if (token == 0) {
+        _from(doSetBook) << "token = 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doSetBook) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            uint bookPriority = pt.get<uint>("priority", AbstractUser::SUPER_ADMINISTER);
+            auto priority = it->getPriority();
+            _from(doSetBook) << "userid: " << it->getUserid() << ", priority: " << priority << ", bookPriority: " << bookPriority << '\n';
+            if (bookPriority > priority || priority < AbstractUser::ADMINISTER) {
+                _from(doSetBook) << "no permission\n";
+                ec = X::NoPermission;
+            } else {
+                _from(doSetBook);
+                ec = userManager.setBookCore(pt);
+                if (!ec)
+                    _from(doSetBook) << "succeed to set a book\n";
+                else
+                    _from(doSetBook) << "fail to set a book: " << X::what(ec) << '\n';
+            }
+        }
+    }
+    writeSetBook(tk, ec);
+}
+
+void SocketWrapper::writeSetBook(const ull &token, const ErrorCode &ec) {
+    ptree pt;
+    pt.put("error_code", ec);
+    write(token, pt, X::SetBookFeedback);
 }

@@ -30,7 +30,11 @@ namespace X {
         AlreadyRegister,
 
         NotLogin,
-        InvalidToken
+        InvalidToken,
+
+        InvalidBook,
+        NoSuchBook,
+        NoPermission
     };
 
     enum ActionCode {
@@ -40,7 +44,11 @@ namespace X {
         Register,
         RegisterFeedback,
         Logout,
-        LogoutFeedback
+        LogoutFeedback,
+        GetBook,
+        GetBookFeedback,
+        SetBook,
+        SetBookFeedback
     };
 
     extern string what(const ErrorCode &ec);

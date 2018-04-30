@@ -7,9 +7,9 @@
 class AbstractUser {
 public:
     enum Priority {
-        User = 1,
-        Administer = 50,
-        SuperAdminister = 100
+        USER = 1,
+        ADMINISTER = 50,
+        SUPER_ADMINISTER = 100
     };
     typedef X::ull ull;
     typedef X::uint uint;

@@ -17,8 +17,7 @@ public:
 
     enum {
         HEADER_SIZE = sizeof(ull) + sizeof(uint) + sizeof(ActionCode), 
-        BODY_SIZE = 1024, 
-        PACKET_SIZE = 1024 * 24
+        BODY_SIZE = 2048
     };
     static const char IDENTIFIER;
 

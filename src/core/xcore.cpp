@@ -32,6 +32,12 @@ namespace X {
             return "No Login";
         case InvalidToken:
             return "Invalid Token";
+        case InvalidBook:
+            return "Invalid Book";
+        case NoSuchBook:
+            return "No Such Book";
+        case NoPermission:
+            return "No Permission";
         default:
             return "No Such Error";
         }
@@ -53,6 +59,14 @@ namespace X {
             return "Logout";
         case LogoutFeedback:
             return "Logout Feedback";
+        case GetBook:
+            return "Get Book";
+        case GetBookFeedback:
+            return "Get Book Feedback";
+        case SetBook:
+            return "Set Book";
+        case SetBookFeedback:
+            return "Set Book Feedback";
         default:
             return "No Such Action";
         }

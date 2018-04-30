@@ -19,11 +19,11 @@ int main() {
     else {
         cerr << "Config file is not exist, build new one[./config.json]\n";
         pt.put("core.server_url", "127.0.0.1");
-        pt.put("core.server_port", 2333);
+        pt.put<int>("core.server_port", 2333);
         pt.put("server.mongodb_url", "mongodb://localhost:23332/?minPoolSize=32&maxPoolSize=32");
         pt.put("server.mongodb_db_name", "pi");
-        pt.put("server.default_alive_ms", 30000);
-        pt.put("server.thread_number", 32);
+        pt.put<int>("server.default_alive_ms", 30000);
+        pt.put<int>("server.thread_number", 32);
         write_json("config.json", pt);
     }
     Server::start(
