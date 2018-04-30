@@ -144,13 +144,6 @@
     <ClInclude Include="usermanager.h" />
     <ClInclude Include="xserver.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\bsoncxx.dll" />
-    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\concrt140.dll" />
-    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\mongocxx.dll" />
-    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\msvcp140.dll" />
-    <None Include="..\..\..\..\mongo\mongo-cxx-driver\bin\vcruntime140.dll" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
