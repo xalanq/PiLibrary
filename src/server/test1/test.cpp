@@ -44,8 +44,21 @@ int main() {
                     boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
                     boost::asio::transfer_exactly(SocketInfo::HEADER_SIZE)
                 );
+                auto length = info.decodeHeaderLength();
                 auto token = info.decodeHeaderToken();
-                cerr << "token: " << token << '\n';
+                cerr << "length: " << length << ", token: " << token << '\n';
+
+                info.setSize(length);
+                boost::asio::read(
+                    s,
+                    boost::asio::buffer(info.getBuffer(), length),
+                    boost::asio::transfer_exactly(length)
+                );
+
+                pt = boost::property_tree::ptree();
+                info.decodeBody(length, pt);
+                str = info.encodePtree(pt, true);
+                cerr << str << '\n';
 
                 pt = boost::property_tree::ptree();
                 str = SocketInfo::encodePtree(pt);

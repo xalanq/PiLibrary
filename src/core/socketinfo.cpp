@@ -75,9 +75,9 @@ void SocketInfo::encode(const ull &token, const uint &bodyLength, const ActionCo
     encode(token, bodyLength, ac, encodePtree(pt));
 }
 
-std::string SocketInfo::encodePtree(const ptree &pt) {
+std::string SocketInfo::encodePtree(const ptree &pt, bool pretty) {
     std::stringstream ss;
-    boost::property_tree::write_json(ss, pt, false);
+    boost::property_tree::write_json(ss, pt, pretty);
     return std::move(ss.str());
 }
 
