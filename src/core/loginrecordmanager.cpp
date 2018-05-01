@@ -1,4 +1,7 @@
-#include "loginrecordmanager.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <core/loginrecordmanager.h>
 
 void LoginRecordManager::add(const LoginRecord &record) {
     data.insert(record);
@@ -12,7 +15,7 @@ void LoginRecordManager::clear() {
     data.clear();
 }
 
-int LoginRecordManager::size() {
+size_t LoginRecordManager::size() {
     return data.size();
 }
 

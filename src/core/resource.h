@@ -1,11 +1,11 @@
-#ifndef RESOURCE_H
-#define RESOURCE_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
+#pragma once
+
+#include <core/xcore.h>
 
 namespace R {
     void remove(const X::string &path);
     void add(const X::string &path, const char *data);
 }
-
-#endif // RESOURCE_H

@@ -1,4 +1,7 @@
-#include "xcore.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <core/xcore.h>
 
 namespace X {
     const string author[] = {"xalanq", "chang-ran"};

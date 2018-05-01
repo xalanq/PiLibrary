@@ -1,4 +1,7 @@
-#include "session.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <server/session.h>
 
 Session::Session(const ull &token, const uint &userid, const time_t &alive, const uint &priority) :
     token(token),

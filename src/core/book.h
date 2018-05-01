@@ -1,9 +1,13 @@
-#ifndef BOOK_H
-#define BOOK_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
-#include "bookcore.h"
+#pragma once
+
 #include <map>
+
+#include <core/bookcore.h>
+#include <core/resource.h>
+#include <core/xcore.h>
 
 class Book : public BookCore {
 public:
@@ -13,5 +17,3 @@ public:
 private:
     std::map<string, string> resource;
 };
-
-#endif // BOOK_H

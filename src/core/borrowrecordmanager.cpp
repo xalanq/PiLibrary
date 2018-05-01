@@ -1,4 +1,7 @@
-#include "borrowrecordmanager.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <core/borrowrecordmanager.h>
 
 void BorrowRecordManager::add(const BorrowRecord &record) {
     data.insert(record);
@@ -12,7 +15,7 @@ void BorrowRecordManager::clear() {
     data.clear();
 }
 
-int BorrowRecordManager::size() {
+size_t BorrowRecordManager::size() {
     return data.size();
 }
 

@@ -1,4 +1,7 @@
-#include "borrowrecord.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <core/borrowrecord.h>
 
 BorrowRecord::uint BorrowRecord::getBookid() const {
     return bookid;
@@ -27,4 +30,8 @@ std::time_t BorrowRecord::getEndTime() const {
 
 void BorrowRecord::setEndTime(const std::time_t &value) {
     endTime = value;
+}
+
+bool BorrowRecord::operator < (const BorrowRecord &t) const {
+    return beginTime == t.beginTime ? (endTime == t.endTime ? bookid < t.bookid : endTime < t.endTime) : beginTime < t.beginTime;
 }

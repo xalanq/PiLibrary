@@ -1,12 +1,15 @@
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xserver.h"
-#include "session.h"
-#include <set>
+#pragma once
+
 #include <ctime>
 #include <memory>
 #include <random>
+#include <set>
+
+#include <server/session.h>
+#include <server/xserver.h>
 
 class SessionManager {
 public:
@@ -53,5 +56,3 @@ private:
     std::mt19937_64 eng;
     uint defaultAlive;
 };
-
-#endif // SESSIONMANAGER_H

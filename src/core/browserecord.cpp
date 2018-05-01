@@ -1,4 +1,7 @@
-#include "browserecord.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <core/browserecord.h>
 
 BrowseRecord::uint BrowseRecord::getBookid() const {
     return bookid;

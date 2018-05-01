@@ -1,4 +1,7 @@
-#include "socketwrapper.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <server/socketwrapper.h>
 
 #define _from(func) cerr << "(" << #func << ") from " << socket.remote_endpoint().address() << " : " 
 #define _to(func) cerr << "(" << #func << ") send to " << socket.remote_endpoint().address() << " : " 
@@ -89,7 +92,7 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
             }
             ptree pt;
             try {
-                info.decodeBody(bytes, pt);
+                info.decodeBody(static_cast<uint>(bytes), pt);
             } catch (std::exception &e) {
                 _from(readBody) << "can't decode body. " << e.what() << '\n';
                 read();
@@ -114,7 +117,7 @@ void SocketWrapper::write(const ull &token, const ptree &pt, const ActionCode &a
     string str = SocketInfo::encodePtree(pt);
     auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
     info.setSize(size);
-    info.encode(token, str.size(), X::LoginFeedback, str);
+    info.encode(token, static_cast<uint>(str.size()), X::LoginFeedback, str);
     _to(write) << "sending feedback, size = " << size << '\n';
 
     boost::asio::async_write(

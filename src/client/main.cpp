@@ -1,8 +1,11 @@
-#include "mainwindow.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
 #include <QApplication>
 
-int main(int argc, char *argv[])
-{
+#include <client/mainwindow.h>
+
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     MainWindow w;
     w.show();

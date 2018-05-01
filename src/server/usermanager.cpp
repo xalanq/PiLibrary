@@ -1,4 +1,7 @@
-#include "usermanager.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <server/usermanager.h>
 
 UserManager::UserManager(const char *mongo_url, const char *mongo_db_name) :
     pool(mongo::uri(mongo_url)),
@@ -8,20 +11,6 @@ UserManager::UserManager(const char *mongo_url, const char *mongo_db_name) :
 
 UserManager::~UserManager() {
 
-}
-
-UserManager::string UserManager::to_json(bsoncxx::document::value &document) {
-    std::string ret;
-    bson_t bson;
-    auto view = document.view();
-    bson_init_static(&bson, view.data(), view.length());
-    size_t size;
-    auto result = bson_as_json(&bson, &size);
-    if (!result)
-        return "";
-    ret = std::string(result);
-    bson_free(result);
-    return std::move(ret);
 }
 
 bool UserManager::isUser(const uint &userid) {
@@ -78,7 +67,7 @@ UserManager::ptree UserManager::loginUser(const ptree &pt) {
     );
     ptree p;
     if (doc)
-        SocketInfo::decodePtree(to_json(*doc), p);
+        SocketInfo::decodePtree(bsoncxx::to_json(*doc, bsoncxx::ExtendedJsonMode::k_legacy), p);
     return std::move(p);
 }
 
@@ -158,7 +147,7 @@ UserManager::ptree UserManager::getBookCore(const ptree &pt) {
     );
     ptree p;
     if (doc)
-        SocketInfo::decodePtree(to_json(*doc), p);
+        SocketInfo::decodePtree(bsoncxx::to_json(*doc, bsoncxx::ExtendedJsonMode::k_legacy), p);
     return std::move(p);
 }
 

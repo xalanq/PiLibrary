@@ -1,5 +1,7 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#pragma once
 
 #include <QMainWindow>
 
@@ -11,5 +13,3 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 };
-
-#endif // MAINWINDOW_H

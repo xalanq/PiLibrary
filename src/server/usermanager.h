@@ -1,28 +1,28 @@
-#ifndef USERMANAGER_H
-#define USERMANAGER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xserver.h"
-#include "../core/socketinfo.h"
-#include "../core/abstractuser.h"
+#pragma once
 
+#include <regex>
+
+#include <boost/property_tree/ptree.hpp>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
-#include <bson.h>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <boost/property_tree/ptree.hpp>
-
-#include <regex>
+#include <core/abstractuser.h>
+#include <core/socketinfo.h>
+#include <server/xserver.h>
 
 namespace mongo {
     using bsoncxx::builder::basic::kvp;
@@ -54,8 +54,6 @@ public:
     UserManager(const char *mongo_url, const char *mongo_db_name);
     ~UserManager();
 
-    static string to_json(bsoncxx::document::value &document);
-
     bool isUser(const uint &userid);
     bool isUser(const string &username);
 
@@ -73,5 +71,3 @@ private:
     mongo::pool pool;
     const char *db_name;
 };
-
-#endif // USERMANAGER_H

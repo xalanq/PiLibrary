@@ -1,21 +1,22 @@
-#ifndef BORROWRECORDMANAGER_H
-#define BORROWRECORDMANAGER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
-#include "borrowrecord.h"
+#pragma once
+
 #include <set>
 #include <vector>
+
+#include <core/borrowrecord.h>
+#include <core/xcore.h>
 
 class BorrowRecordManager {
 public:
     void add(const BorrowRecord &record);
     void remove(const BorrowRecord &record);
     void clear();
-    int size();
+    size_t size();
     std::vector<BorrowRecord> getData() const;
 
 private:
     std::set<BorrowRecord> data;
 };
-
-#endif // BORROWRECORDMANAGER_H

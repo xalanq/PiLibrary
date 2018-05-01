@@ -1,11 +1,13 @@
-#ifndef USER_H
-#define USER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
-#include "abstractuser.h"
-#include "loginrecordmanager.h"
-#include "borrowrecordmanager.h"
-#include "browserecordmanager.h"
+#pragma once
+
+#include <core/abstractuser.h>
+#include <core/borrowrecordmanager.h>
+#include <core/browserecordmanager.h>
+#include <core/loginrecordmanager.h>
+#include <core/xcore.h>
 
 class User : public AbstractUser {
 public:
@@ -20,5 +22,3 @@ private:
     BrowseRecordManager browseRecord;
     BorrowRecordManager borrowRecord;
 };
-
-#endif // USER_H

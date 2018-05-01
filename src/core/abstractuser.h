@@ -1,8 +1,10 @@
-#ifndef ABSTRACTUSER_H
-#define ABSTRACTUSER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
-#include "loginrecordmanager.h"
+#pragma once
+
+#include <core/loginrecordmanager.h>
+#include <core/xcore.h>
 
 class AbstractUser {
 public:
@@ -45,5 +47,3 @@ private:
     uint priority;
     LoginRecordManager loginRecordManager;
 };
-
-#endif // ABSTRACTUSER_H

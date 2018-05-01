@@ -1,7 +1,9 @@
-#ifndef BOOKCORE_H
-#define BOOKCORE_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
+#pragma once
+
+#include <core/xcore.h>
 
 class BookCore {
 public:
@@ -44,5 +46,3 @@ private:
     string introduction;
     uint priority;
 };
-
-#endif // BOOKCORE_H

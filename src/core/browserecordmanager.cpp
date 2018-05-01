@@ -1,4 +1,7 @@
-#include "browserecordmanager.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <core/browserecordmanager.h>
 
 void BrowseRecordManager::add(const BrowseRecord &record) {
     data.insert(record);
@@ -12,7 +15,7 @@ void BrowseRecordManager::clear() {
     data.clear();
 }
 
-int BrowseRecordManager::size() {
+size_t BrowseRecordManager::size() {
     return data.size();
 }
 

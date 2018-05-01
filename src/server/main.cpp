@@ -1,13 +1,19 @@
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
 #include <iostream>
 #include <fstream>
-#include "../core/xcore.h"
-#include "server.h"
-#include <boost/property_tree/ptree.hpp>
+
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+
 #include <mongocxx/instance.hpp>
 
-using namespace std;
+#include <core/xcore.h>
+#include <server/server.h>
+
 using namespace boost::property_tree;
+using namespace std;
 
 int main() {
     mongocxx::instance _ {};

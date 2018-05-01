@@ -1,9 +1,9 @@
-#ifndef XSERVER_H
-#define XSERVER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "../core/xcore.h"
+#pragma once
+
+#include <core/xcore.h>
 
 namespace X {
 }
-
-#endif // XSERVER_H

@@ -1,8 +1,11 @@
-#ifndef BORROWRECORD_H
-#define BORROWRECORD_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
+#pragma once
+
 #include <ctime>
+
+#include <core/xcore.h>
 
 class BorrowRecord {
 public:
@@ -20,11 +23,11 @@ public:
 
     std::time_t getEndTime() const;
     void setEndTime(const std::time_t &value);
+    
+    bool operator < (const BorrowRecord &t) const;
 
 private:
     uint bookid;
     std::time_t beginTime;
     std::time_t endTime;
 };
-
-#endif // BORROWRECORD_H

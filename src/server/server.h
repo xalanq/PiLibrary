@@ -1,21 +1,28 @@
-#ifndef SERVER_H
-#define SERVER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xserver.h"
-#include "socketwrapper.h"
-#include "sessionmanager.h"
-#include "usermanager.h"
+#pragma once
+
 #include <memory>
+
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+
+#include <server/sessionmanager.h>
+#include <server/socketwrapper.h>
+#include <server/usermanager.h>
+#include <server/xserver.h>
 
 class Server {
 public:
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
+    typedef X::ull ull;
+    typedef X::uint uint;
+    typedef X::string string;
 
-    Server(boost::asio::io_service &service, const X::string &url, const int &port, const X::string &mongo_url, const X::string &mongo_db_name, const X::uint &default_alive, const int &thread_number);
-    static void start(const X::string &url, const int &port, const X::string &mongo_url, const X::string &mongo_db_name, const X::uint &default_alive, const int &thread_number);
+    Server(boost::asio::io_service &service, const string &url, const int &port, const string &mongo_url, const string &mongo_db_name, const uint &default_alive, const int &thread_number);
+    static void start(const string &url, const int &port, const string &mongo_url, const string &mongo_db_name, const uint &default_alive, const int &thread_number);
 
 private:
     void start();
@@ -27,5 +34,3 @@ private:
     UserManager userManager;
     SessionManager sessionManager;
 };
-
-#endif // SERVER_H

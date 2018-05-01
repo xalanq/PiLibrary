@@ -1,8 +1,11 @@
-#ifndef BROWSERECORD_H
-#define BROWSERECORD_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
+#pragma once
+
 #include <ctime>
+
+#include <core/xcore.h>
 
 class BrowseRecord {
 public:
@@ -22,5 +25,3 @@ private:
     uint bookid;
     std::time_t time;
 };
-
-#endif // BROWSERECORD_H

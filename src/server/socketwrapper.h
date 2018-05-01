@@ -1,15 +1,19 @@
-#ifndef SOCKETWRAPPER_H
-#define SOCKETWRAPPER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xserver.h"
-#include "../core/socketinfo.h"
-#include "sessionmanager.h"
-#include "usermanager.h"
-#include <boost/asio.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
+#pragma once
+
 #include <ctime>
 #include <exception>
+
+#include <boost/asio.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <core/socketinfo.h>
+#include <server/sessionmanager.h>
+#include <server/usermanager.h>
+#include <server/xserver.h>
 
 // one read and one write as a turn
 class SocketWrapper : public std::enable_shared_from_this<SocketWrapper> {
@@ -54,5 +58,3 @@ private:
     SessionManager &sessionManager;
     UserManager &userManager;
 };
-
-#endif // SOCKETWRAPPER_H

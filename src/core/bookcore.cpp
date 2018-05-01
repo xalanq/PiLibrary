@@ -1,4 +1,7 @@
-#include "bookcore.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <core/bookcore.h>
 
 BookCore::~BookCore() { }
 

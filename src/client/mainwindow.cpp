@@ -1,11 +1,12 @@
-#include "mainwindow.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-{
+#include <client/mainwindow.h>
+
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent) {
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
 
 }

@@ -1,8 +1,10 @@
-#ifndef XCORE_H
-#define XCORE_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include <string>
+#pragma once
+
 #include <iostream>
+#include <string>
 
 using std::cerr;
 
@@ -54,5 +56,3 @@ namespace X {
     extern string what(const ErrorCode &ec);
     extern string what(const ActionCode &ac);
 }
-
-#endif // XCORE_H

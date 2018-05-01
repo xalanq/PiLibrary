@@ -1,9 +1,12 @@
-#ifndef SESSION_H
-#define SESSION_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xserver.h"
-#include <ctime>
+#pragma once
+
 #include <cstdlib>
+#include <ctime>
+
+#include <server/xserver.h>
 
 class Session {
 public:
@@ -33,5 +36,3 @@ private:
     std::time_t alive;
     uint priority;
 };
-
-#endif // SESSION_H

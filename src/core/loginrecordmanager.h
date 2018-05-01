@@ -1,21 +1,22 @@
-#ifndef LOGINRECORDMANAGER_H
-#define LOGINRECORDMANAGER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
-#include "loginrecord.h"
+#pragma once
+
 #include <set>
 #include <vector>
+
+#include <core/loginrecord.h>
+#include <core/xcore.h>
 
 class LoginRecordManager {
 public:
     void add(const LoginRecord &record);
     void remove(const LoginRecord &record);
     void clear();
-    int size();
+    size_t size();
     std::vector<LoginRecord> getData() const;
 
 private:
     std::set<LoginRecord> data;
 };
-
-#endif // LOGINRECORDMANAGER_H

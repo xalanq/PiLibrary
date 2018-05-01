@@ -1,4 +1,7 @@
-#include "loginrecord.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <core/loginrecord.h>
 
 LoginRecord::string LoginRecord::getIp() const {
     return ip;

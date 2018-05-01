@@ -1,6 +1,9 @@
-#include "server.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-Server::Server(boost::asio::io_service &service, const X::string &url, const int &port, const X::string &mongo_url, const X::string &mongo_db_name, const X::uint &default_alive, const int &thread_number) :
+#include <server/server.h>
+
+Server::Server(boost::asio::io_service &service, const string &url, const int &port, const string &mongo_url, const string &mongo_db_name, const uint &default_alive, const int &thread_number) :
     acceptor(service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(url), port)),
     socket(service),
     thread_number(thread_number),
@@ -9,7 +12,7 @@ Server::Server(boost::asio::io_service &service, const X::string &url, const int
 
 }
 
-void Server::start(const X::string &url, const int &port, const X::string &mongo_url, const X::string &mongo_db_name, const X::uint &default_alive, const int &thread_number) {
+void Server::start(const string &url, const int &port, const string &mongo_url, const string &mongo_db_name, const uint &default_alive, const int &thread_number) {
     cerr << "Listening: " << url << ":" << port << '\n';
     cerr << "mongo_url: " << mongo_url << ", db_name: " << mongo_db_name << '\n';
     cerr << "Thread number: " << thread_number << '\n';

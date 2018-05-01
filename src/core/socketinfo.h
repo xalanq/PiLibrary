@@ -1,11 +1,15 @@
-#ifndef SOCKETINFO_H
-#define SOCKETINFO_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
+#pragma once
+
 #include <ctime>
 #include <sstream>
-#include <boost/property_tree/ptree.hpp>
+
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <core/xcore.h>
 
 class SocketInfo {
 public:
@@ -52,5 +56,3 @@ private:
     char *buffer;
     size_t size;
 };
-
-#endif // SOCKETINFO_H

@@ -1,8 +1,10 @@
-#ifndef ADMINISTER_H
-#define ADMINISTER_H
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
 
-#include "xcore.h"
-#include "abstractuser.h"
+#pragma once
+
+#include <core/abstractuser.h>
+#include <core/xcore.h>
 
 class Administer : public AbstractUser
 {
@@ -22,5 +24,3 @@ public:
 private:
     uint authority;
 };
-
-#endif // ADMINISTER_H
