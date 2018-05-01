@@ -1,7 +1,8 @@
 project(testServer)
 
-add_executable(testServer1 test1.cpp)
-add_executable(testServer2 test2.cpp)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/test)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/test)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/test)
 
 SET(Boost_USE_STATIC_LIBS ON)
 
@@ -12,6 +13,9 @@ include_directories(${Boost_INCLUDE_DIR})
 
 message(STATUS "include dir ${Boost_INCLUDE_DIR}")
 message(STATUS "libraries dir ${Boost_LIBRARY_DIRS}")
+
+add_executable(testServer1 test1.cpp)
+add_executable(testServer2 test2.cpp)
 
 target_link_libraries(testServer1 PUBLIC ${Boost_LIBRARIES})
 target_link_libraries(testServer1 PUBLIC core)

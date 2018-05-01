@@ -1,8 +1,5 @@
 project(server)
 
-file(GLOB server_sources *.cpp)
-add_executable(server ${server_sources})
-
 SET(Boost_USE_STATIC_LIBS ON)
 
 find_package(Boost 1.56.0 REQUIRED)
@@ -10,6 +7,9 @@ find_package(libmongocxx-static 3.2.0 REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${Boost_INCLUDE_DIR})
+
+file(GLOB server_sources *.cpp)
+add_executable(server ${server_sources})
 
 target_link_libraries(server PUBLIC ${Boost_LIBRARIES})
 target_include_directories(server PUBLIC ${LIBMONGOCXX_STATIC_INCLUDE_DIRS})
