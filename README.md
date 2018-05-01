@@ -42,6 +42,10 @@ msbuild.exe /p:Configuration=Release ALL_BUILD.vcxproj
 
 ## How to run
 
-Don't tell me you don't know how to run.
+```
+cd ../bin
+```
+
+Now, don't tell me you don't know how to run.
 
 
