@@ -11,9 +11,11 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${Boost_INCLUDE_DIR})
 
 message(STATUS "include dir ${Boost_INCLUDE_DIR}")
-message(STATUS "libraries dir ${Boost_LIBRARIES}")
+message(STATUS "libraries dir ${Boost_LIBRARY_DIRS}")
 
 target_link_libraries(testServer1 PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(testServer1 PUBLIC core)
 add_dependencies(testServer1 server)
 target_link_libraries(testServer2 PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(testServer2 PUBLIC core)
 add_dependencies(testServer2 server)

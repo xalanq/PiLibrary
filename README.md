@@ -23,7 +23,7 @@ Then:
 make
 ```
 
-### Windows(with Visual Studio)
+### Windows (with Visual Studio)
 
 Use commands like that:
 
