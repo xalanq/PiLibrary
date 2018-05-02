@@ -20,6 +20,7 @@ void SocketInfo::setSize(const size_t &size) {
         if (buffer)
             delete[] buffer;
         buffer = new char[size];
+        this->size = size;
     }
 }
 

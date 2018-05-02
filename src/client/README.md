@@ -1,3 +1,3 @@
 # 客户端
 
-Qt + Boost.Asio + OpenSSL
+Qt5 + Boost.Asio + OpenSSL
