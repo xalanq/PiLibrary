@@ -20,9 +20,9 @@ public:
 
     SessionManager(const uint &defaulAlive);
     void removeExpired();
-    bool add(const ptr &p);
-    bool add(const Session &session);
-    bool add(const ull &token, const uint &userid, const std::time_t &alive, const uint &priority);
+    bool add(const ptr &p, bool force = false);
+    bool add(const Session &session, bool force = false);
+    bool add(const ull &token, const uint &userid, const std::time_t &alive, const uint &priority, bool force = false);
     void remove(const ptr &p);
     bool removeByToken(const ull &token);
     bool removeByUserid(const uint &userid);

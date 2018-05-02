@@ -19,22 +19,27 @@ void SessionManager::removeExpired() {
     }
 }
 
-bool SessionManager::add(const SessionManager::ptr &p) {
+bool SessionManager::add(const SessionManager::ptr &p, bool force) {
     removeExpired();
+    if (force) {
+        auto it = findUserid(p->getUserid());
+        if (it != nullptr)
+            remove(it);
+    }
     auto pr = dataToken.insert(p);
     dataAlive.insert(p);
     dataUserid.insert(p);
     return pr.second;
 }
 
-bool SessionManager::add(const Session &session) {
+bool SessionManager::add(const Session &session, bool force) {
     auto p = std::make_shared<Session> (session);
-    return add(p);
+    return add(p, force);
 }
 
-bool SessionManager::add(const ull &token, const uint &userid, const std::time_t &alive, const uint &priority) {
+bool SessionManager::add(const ull &token, const uint &userid, const std::time_t &alive, const uint &priority, bool force) {
     auto p = std::make_shared<Session> (token, userid, alive, priority);
-    return add(p);
+    return add(p, force);
 }
 
 void SessionManager::remove(const SessionManager::ptr &p) {

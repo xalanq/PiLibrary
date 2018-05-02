@@ -155,12 +155,12 @@ void SocketWrapper::doLogin(const ptree &pt, const ull &token) {
             auto userid = p.get<uint>("userid", 0);
             auto priority = p.get<uint>("priority", 0);
             _from(doLogin) << "token: " << tk << ", userid: " << userid << '\n';
-            if (sessionManager.add(tk, userid, Session::getNowTime() + sessionManager.getDefaultAlive(), priority)) {
+            if (sessionManager.add(tk, userid, Session::getNowTime() + sessionManager.getDefaultAlive(), priority, true)) {
                 _from(doLogin) << "login successfully\n";
                 tr = std::move(p);
             } else {
-                _from(doLogin) << "failed to add a new session, already exist\n";
-                ec = X::AlreadyLogin;
+                _from(doLogin) << "failed to login\n";
+                ec = X::LoginFailed;
             }
         }
     }
