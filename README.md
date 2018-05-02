@@ -14,7 +14,7 @@ A very weak(pi) library system. (一个非常菜(皮)的图书管理系统)
 
 ### Linux
 
-Use commands like that:
+Use commands like these:
 
 ```
 cd build
@@ -31,7 +31,7 @@ make
 
 ### Windows (with Visual Studio)
 
-Use commands like that:
+Use commands like these:
 
 ```
 cd build
