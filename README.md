@@ -15,7 +15,7 @@ cd build
 cmake -DBOOST_ROOT=/usr/lib/boost -DCMAKE_PREFIX_PATH=/usr/lib/mongo-cxx-driver -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-Ensure you have modified the path like `-DBOOST_ROOT=[path]` to your own path.
+Ensure you have modified the path like `-DBOOST_ROOT=[path]` into your own path.
 
 Then:
 
@@ -32,7 +32,7 @@ cd build
 cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT=E:\Boost\boost_1_67_0 -DCMAKE_PREFIX_PATH=E:\mongo\mongo-cxx-driver -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-Ensure you have modified the path like `-DBOOST_ROOT=[path]` to your own path.
+Ensure you have modified the path like `-DBOOST_ROOT=[path]` into your own path.
 
 Then open `PiLibrary.sln` with VS, and build solution, or use following commands:
 
