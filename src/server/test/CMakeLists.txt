@@ -5,14 +5,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/test)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/test)
 
 SET(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.56.0 REQUIRED)
+find_package(Boost 1.56.0 COMPONENTS regex date_time system thread)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${Boost_INCLUDE_DIR})
 
 message(STATUS "include dir ${Boost_INCLUDE_DIR}")
-message(STATUS "libraries dir ${Boost_LIBRARY_DIRS}")
+message(STATUS "libraries ${Boost_LIBRARIES}")
 
 add_executable(testServer1 test1.cpp)
 add_executable(testServer2 test2.cpp)

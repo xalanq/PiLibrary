@@ -1,8 +1,10 @@
 project(server)
 
 SET(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.56.0 REQUIRED)
+find_package(Boost 1.56.0 COMPONENTS regex date_time system thread)
 find_package(libmongocxx-static 3.2.0 REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
