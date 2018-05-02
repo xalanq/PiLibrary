@@ -40,7 +40,7 @@ cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT=E:\Boost\boost_1_67_0 -DCMAK
 
 Ensure you have modified the path like `-DBOOST_ROOT=[path]` into your own path.
 
-Then open `PiLibrary.sln` with VS, and build solution, or use following commands:
+Then open `PiLibrary.sln` with VS, and build solution. Or just use the following command:
 
 ```
 msbuild.exe /p:Configuration=Release ALL_BUILD.vcxproj
