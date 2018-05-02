@@ -6,6 +6,6 @@
 
 Client::Client(QWidget *parent) : 
     QMainWindow(parent) {
-    DialogLogin dialog(io_service);
+    DialogLogin dialog(this);
     dialog.exec();
 }

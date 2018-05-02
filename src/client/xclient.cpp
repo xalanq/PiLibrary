@@ -2,7 +2,6 @@
 // License: LGPL v3.0
 
 #include <client/xclient.h>
-
 namespace X {
     const string &APP_NAME = "PiLibrary";
     const string &VERSION = "1.0.0";

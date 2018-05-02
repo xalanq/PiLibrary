@@ -2,6 +2,7 @@
 // License: LGPL v3.0
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/thread.hpp>
 
 #include <QApplication>
 #include <QCryptographicHash>
@@ -11,8 +12,48 @@
 #include <client/dialoglogin.h>
 #include <core/socketinfo.h>
 
-DialogLogin::DialogLogin(boost::asio::io_service &io_service, QWidget *parent) :
-    io_service(io_service),
+
+LoginThread::LoginThread(const QString &username, const QString &password, QObject *parent) :
+    QThread(parent),
+    io_service(),
+    ep(boost::asio::ip::address::from_string(
+          QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
+       QSettings().value("Network/server_port", 2333).toInt()),
+    username(username),
+    password(password) {
+
+}
+
+void LoginThread::run() {
+    X::ull token;
+    boost::property_tree::ptree pt;
+    X::ActionCode ac;
+    X::ErrorCode ec;
+
+    pt.put("username", username.toStdString());
+    pt.put("password", password.toStdString()); 
+
+    try {
+        boost::asio::ip::tcp::socket socket(io_service);
+        socket.connect(ep);
+        X::tcp_sync_write(socket, 0, X::Login, pt);
+        pt = boost::property_tree::ptree();
+        X::tcp_sync_read(socket, token, ac, pt);
+        socket.close();
+        ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
+    } catch (std::exception &e) {
+        token = 0;
+        ec = X::LoginFailed;
+    }
+
+    if (ac != X::LoginFeedback) {
+        token = 0;
+        ec = X::LoginFailed;
+    }
+    emit done(token, int(ec));
+}
+
+DialogLogin::DialogLogin(QWidget *parent) :
     QDialog(parent) {
 
     labelMessage = new QLabel(this);
@@ -27,74 +68,30 @@ DialogLogin::DialogLogin(boost::asio::io_service &io_service, QWidget *parent) :
     loadSetting();
 }
 
-void DialogLogin::slotLogin() {
-    labelMessage->setText(tr("Login..."));
+void DialogLogin::slotLoginBegin() {
     labelMessage->show();
-
+    labelMessage->setText(tr("Connecting..."));
     QString username = cbboxUsername->currentText();
     QString password = QCryptographicHash::hash(QString::fromStdString(X::saltBegin + editPassword->text().toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex();
 
-    boost::asio::ip::tcp::endpoint ep(
-        boost::asio::ip::address::from_string(
-            QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
-        QSettings().value("Network/server_port", 2333).toInt());
-    boost::asio::ip::tcp::socket socket(io_service);
-    boost::property_tree::ptree pt;
-    SocketInfo info;
+    LoginThread *thread = new LoginThread(std::move(username), std::move(password), this);
+    connect(thread, &LoginThread::done, this, &DialogLogin::slotLoginEnd);
+    connect(thread, &LoginThread::finished, thread, &QObject::deleteLater);
+    thread->start();
+}
 
-    socket.connect(ep);
-
-    pt.put("username", username.toStdString());
-    pt.put("password", password.toStdString());
-
-    auto str = SocketInfo::encodePtree(pt);
-
-    auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
-
-    info.setSize(size);
-    info.encode(0, static_cast<X::uint> (str.size()), X::Login, str);
-
-    boost::asio::write(
-        socket,
-        boost::asio::buffer(info.getBuffer(), size)
-    );
-
-    boost::asio::read(
-        socket,
-        boost::asio::buffer(info.getBuffer(), 1),
-        boost::asio::transfer_exactly(1)
-    );
-    boost::asio::read(
-        socket,
-        boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
-        boost::asio::transfer_exactly(SocketInfo::HEADER_SIZE)
-    );
-    auto length = info.decodeHeaderLength();
-    auto token = info.decodeHeaderToken();
-
-    info.setSize(length);
-    boost::asio::read(
-        socket,
-        boost::asio::buffer(info.getBuffer(), length),
-        boost::asio::transfer_exactly(length)
-    );
-
-    pt = boost::property_tree::ptree();
-    info.decodeBody(length, pt);
-    str = info.encodePtree(pt, true);
-
-    auto ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
-    if (ec == X::NoError) {
-        emit signalLoginToken(token);
+void DialogLogin::slotLoginEnd(const unsigned long long &token, const int &ec) {
+    if (ec == int(X::NoError)) {
+        emit done(token);
         close();
-    } {
+    } else {
         QString s;
-        if (ec == X::NoSuchUser)
+        if (ec == int(X::NoSuchUser))
             s = tr("Wrong username or password");
-        else if (ec == X::LoginFailed)
+        else if (ec == int(X::LoginFailed))
             s = tr("Login failed");
         else
-            s = QString::fromStdString(X::what(ec));
+            s = QString::fromStdString(X::what(static_cast<X::ActionCode> (ec)));
         labelMessage->setText(s);
     }
 }
@@ -148,7 +145,7 @@ void DialogLogin::setConnection() {
         btns->button(QDialogButtonBox::Ok),
         SIGNAL(clicked()),
         this,
-        SLOT(slotLogin())
+        SLOT(slotLoginBegin())
     );
 }
 

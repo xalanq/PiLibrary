@@ -6,6 +6,9 @@
 #include <iostream>
 #include <string>
 
+#include <boost/asio.hpp>
+#include <boost/property_tree/ptree.hpp>
+
 using std::cerr;
 
 namespace X {
@@ -56,4 +59,7 @@ namespace X {
 
     extern string what(const ErrorCode &ec);
     extern string what(const ActionCode &ac);
+
+    extern void tcp_sync_read(boost::asio::ip::tcp::socket &socket, ull &token, ActionCode &ac, boost::property_tree::ptree &pt);
+    extern void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const ull &token, const ActionCode &ac, const boost::property_tree::ptree &pt);
 }

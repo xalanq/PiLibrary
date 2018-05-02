@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
-
 #include <QtWidgets/QMainWindow>
 
 class Client : public QMainWindow {
@@ -13,6 +11,4 @@ class Client : public QMainWindow {
 public:
     Client(QWidget *parent = Q_NULLPTR);
 
-private:
-    boost::asio::io_service io_service;
 };

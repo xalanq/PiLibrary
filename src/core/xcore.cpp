@@ -1,6 +1,9 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <boost/property_tree/json_parser.hpp>
+
+#include <core/socketinfo.h>
 #include <core/xcore.h>
 
 namespace X {
@@ -75,4 +78,48 @@ namespace X {
         }
     }
 
+    void tcp_sync_read(boost::asio::ip::tcp::socket &socket, ull &token, ActionCode &ac, boost::property_tree::ptree &pt) {
+        SocketInfo info;
+
+        info.setSize(SocketInfo::HEADER_SIZE);
+
+        boost::asio::read(
+            socket,
+            boost::asio::buffer(info.getBuffer(), 1),
+            boost::asio::transfer_exactly(1)
+        );
+        boost::asio::read(
+            socket,
+            boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
+            boost::asio::transfer_exactly(SocketInfo::HEADER_SIZE)
+        );
+
+        token = info.decodeHeaderToken();
+        auto length = info.decodeHeaderLength();
+        ac = info.decodeHeaderActionCode();
+
+        info.setSize(length);
+
+        boost::asio::read(
+            socket,
+            boost::asio::buffer(info.getBuffer(), length),
+            boost::asio::transfer_exactly(length)
+        );
+
+        info.decodeBody(length, pt);
+    }
+
+    void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const ull &token, const ActionCode &ac, const boost::property_tree::ptree &pt) {
+        SocketInfo info;
+        auto str = SocketInfo::encodePtree(pt);
+        auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
+
+        info.setSize(size);
+        info.encode(0, static_cast<uint> (str.size()), ac, str);
+
+        boost::asio::write(
+            socket,
+            boost::asio::buffer(info.getBuffer(), size)
+        );
+    }
 }
