@@ -4,7 +4,13 @@ A very weak(pi) library system. (一个非常菜(皮)的图书管理系统)
 
 ## How to build
 
-**Notice**: we just provide the way to build it with **static** libraries(mongocxx driver), ensure you have already built these static libraries. If you want to build a **dynamic** version, modify `src/server/CMakeLists.txt` yourself.
+**Notice**: We just provide the way to build it with **static** libraries(mongocxx driver), ensure you have already built these static libraries. If you want to build a **dynamic** version, modify `CMakeLists.txt`, `src/core/CMakeLists.txt`, `src/server/CMakeLists.txt`, `src/server/test/CMakeLists.txt` yourself.
+
+**Notice**: You should install `Boost` and `MongoDB` firstly. You can check these following links to install them:
+
+* [Boost Downloads](https://www.boost.org/users/download/)
+* [MongoDB Downloads](https://www.mongodb.com/download-center)
+* [mongocxx driver](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/)
 
 ### Linux
 
