@@ -1,24 +1,35 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <boost/thread.hpp>
+
 #include <server/server.h>
 
-Server::Server(boost::asio::io_service &service, const string &url, const int &port, const string &mongo_url, const string &mongo_db_name, const uint &default_alive, const int &thread_number) :
-    acceptor(service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(url), port)),
-    socket(service),
-    thread_number(thread_number),
-    userManager(mongo_url.c_str(), mongo_db_name.c_str()),
-    sessionManager(default_alive) {
-
+Server::Server(boost::asio::io_service &service, const ptree &config) :
+    acceptor(service, boost::asio::ip::tcp::endpoint(
+        boost::asio::ip::address::from_string(config.get<string> ("server_url")), 
+        config.get<int> ("server_port"))),
+    socket(
+        service),
+    thread_number(
+        config.get<int> ("thread_number")),
+    userManager(
+        config.get<string> ("mongodb_url").c_str(), 
+        config.get<string> ("mongodb_db_name").c_str()),
+    sessionManager(
+        config.get<int> ("default_alive_ms")) {
 }
 
-void Server::start(const string &url, const int &port, const string &mongo_url, const string &mongo_db_name, const uint &default_alive, const int &thread_number) {
-    cerr << "Listening: " << url << ":" << port << '\n';
-    cerr << "mongo_url: " << mongo_url << ", db_name: " << mongo_db_name << '\n';
+void Server::start(const ptree &config) {
+    int thread_number = config.get<int>("thread_number");
+
+    cerr << "Listening: " << config.get<string> ("server_url") << ":" << config.get<int> ("server_port") << '\n';
+    cerr << "mongo_url: " << config.get<string>("mongodb_url") << '\n';
+    cerr << "mongo_db_name: " << config.get<string>("mongodb_db_name") << '\n';
     cerr << "Thread number: " << thread_number << '\n';
 
     boost::asio::io_service service;
-    Server server(service, url, port, mongo_url, mongo_db_name, default_alive, thread_number);
+    Server server(service, config);
     server.start();
 
     for (int i = 0; i < thread_number - 1; ++i) {

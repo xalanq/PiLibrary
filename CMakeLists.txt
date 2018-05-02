@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 message(STATUS "========================================")
 message(STATUS "========================================")
-message(STATUS "Building PiLibrary hahahah. PI!pi!Pi!pI!")
+message(STATUS "Building PiLibrary v1.0.0   PI!pi!Pi!pI!")
 message(STATUS "Author: xalanq, chang-ran")
 message(STATUS "License: LGPL v3.0")
 message(STATUS "========================================")

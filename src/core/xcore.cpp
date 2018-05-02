@@ -4,10 +4,10 @@
 #include <core/xcore.h>
 
 namespace X {
-    const string author[] = {"xalanq", "chang-ran"};
-    const string email[] = {"xalanq@gmail.com", "chang-r17@mails.tsinghua.edu.cn"};
-    const string &website = "blog.xalanq.com";
-    const string &github = "github.com/xalanq/PiLibrary";
+    const string AUTHOR[] = {"xalanq", "chang-ran"};
+    const string EMAIL[] = {"xalanq@gmail.com", "chang-r17@mails.tsinghua.edu.cn"};
+    const string &WEBSITE = "blog.xalanq.com";
+    const string &GITHUB = "github.com/xalanq/PiLibrary";
 
     string what(const ErrorCode &ec) {
         switch (ec) {

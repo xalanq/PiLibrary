@@ -6,7 +6,7 @@
 #include <memory>
 
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 #include <server/sessionmanager.h>
 #include <server/socketwrapper.h>
@@ -15,14 +15,15 @@
 
 class Server {
 public:
+    typedef boost::property_tree::ptree ptree;
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
     typedef X::ull ull;
     typedef X::uint uint;
     typedef X::string string;
 
-    Server(boost::asio::io_service &service, const string &url, const int &port, const string &mongo_url, const string &mongo_db_name, const uint &default_alive, const int &thread_number);
-    static void start(const string &url, const int &port, const string &mongo_url, const string &mongo_db_name, const uint &default_alive, const int &thread_number);
+    Server(boost::asio::io_service &service, const ptree &config);
+    static void start(const ptree &config);
 
 private:
     void start();

@@ -1,6 +1,8 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <boost/property_tree/json_parser.hpp>
+
 #include <server/socketwrapper.h>
 
 #define _from(func) cerr << "(" << #func << ") from " << socket.remote_endpoint().address() << " : " 

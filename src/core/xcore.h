@@ -9,13 +9,14 @@
 using std::cerr;
 
 namespace X {
-    using std::string;
     typedef unsigned int uint;
     typedef unsigned long long ull;
-    extern const string author[];
-    extern const string email[];
-    extern const string &website;
-    extern const string &github;
+    typedef std::string string;
+
+    extern const string AUTHOR[];
+    extern const string EMAIL[];
+    extern const string &WEBSITE;
+    extern const string &GITHUB;
 
     enum ErrorCode {
         NoError = 0,

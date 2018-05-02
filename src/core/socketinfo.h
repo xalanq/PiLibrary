@@ -3,21 +3,21 @@
 
 #pragma once
 
-#include <ctime>
-#include <sstream>
-
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+
+#include <ctime>
+#include <sstream>
 
 #include <core/xcore.h>
 
 class SocketInfo {
 public:
+    typedef boost::property_tree::ptree ptree;
     typedef X::ull ull;
     typedef X::uint uint;
     typedef X::string string;
     typedef X::ActionCode ActionCode;
-    typedef boost::property_tree::ptree ptree;
 
     enum {
         HEADER_SIZE = sizeof(ull) + sizeof(uint) + sizeof(ActionCode), 
