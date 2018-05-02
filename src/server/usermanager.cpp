@@ -3,9 +3,10 @@
 
 #include <server/usermanager.h>
 
-UserManager::UserManager(const char *mongo_url, const char *mongo_db_name) :
+UserManager::UserManager(const string &mongo_url, const string &mongo_db_name) :
     pool(mongo::uri(mongo_url)),
-    db_name(mongo_db_name) {
+    _db_name(mongo_db_name),
+    db_name(_db_name.c_str()) {
 
 }
 

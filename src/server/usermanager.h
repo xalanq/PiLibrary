@@ -51,7 +51,7 @@ public:
     typedef X::ErrorCode ErrorCode;
     typedef boost::property_tree::ptree ptree;
 
-    UserManager(const char *mongo_url, const char *mongo_db_name);
+    UserManager(const string &mongo_url, const string &mongo_db_name);
     ~UserManager();
 
     bool isUser(const uint &userid);
@@ -69,5 +69,6 @@ public:
 
 private:
     mongo::pool pool;
+    string _db_name;
     const char *db_name;
 };

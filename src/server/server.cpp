@@ -14,8 +14,8 @@ Server::Server(boost::asio::io_service &service, const ptree &config) :
     thread_number(
         config.get<int> ("thread_number")),
     userManager(
-        config.get<string> ("mongodb_url").c_str(), 
-        config.get<string> ("mongodb_db_name").c_str()),
+        config.get<string> ("mongodb_url"), 
+        config.get<string> ("mongodb_db_name")),
     sessionManager(
         config.get<int> ("default_alive_ms")) {
 }
