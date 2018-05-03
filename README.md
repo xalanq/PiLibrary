@@ -11,6 +11,7 @@ A very weak(pi) library system. (一个非常菜(皮)的图书管理系统)
 * [Boost Downloads](https://www.boost.org/users/download/)
 * [MongoDB Downloads](https://www.mongodb.com/download-center)
 * [mongocxx driver](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/)
+* [My tutorial](http://blog.xalanq.com/win10_vs2017_qt_boost_mongodb_setting/)
 
 ### Linux
 
