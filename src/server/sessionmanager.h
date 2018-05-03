@@ -8,6 +8,9 @@
 #include <random>
 #include <set>
 
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
+
 #include <server/session.h>
 #include <server/xserver.h>
 
@@ -23,7 +26,7 @@ public:
     bool add(const ptr &p, bool force = false);
     bool add(const Session &session, bool force = false);
     bool add(const ull &token, const uint &userid, const std::time_t &alive, const uint &priority, bool force = false);
-    void remove(const ptr &p);
+    bool remove(const ptr &p);
     bool removeByToken(const ull &token);
     bool removeByUserid(const uint &userid);
     bool setAliveTime(const ull &token, const std::time_t &alive);
@@ -55,4 +58,5 @@ private:
     std::uniform_int_distribution<ull> distr;
     std::mt19937_64 eng;
     uint defaultAlive;
+    boost::shared_mutex _access;
 };

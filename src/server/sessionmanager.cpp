@@ -10,6 +10,8 @@ SessionManager::SessionManager(const uint &defaulAlive) :
 }
 
 void SessionManager::removeExpired() {
+    boost::upgrade_lock<boost::shared_mutex> _lock(_access);
+    boost::upgrade_to_unique_lock<boost::shared_mutex> _uniqueLock(_lock);
     for (; dataAlive.size(); ) {
         auto p = *dataAlive.begin();
         if (p->getAlive() < Session::getNowTime())
@@ -26,6 +28,8 @@ bool SessionManager::add(const SessionManager::ptr &p, bool force) {
         if (it != nullptr)
             remove(it);
     }
+    boost::upgrade_lock<boost::shared_mutex> _lock(_access);
+    boost::upgrade_to_unique_lock<boost::shared_mutex> _uniqueLock(_lock);
     auto pr = dataToken.insert(p);
     dataAlive.insert(p);
     dataUserid.insert(p);
@@ -42,43 +46,50 @@ bool SessionManager::add(const ull &token, const uint &userid, const std::time_t
     return add(p, force);
 }
 
-void SessionManager::remove(const SessionManager::ptr &p) {
-    dataAlive.erase(p);
-    dataToken.erase(p);
-    dataUserid.erase(p);
+bool SessionManager::remove(const SessionManager::ptr &p) {
+    boost::upgrade_lock<boost::shared_mutex> _lock(_access);
+    boost::upgrade_to_unique_lock<boost::shared_mutex> _uniqueLock(_lock);
+    try {
+        dataAlive.erase(p);
+        dataToken.erase(p);
+        dataUserid.erase(p);
+    } catch (std::exception &e) {
+        cerr << "(remove)" << e.what() << '\n';
+        return 0;
+    }
+    return 1;
 }
 
 bool SessionManager::removeByToken(const ull &token) {
     auto p = findToken(token);
     if (p == nullptr)
         return 0;
-    remove(p);
-    return 1;
+    return remove(p);
 }
 
 bool SessionManager::removeByUserid(const uint &userid) {
     auto p = findUserid(userid);
     if (p == nullptr)
         return 0;
-    remove(p);
-    return 1;
+    return remove(p);
 }
 
 bool SessionManager::setAliveTime(const ull &token, const time_t &alive) {
     auto p = findToken(token);
     if (p == nullptr)
         return 0;
-    remove(p);
+    if (!remove(p))
+        return 0;
     p->setAlive(alive);
     if (alive < Session::getNowTime())
         return 0;
-    add(p);
-    return 1;
+    return add(p);
 }
 
 SessionManager::ptr SessionManager::findToken(const ull &token) {
     auto p = std::make_shared<Session> (token);
     removeExpired();
+    boost::shared_lock<boost::shared_mutex> _lock(_access);
     auto it = dataToken.find(p);
     if (it == dataToken.end())
         return nullptr;
@@ -88,6 +99,7 @@ SessionManager::ptr SessionManager::findToken(const ull &token) {
 SessionManager::ptr SessionManager::findUserid(const uint &userid) {
     auto p = std::make_shared<Session> (0, userid);
     removeExpired();
+    boost::shared_lock<boost::shared_mutex> _lock(_access);
     auto it = dataUserid.find(p);
     if (it == dataUserid.end())
         return nullptr;
