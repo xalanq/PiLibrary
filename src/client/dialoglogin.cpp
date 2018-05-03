@@ -2,14 +2,16 @@
 // License: LGPL v3.0
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/thread.hpp>
 
 #include <QApplication>
 #include <QCryptographicHash>
 #include <QDebug>
+#include <QHBoxLayout>
 #include <QSettings>
+#include <QVBoxLayout>
 
 #include <client/dialoglogin.h>
+#include <client/dialogsignup.h>
 #include <core/socketinfo.h>
 
 
@@ -50,17 +52,19 @@ void LoginThread::run() {
         token = 0;
         ec = X::LoginFailed;
     }
+
     emit done(token, int(ec));
 }
 
 DialogLogin::DialogLogin(QWidget *parent) :
     QDialog(parent) {
 
-    labelMessage = new QLabel(this);
-
     cbboxUsername = new QComboBox(this);
     editPassword = new QLineEdit(this);
 
+    labelMessage = new QLabel(this);
+
+    btnSignUp = new QPushButton(this);
     btns = new QDialogButtonBox(this);
 
     setUI();
@@ -89,38 +93,34 @@ void DialogLogin::slotLoginEnd(const unsigned long long &token, const int &ec) {
         if (ec == int(X::NoSuchUser))
             s = tr("Wrong username or password");
         else if (ec == int(X::LoginFailed))
-            s = tr("Login failed");
+            s = tr("Login failed, check network");
         else
             s = QString::fromStdString(X::what(static_cast<X::ActionCode> (ec)));
         labelMessage->setText(s);
     }
 }
 
+void DialogLogin::slotRegister() {
+    DialogSignUp dialog(this);
+    dialog.exec();
+}
+
 void DialogLogin::setUI() {
     setWindowTitle(QString::fromStdString(X::APP_NAME));
-    /*
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    setFixedSize(300, 170);
-    setMinimumWidth(300);
-    setMaximumWidth(300);
-    setMinimumHeight(170);
-    setMaximumHeight(170);
-    */
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
     labelMessage->hide();
 
     cbboxUsername->setEditable(true);
-    cbboxUsername->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     cbboxUsername->lineEdit()->setPlaceholderText(tr("Username"));
 
     editPassword->setEchoMode(QLineEdit::Password);
-    editPassword->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     editPassword->setPlaceholderText(tr("Password"));
 
-    btns->addButton(QDialogButtonBox::Ok)->setText(tr("&Login"));
-    btns->addButton(QDialogButtonBox::Cancel)->setText(tr("&Quit"));
+    btnSignUp->setText(tr("&Sign up"));
+    btns->addButton(QDialogButtonBox::Ok)->setText(tr("&Log in"));
+    btns->addButton(btnSignUp, QDialogButtonBox::ActionRole);
     btns->setCenterButtons(true);
-    btns->button(QDialogButtonBox::Ok)->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    btns->button(QDialogButtonBox::Cancel)->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     QVBoxLayout *layout = new QVBoxLayout;
 
@@ -135,10 +135,10 @@ void DialogLogin::setUI() {
 
 void DialogLogin::setConnection() {
     connect(
-        btns->button(QDialogButtonBox::Cancel),
+        btnSignUp,
         SIGNAL(clicked()),
         this,
-        SLOT(close())
+        SLOT(slotRegister())
     );
 
     connect(

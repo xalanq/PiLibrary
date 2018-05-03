@@ -9,13 +9,11 @@
 #include <QComboBox>
 #include <QDialog>
 #include <QDialogButtonBox>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QObject>
 #include <QPushButton>
 #include <QThread>
-#include <QVBoxLayout>
 
 #include <client/xclient.h>
 
@@ -49,6 +47,7 @@ signals:
 public slots:
     void slotLoginBegin();
     void slotLoginEnd(const unsigned long long &token, const int &ec);
+    void slotRegister();
 
 private:
     void setUI();
@@ -56,11 +55,12 @@ private:
     void loadSetting();
 
 private:
-    QLabel *labelMessage;
-
     QComboBox *cbboxUsername;
     QLineEdit *editPassword;
 
+    QLabel *labelMessage;
+    
+    QPushButton *btnSignUp;
     QDialogButtonBox *btns;
 };
 
