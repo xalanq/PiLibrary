@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <regex>
-
 #include <boost/property_tree/ptree.hpp>
 
 #include <bsoncxx/builder/basic/document.hpp>

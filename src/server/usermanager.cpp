@@ -1,6 +1,8 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <regex>
+
 #include <server/usermanager.h>
 
 UserManager::UserManager(const string &mongo_url, const string &mongo_db_name) :
@@ -73,16 +75,14 @@ UserManager::ptree UserManager::loginUser(const ptree &pt) {
 }
 
 UserManager::ErrorCode UserManager::checkRegister(const string &username, const string &nickname, const string &password, const string &email) {
-    static const std::regex patternUsername("[\\w\\.\\-]+");
-    static const std::regex patternEmail("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
-    if (username.size() > 100 || !std::regex_match(username, patternUsername))
+    if (username.size() < 1 || username.size() > 100 || !std::regex_match(username, X::patternUsername))
         return X::InvalidUsername;
-    if (password.size() < 6 || password.size() > 100)
-        return X::InvalidPassword;
-    if (email.size() > 100 || !std::regex_match(email, patternEmail))
-        return X::InvalidEmail;
     if (nickname.size() < 1 || nickname.size() > 100)
         return X::InvalidNickname;
+    if (password.size() < 6 || password.size() > 100)
+        return X::InvalidPassword;
+    if (email.size() < 5 || email.size() > 100 || !std::regex_match(email, X::patternEmail))
+        return X::InvalidEmail;
     return X::NoError;
 }
 

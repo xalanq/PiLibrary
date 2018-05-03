@@ -11,6 +11,8 @@ namespace X {
     const string EMAIL[] = {"xalanq@gmail.com", "chang-r17@mails.tsinghua.edu.cn"};
     const string &WEBSITE = "blog.xalanq.com";
     const string &GITHUB = "github.com/xalanq/PiLibrary";
+    const std::regex patternUsername("[\\w\\.\\-]+");
+    const std::regex patternEmail("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
 
     string what(const ErrorCode &ec) {
         switch (ec) {

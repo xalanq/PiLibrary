@@ -1,6 +1,9 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <ctime>
+#include <exception>
+
 #include <boost/property_tree/json_parser.hpp>
 
 #include <server/socketwrapper.h>
@@ -119,7 +122,7 @@ void SocketWrapper::write(const ull &token, const ptree &pt, const ActionCode &a
     string str = SocketInfo::encodePtree(pt);
     auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
     info.setSize(size);
-    info.encode(token, static_cast<uint>(str.size()), X::LoginFeedback, str);
+    info.encode(token, static_cast<uint>(str.size()), ac, str);
     _to(write) << "sending feedback, size = " << size << '\n';
 
     boost::asio::async_write(

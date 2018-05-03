@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+#include <regex>
 
 #include <boost/asio.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -20,6 +21,8 @@ namespace X {
     extern const string EMAIL[];
     extern const string &WEBSITE;
     extern const string &GITHUB;
+    extern const std::regex patternUsername;
+    extern const std::regex patternEmail;
 
     enum ErrorCode {
         NoError = 0,
