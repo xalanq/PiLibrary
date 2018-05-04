@@ -65,6 +65,16 @@ public:
     ptree getBookCore(const ptree &pt);
     ErrorCode setBookCore(const ptree &pt);
 
+    ptree getLoginRecord(const uint &userid, const uint &number, const uint &start);
+    ptree getBorrowRecord(const uint &userid, const uint &number, const uint &start);
+    ptree getBrowseRecord(const uint &userid, const uint &number, const uint &start);
+
+
+    // not open for user, so ensure the userid exists in the below methods
+    void recordLogin(const ptree &pt);
+    void recordBorrow(const ptree &pt);
+    void recordBrowse(const ptree &pt);
+
 private:
     mongo::pool pool;
     string _db_name;

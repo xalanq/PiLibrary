@@ -225,3 +225,125 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
     }
     return ec;
 }
+
+UserManager::ptree UserManager::getLoginRecord(const uint &userid, const uint &number, const uint &start) {
+    using namespace mongo;
+    auto client = pool.acquire();
+    mongocxx::options::find opt;
+    opt.projection(
+        make_document(kvp("loginRecord", 
+            make_document(kvp("$slice", "-" + std::to_string(start + number))))));
+    auto doc = (*client)[db_name]["user"].find_one(
+        make_document(
+            kvp("userid", int(userid))
+        ),
+        opt
+    );
+    ptree p;
+    if (doc)
+        SocketInfo::decodePtree(bsoncxx::to_json(doc->view()["loginRecord"].get_array().value, bsoncxx::ExtendedJsonMode::k_legacy), p);
+    return std::move(p);
+}
+
+UserManager::ptree UserManager::getBorrowRecord(const uint &userid, const uint &number, const uint &start) {
+    using namespace mongo;
+    auto client = pool.acquire();
+    mongocxx::options::find opt;
+    opt.projection(
+        make_document(kvp("borrowRecord", 
+            make_document(kvp("$slice", "-" + std::to_string(start + number))))));
+    auto doc = (*client)[db_name]["user"].find_one(
+        make_document(
+            kvp("userid", int(userid))
+        ),
+        opt
+    );
+    ptree p;
+    if (doc)
+        SocketInfo::decodePtree(bsoncxx::to_json(doc->view()["borrowRecord"].get_array().value, bsoncxx::ExtendedJsonMode::k_legacy), p);
+    return std::move(p);
+}
+
+UserManager::ptree UserManager::getBrowseRecord(const uint &userid, const uint &number, const uint &start) {
+    using namespace mongo;
+    auto client = pool.acquire();
+    mongocxx::options::find opt;
+    opt.projection(
+        make_document(kvp("browseRecord", 
+            make_document(kvp("$slice", "-" + std::to_string(start + number))))));
+    auto doc = (*client)[db_name]["user"].find_one(
+        make_document(
+            kvp("userid", int(userid))
+        ),
+        opt
+    );
+    ptree p;
+    if (doc)
+        SocketInfo::decodePtree(bsoncxx::to_json(doc->view()["browseRecord"].get_array().value, bsoncxx::ExtendedJsonMode::k_legacy), p);
+    return std::move(p);
+}
+
+// need: userid, ip, time, ensure the user is exist
+void UserManager::recordLogin(const ptree &pt) {
+    auto userid = pt.get<uint>("userid");
+    auto ip = pt.get<string>("ip");
+    auto time = long long(pt.get<std::time_t>("time"));
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    (*client)[db_name]["user"].update_one(
+        make_document(kvp("userid", int(userid))),
+        make_document(kvp("$push", 
+            make_document(kvp("loginRecord", 
+                make_document(
+                    kvp("ip", bsoncxx::types::b_utf8(ip)), 
+                    kvp("time", time)
+                ))
+            ))
+        )
+    );
+}
+
+// need: userid, bookid, beginTime, endTime
+void UserManager::recordBorrow(const ptree &pt) {
+    auto userid = pt.get<uint>("userid");
+    auto bookid = pt.get<uint>("bookid");
+    auto beginTime = long long(pt.get<std::time_t>("beginTime"));
+    auto endTime = long long(pt.get<std::time_t>("endTime"));
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    (*client)[db_name]["user"].update_one(
+        make_document(kvp("userid", int(userid))),
+        make_document(kvp("$push", 
+            make_document(kvp("borrowRecord", 
+                make_document(
+                    kvp("bookid", int(bookid)), 
+                    kvp("beginTime", beginTime),
+                    kvp("endTime", endTime)
+                ))
+            ))
+        )
+    );
+}
+
+// need: userid, bookid, time
+void UserManager::recordBrowse(const ptree &pt) {
+    auto userid = pt.get<uint>("userid");
+    auto bookid = pt.get<uint>("bookid");
+    auto time = long long(pt.get<std::time_t>("time"));
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    (*client)[db_name]["user"].update_one(
+        make_document(kvp("userid", int(userid))),
+        make_document(kvp("$push", 
+            make_document(kvp("browseRecord", 
+                make_document(
+                    kvp("bookid", int(bookid)), 
+                    kvp("time", time)
+                ))
+            ))
+        )
+    );
+}
