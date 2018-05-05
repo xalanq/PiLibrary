@@ -104,21 +104,21 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
                 return;
             }
             if (ac == X::Login)
-                doLogin(pt, token);
+                doLogin(std::move(pt), token);
             else if (ac == X::Register)
-                doRegister(pt, token);
+                doRegister(std::move(pt), token);
             else if (ac == X::Logout)
-                doLogout(pt, token);
+                doLogout(std::move(pt), token);
             else if (ac == X::GetBook)
-                doGetBook(pt, token);
+                doGetBook(std::move(pt), token);
             else if (ac == X::SetBook)
-                doSetBook(pt, token);
+                doSetBook(std::move(pt), token);
             else if (ac == X::GetLoginRecord)
-                doGetLoginReccord(pt, token);
+                doGetLoginReccord(std::move(pt), token);
             else if (ac == X::GetBorrowRecord)
-                doGetBorrowReccord(pt, token);
+                doGetBorrowReccord(std::move(pt), token);
             else if (ac == X::GetBrowseRecord)
-                doGetBrowseReccord(pt, token);
+                doGetBrowseReccord(std::move(pt), token);
             else
                 read();
         }
@@ -228,7 +228,7 @@ void SocketWrapper::writeLogout(const ErrorCode &ec) {
     write(0, pt, X::LogoutFeedback);
 }
 
-void SocketWrapper::doGetBook(const ptree &pt, const ull &token) {
+void SocketWrapper::doGetBook(ptree pt, const ull &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     ull tk = 0;
@@ -242,27 +242,20 @@ void SocketWrapper::doGetBook(const ptree &pt, const ull &token) {
             ec = X::NotLogin;
         } else {
             tk = token;
+            auto userid = it->getUserid();
+            auto priority = it->getPriority();
+            pt.put<uint>("userid", userid);
+            pt.put<uint>("priority", priority);
             _from(doGetBook);
             auto p = userManager.getBookCore(pt);
             if (p.empty()) {
                 _from(doGetBook) << "p is empty\n";
                 ec = X::InvalidBook;
             } else {
-                auto bookPriority = p.get<uint>("priority", AbstractUser::SUPER_ADMINISTER);
-                auto priority = it->getPriority();
-                auto userid = it->getUserid();
-                auto bookid = pt.get<uint>("bookid");
-                _from(doGetBook) << "userid: " << userid << ", priority: " << priority << ", bookid: " << bookid << ", bookPriority: " << bookPriority << '\n';
-                if (bookPriority > priority)
-                    ec = X::NoPermission;
-                else {
-                    ptree pt;
-                    pt.put<uint>("userid", userid);
-                    pt.put<uint>("bookid", bookid);
-                    pt.put<std::time_t>("time", Session::getNowTime());
-                    userManager.recordBrowse(pt);
-                    tr = std::move(p);
-                }
+                pt.put<std::time_t>("time", Session::getNowTime());
+                _from(doGetBook);
+                userManager.recordBrowse(pt);
+                tr = std::move(p);
             }
         }
     }
@@ -312,7 +305,7 @@ void SocketWrapper::writeSetBook(const ull &token, const ErrorCode &ec) {
     write(token, pt, X::SetBookFeedback);
 }
 
-void SocketWrapper::doGetLoginReccord(const ptree &pt, const ull &token) {
+void SocketWrapper::doGetLoginReccord(ptree pt, const ull &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     ull tk = 0;
@@ -327,10 +320,9 @@ void SocketWrapper::doGetLoginReccord(const ptree &pt, const ull &token) {
         } else {
             tk = token;
             auto userid = it->getUserid();
-            auto number = pt.get<uint>("number", 0);
-            auto begin = pt.get<uint>("begin", 0);
+            pt.put<uint>("userid", userid);
             _from(doGetLoginReccord);
-            tr = userManager.getLoginRecord(userid, number, begin);
+            tr = userManager.getLoginRecord(pt);
         }
     }
     writeGetLoginRecord(tk, std::move(tr), ec);
@@ -341,7 +333,7 @@ void SocketWrapper::writeGetLoginRecord(const ull &token, ptree pt, const ErrorC
     write(token, pt, X::GetLoginRecordFeedBack);
 }
 
-void SocketWrapper::doGetBorrowReccord(const ptree &pt, const ull &token) {
+void SocketWrapper::doGetBorrowReccord(ptree pt, const ull &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     ull tk = 0;
@@ -356,10 +348,9 @@ void SocketWrapper::doGetBorrowReccord(const ptree &pt, const ull &token) {
         } else {
             tk = token;
             auto userid = it->getUserid();
-            auto number = pt.get<uint>("number", 0);
-            auto begin = pt.get<uint>("begin", 0);
+            pt.put<uint>("userid", userid);
             _from(doGetBorrowReccord());
-            tr = userManager.getBorrowRecord(userid, number, begin);
+            tr = userManager.getBorrowRecord(pt);
         }
     }
     writeGetBorrowRecord(token, std::move(tr), ec);
@@ -371,7 +362,7 @@ void SocketWrapper::writeGetBorrowRecord(const ull &token, ptree pt, const Error
     write(token, pt, X::GetBorrowRecordFeedBack);
 }
 
-void SocketWrapper::doGetBrowseReccord(const ptree &pt, const ull &token) {
+void SocketWrapper::doGetBrowseReccord(ptree pt, const ull &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     ull tk = 0;
@@ -386,10 +377,9 @@ void SocketWrapper::doGetBrowseReccord(const ptree &pt, const ull &token) {
         } else {
             tk = token;
             auto userid = it->getUserid();
-            auto number = pt.get<uint>("number", 0);
-            auto begin = pt.get<uint>("begin", 0);
+            pt.put<uint>("userid", userid);
             _from(doGetBrowseReccord);
-            tr = userManager.getBrowseRecord(userid, number, begin);
+            tr = userManager.getBrowseRecord(pt);
         }
     }
     writeGetBrowseRecord(tk, std::move(tr), ec);

@@ -34,7 +34,7 @@ int main() {
             // GetLoginRecord
             pt = boost::property_tree::ptree();
             pt.put("number", 50);
-            pt.put("start", 0);
+            pt.put("begin", 0);
             cerr << "GetLoginRecord send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
             X::tcp_sync_write(s, token, X::GetLoginRecord, pt);
@@ -46,7 +46,7 @@ int main() {
             // GetBorrowRecord
             pt = boost::property_tree::ptree();
             pt.put("number", 50);
-            pt.put("start", 0);
+            pt.put("begin", 0);
             cerr << "GetBorrowRecord send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
             X::tcp_sync_write(s, token, X::GetBorrowRecord, pt);
@@ -58,7 +58,7 @@ int main() {
             // GetBrowseRecord
             pt = boost::property_tree::ptree();
             pt.put("number", 50);
-            pt.put("start", 0);
+            pt.put("begin", 0);
             cerr << "GetBrowseRecord send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
             X::tcp_sync_write(s, token, X::GetBrowseRecord, pt);

@@ -65,9 +65,11 @@ public:
     ptree getBookCore(const ptree &pt);
     ErrorCode setBookCore(const ptree &pt);
 
-    ptree getLoginRecord(const uint &userid, const uint &number, const uint &begin);
-    ptree getBorrowRecord(const uint &userid, const uint &number, const uint &begin);
-    ptree getBrowseRecord(const uint &userid, const uint &number, const uint &begin);
+    ptree getLoginRecord(const ptree &pt);
+
+    ptree getBorrowRecord(const ptree &pt);
+
+    ptree getBrowseRecord(const ptree &pt);
 
 
     // not open for user, so ensure the userid exists in the below methods

@@ -17,6 +17,7 @@ UserManager::~UserManager() {
 }
 
 bool UserManager::isUser(const uint &userid) {
+    cerr << "userid: " << userid << '\n';
     using namespace mongo;
     auto client = pool.acquire();
     auto doc = (*client)[db_name]["user"].find_one(make_document(
@@ -26,6 +27,7 @@ bool UserManager::isUser(const uint &userid) {
 }
 
 bool UserManager::isUser(const string &username) {
+    cerr << "username: " << username << '\n';
     using namespace mongo;
     auto client = pool.acquire();
     auto doc = (*client)[db_name]["user"].find_one(make_document(
@@ -35,6 +37,7 @@ bool UserManager::isUser(const string &username) {
 }
 
 UserManager::uint UserManager::getPriority(const uint &userid) {
+    cerr << "userid: " << userid << '\n';
     using namespace mongo;
     auto client = pool.acquire();
     auto doc = (*client)[db_name]["user"].find_one(make_document(
@@ -47,9 +50,9 @@ UserManager::uint UserManager::getPriority(const uint &userid) {
 
 // return user info
 UserManager::ptree UserManager::loginUser(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
     string username = pt.get("username", "");
     string password = pt.get("password", "");
-    cerr << SocketInfo::encodePtree(pt, true);
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -87,11 +90,11 @@ UserManager::ErrorCode UserManager::checkRegister(const string &username, const 
 }
 
 UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
     string username = pt.get("username", "");
     string nickname = pt.get("nickname", "");
     string password = pt.get("password", "");
     string email = pt.get("email", "");
-    cerr << SocketInfo::encodePtree(pt, true);
 
     auto ec = checkRegister(username, nickname, password, email);
     if (!ec && isUser(username))
@@ -130,8 +133,9 @@ UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
 
 // maybe just use pt to search book not just by bookid
 UserManager::ptree UserManager::getBookCore(const ptree &pt) {
-    auto bookid = pt.get<uint>("bookid", 0);
     cerr << SocketInfo::encodePtree(pt, true);
+    auto bookid = pt.get<uint>("bookid", 0);
+    auto priority = pt.get<uint>("priority", 0);
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -142,7 +146,10 @@ UserManager::ptree UserManager::getBookCore(const ptree &pt) {
     ));
     auto doc = (*client)[db_name]["book"].find_one(
         make_document(
-            kvp("bookid", int(bookid))
+            kvp("bookid", int(bookid)),
+            kvp("priority", make_document(
+                kvp("$lte", int(priority))
+            ))
         ),
         opt
     );
@@ -153,6 +160,7 @@ UserManager::ptree UserManager::getBookCore(const ptree &pt) {
 }
 
 UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
     uint bookid = pt.get<uint>("bookid", 0);
     auto title = pt.get_optional<string>("title");
     auto author = pt.get_optional<string>("author");
@@ -162,7 +170,6 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
     auto introduction = pt.get_optional<string>("introduction");
     auto position = pt.get_optional<string>("position");
     auto priority = pt.get_optional<uint>("priority");
-    cerr << SocketInfo::encodePtree(pt, true);
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -230,8 +237,11 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
     return ec;
 }
 
-UserManager::ptree UserManager::getLoginRecord(const uint &userid, const uint &number, const uint &begin) {
-    cerr << "userid: " << userid << ", number: " << number << ", begin: " << begin << '\n';
+UserManager::ptree UserManager::getLoginRecord(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto userid = pt.get<uint>("userid");
+    auto number = pt.get<uint>("number");
+    auto begin = pt.get<uint>("begin");
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -251,8 +261,11 @@ UserManager::ptree UserManager::getLoginRecord(const uint &userid, const uint &n
     return std::move(p);
 }
 
-UserManager::ptree UserManager::getBorrowRecord(const uint &userid, const uint &number, const uint &begin) {
-    cerr << "userid: " << userid << ", number: " << number << ", begin: " << begin << '\n';
+UserManager::ptree UserManager::getBorrowRecord(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto userid = pt.get<uint>("userid");
+    auto number = pt.get<uint>("number");
+    auto begin = pt.get<uint>("begin");
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -272,8 +285,11 @@ UserManager::ptree UserManager::getBorrowRecord(const uint &userid, const uint &
     return std::move(p);
 }
 
-UserManager::ptree UserManager::getBrowseRecord(const uint &userid, const uint &number, const uint &begin) {
-    cerr << "userid: " << userid << ", number: " << number << ", begin: " << begin << '\n';
+UserManager::ptree UserManager::getBrowseRecord(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto userid = pt.get<uint>("userid");
+    auto number = pt.get<uint>("number");
+    auto begin = pt.get<uint>("begin");
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -295,6 +311,7 @@ UserManager::ptree UserManager::getBrowseRecord(const uint &userid, const uint &
 
 // need: userid, ip, time, ensure the user is exist
 void UserManager::recordLogin(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
     auto userid = pt.get<uint>("userid");
     auto ip = pt.get<string>("ip");
     auto time = long long(pt.get<std::time_t>("time"));
@@ -316,6 +333,7 @@ void UserManager::recordLogin(const ptree &pt) {
 
 // need: userid, bookid, beginTime, endTime
 void UserManager::recordBorrow(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
     auto userid = pt.get<uint>("userid");
     auto bookid = pt.get<uint>("bookid");
     auto beginTime = long long(pt.get<std::time_t>("beginTime"));
@@ -339,6 +357,7 @@ void UserManager::recordBorrow(const ptree &pt) {
 
 // need: userid, bookid, time
 void UserManager::recordBrowse(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
     auto userid = pt.get<uint>("userid");
     auto bookid = pt.get<uint>("bookid");
     auto time = long long(pt.get<std::time_t>("time"));
