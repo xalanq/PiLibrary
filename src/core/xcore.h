@@ -57,7 +57,13 @@ namespace X {
         GetBook,
         GetBookFeedback,
         SetBook,
-        SetBookFeedback
+        SetBookFeedback,
+        GetLoginRecord,
+        GetLoginRecordFeedBack,
+        GetBorrowRecord,
+        GetBorrowRecordFeedBack,
+        GetBrowseRecord,
+        GetBrowseRecordFeedBack
     };
 
     extern string what(const ErrorCode &ec);

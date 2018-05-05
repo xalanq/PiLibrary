@@ -75,6 +75,18 @@ namespace X {
             return "Set Book";
         case SetBookFeedback:
             return "Set Book Feedback";
+        case GetLoginRecord:
+            return "Get Login Record";
+        case GetLoginRecordFeedBack:
+            return "Get Login Record Feedback";
+        case GetBorrowRecord:
+            return "Get Borrow Record";
+        case GetBorrowRecordFeedBack:
+            return "Get Borrow Record Feedback";
+        case GetBrowseRecord:
+            return "Get Browse Record";
+        case GetBrowseRecordFeedBack:
+            return "Get Browse Record Feedback";
         default:
             return "No Such Action";
         }
@@ -117,7 +129,7 @@ namespace X {
         auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
 
         info.setSize(size);
-        info.encode(0, static_cast<uint> (str.size()), ac, str);
+        info.encode(token, static_cast<uint> (str.size()), ac, str);
 
         boost::asio::write(
             socket,

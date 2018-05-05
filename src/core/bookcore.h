@@ -33,6 +33,9 @@ public:
     string getIntroduction() const;
     void setIntroduction(const string &value);
 
+    string getPosition() const;
+    void setPosition(const string &value);
+
     uint getPriority() const;
     void setPriority(const uint &value);
 
@@ -44,5 +47,6 @@ private:
     string publisher;
     uint amount;
     string introduction;
+    string position;
     uint priority;
 };

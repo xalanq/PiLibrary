@@ -61,6 +61,14 @@ void BookCore::setIntroduction(const string &value) {
     introduction = value;
 }
 
+BookCore::string BookCore::getPosition() const {
+    return position;
+}
+
+void BookCore::setPosition(const string &value) {
+    position = value;
+}
+
 BookCore::uint BookCore::getPriority() const {
     return priority;
 }

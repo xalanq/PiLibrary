@@ -160,6 +160,7 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
     auto publisher = pt.get_optional<string>("publisher");
     auto amount = pt.get_optional<uint>("amount");
     auto introduction = pt.get_optional<string>("introduction");
+    auto position = pt.get_optional<string>("position");
     auto priority = pt.get_optional<uint>("priority");
     cerr << SocketInfo::encodePtree(pt, true);
 
@@ -170,7 +171,7 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
         auto info = (*client)[db_name]["book"].find_one(make_document(
             kvp("bookid", int(bookid))
         ));
-        if (info && (title || author || ISBN || publisher || amount || introduction || priority)) {
+        if (info && (title || author || ISBN || publisher || amount || introduction || position || priority)) {
             auto doc = document();
             doc << "$set" << open_document;
             if (title)
@@ -185,6 +186,8 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
                 doc << "amount" << int(*amount);
             if (introduction)
                 doc << "introduction" << bsoncxx::types::b_utf8(*introduction);
+            if (position)
+                doc << "position" << bsoncxx::types::b_utf8(*position);
             if (priority)
                 doc << "priority" << int(*priority);
             doc << close_document;
@@ -219,6 +222,7 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
             kvp("publisher", bsoncxx::types::b_utf8(publisher ? *publisher : "")),
             kvp("amount", int(amount ? *amount : 0)),
             kvp("introduction", bsoncxx::types::b_utf8(introduction ? *introduction : "")),
+            kvp("position", bsoncxx::types::b_utf8(position ? *position : "")),
             kvp("priority", int(priority ? *priority : AbstractUser::SUPER_ADMINISTER)),
             kvp("resources", make_array())
         ));
@@ -226,13 +230,15 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
     return ec;
 }
 
-UserManager::ptree UserManager::getLoginRecord(const uint &userid, const uint &number, const uint &start) {
+UserManager::ptree UserManager::getLoginRecord(const uint &userid, const uint &number, const uint &begin) {
+    cerr << "userid: " << userid << ", number: " << number << ", begin: " << begin << '\n';
+
     using namespace mongo;
     auto client = pool.acquire();
     mongocxx::options::find opt;
     opt.projection(
         make_document(kvp("loginRecord", 
-            make_document(kvp("$slice", "-" + std::to_string(start + number))))));
+            make_document(kvp("$slice", -int(begin + number))))));
     auto doc = (*client)[db_name]["user"].find_one(
         make_document(
             kvp("userid", int(userid))
@@ -241,17 +247,19 @@ UserManager::ptree UserManager::getLoginRecord(const uint &userid, const uint &n
     );
     ptree p;
     if (doc)
-        SocketInfo::decodePtree(bsoncxx::to_json(doc->view()["loginRecord"].get_array().value, bsoncxx::ExtendedJsonMode::k_legacy), p);
+        SocketInfo::decodePtree(bsoncxx::to_json((*doc).view()["loginRecord"].get_array().value, bsoncxx::ExtendedJsonMode::k_legacy), p);
     return std::move(p);
 }
 
-UserManager::ptree UserManager::getBorrowRecord(const uint &userid, const uint &number, const uint &start) {
+UserManager::ptree UserManager::getBorrowRecord(const uint &userid, const uint &number, const uint &begin) {
+    cerr << "userid: " << userid << ", number: " << number << ", begin: " << begin << '\n';
+
     using namespace mongo;
     auto client = pool.acquire();
     mongocxx::options::find opt;
     opt.projection(
         make_document(kvp("borrowRecord", 
-            make_document(kvp("$slice", "-" + std::to_string(start + number))))));
+            make_document(kvp("$slice", -int(begin + number))))));
     auto doc = (*client)[db_name]["user"].find_one(
         make_document(
             kvp("userid", int(userid))
@@ -264,13 +272,15 @@ UserManager::ptree UserManager::getBorrowRecord(const uint &userid, const uint &
     return std::move(p);
 }
 
-UserManager::ptree UserManager::getBrowseRecord(const uint &userid, const uint &number, const uint &start) {
+UserManager::ptree UserManager::getBrowseRecord(const uint &userid, const uint &number, const uint &begin) {
+    cerr << "userid: " << userid << ", number: " << number << ", begin: " << begin << '\n';
+
     using namespace mongo;
     auto client = pool.acquire();
     mongocxx::options::find opt;
     opt.projection(
         make_document(kvp("browseRecord", 
-            make_document(kvp("$slice", "-" + std::to_string(start + number))))));
+            make_document(kvp("$slice", -int(begin + number))))));
     auto doc = (*client)[db_name]["user"].find_one(
         make_document(
             kvp("userid", int(userid))

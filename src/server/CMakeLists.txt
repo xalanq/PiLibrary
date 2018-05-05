@@ -14,10 +14,10 @@ file(GLOB server_sources *.cpp)
 add_executable(server ${server_sources})
 
 target_link_libraries(server PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(server PUBLIC core)
 target_include_directories(server PUBLIC ${LIBMONGOCXX_STATIC_INCLUDE_DIRS})
 target_link_libraries(server PUBLIC ${LIBMONGOCXX_STATIC_LIBRARIES})
 target_compile_definitions(server PUBLIC ${LIBMONGOCXX_STATIC_DEFINITIONS})
-target_link_libraries(server PUBLIC core)
 
 list(FIND LIBMONGOCXX_STATIC_DEFINITIONS "BSONCXX_STATIC" LIST_IDX)
 if (${LIST_IDX} EQUAL -1)
