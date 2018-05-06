@@ -32,29 +32,16 @@ private:
     void readHeader();
     void readBody(xll token, xint length, ActionCode ac);
 
-    void write(const xll &token, const ptree &pt, const ActionCode &ac);
-    void writeError(const ErrorCode &ec);
+    void write(const ErrorCode &ec, const ActionCode &ac = X::NoAction, const xll &token = 0, ptree pt = ptree());
 
     void doLogin(const ptree &pt, const xll &token);
-    void writeLogin(const xll &token, ptree pt, const ErrorCode &ec = X::NoError);
-
     void doRegister(const ptree &pt, const xll &token);
-    void writeRegister(const ErrorCode &ec = X::NoError);
-
     void doLogout(const ptree &pt, const xll &token);
-    void writeLogout(const ErrorCode &ec = X::NoError);
-
-    void doBorrow(ptree pt, const xll &token);
-    void writeBorrow(const xll &token, const ErrorCode &ec = X::NoError);
-
+    void doBorrowBook(ptree pt, const xll &token);
+    void doReturn(ptree pt, const xll &token);
     void doGetBook(ptree pt, const xll &token);
-    void writeGetBook(const xll &token, ptree pt, const ErrorCode &ec = X::NoError);
-
     void doSetBook(const ptree &pt, const xll &token);
-    void writeSetBook(const xll &token, const ErrorCode &ec = X::NoError);
-
     void doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback);
-    void writeGetRecord(const xll &token, ptree pt, const ErrorCode &ec, const ActionCode &feedback);
 
     boost::asio::ip::tcp::socket socket;
     SocketInfo info;

@@ -150,7 +150,7 @@ UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
 }
 
 // maybe need to verify time
-UserManager::ErrorCode UserManager::borrow(const ptree &pt) {
+UserManager::ErrorCode UserManager::borrowBook(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
     auto userid = pt.get<xint>("userid");
     auto priority = pt.get<xint>("priority");
@@ -219,7 +219,8 @@ UserManager::ErrorCode UserManager::borrow(const ptree &pt) {
                             kvp("borrowRecord", make_document(
                                 kvp("bookid", bookid),
                                 kvp("beginTime", beginTime),
-                                kvp("endTime", endTime)
+                                kvp("endTime", endTime),
+                                kvp("returnTime", X::xll(0))
                             ))
                         ))
                     )
@@ -238,7 +239,8 @@ UserManager::ErrorCode UserManager::borrow(const ptree &pt) {
                             kvp("borrowRecord", make_document(
                                 kvp("userid", userid),
                                 kvp("beginTime", beginTime),
-                                kvp("endTime", endTime)
+                                kvp("endTime", endTime),
+                                kvp("returnTime", X::xll(0))
                             ))
                         ))
                     )
@@ -248,6 +250,66 @@ UserManager::ErrorCode UserManager::borrow(const ptree &pt) {
         }
     }
     return ec;
+}
+
+UserManager::ErrorCode UserManager::returnBook(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto returnTime = pt.get<xll>("returnTime");
+    auto userid = pt.get<xint>("userid", 0);
+    auto bookid = pt.get<xint>("bookid", 0);
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    auto res = (*client)[db_name]["book"].update_one(
+        make_document(
+            kvp("bookid", bookid)
+        ),
+        make_document(
+            kvp("$pull", make_document(
+                kvp("keep", make_document(
+                    kvp("userid", userid)
+                ))
+            ))
+        )
+    );
+    if (res && res->modified_count() > 0) {
+        (*client)[db_name]["book"].update_one(
+            make_document(
+                kvp("bookid", bookid),
+                kvp("borrowRecord.userid", userid)
+            ),
+            make_document(
+                kvp("$set", make_document(
+                    kvp("borrowRecord.$.returnTime", returnTime)
+                ))
+            )
+        );
+        (*client)[db_name]["user"].update_one(
+            make_document(
+                kvp("userid", userid)
+            ),
+            make_document(
+                kvp("$pull", make_document(
+                    kvp("keep", make_document(
+                        kvp("bookid", bookid)
+                    ))
+                ))
+            )
+        );
+        (*client)[db_name]["user"].update_one(
+            make_document(
+                kvp("userid", userid),
+                kvp("borrowRecord.bookid", bookid)
+            ),
+            make_document(
+                kvp("$set", make_document(
+                    kvp("borrowRecord.$.returnTime", returnTime)
+                ))
+            )
+        );
+        return X::NoError;
+    } else
+        return X::NoHave;
 }
 
 // maybe just use pt to search book not just by bookid

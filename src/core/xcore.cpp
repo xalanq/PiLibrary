@@ -52,6 +52,8 @@ namespace X {
             return "No Rest Book";
         case AlreadyHave:
             return "Already Have";
+        case NoHave:
+            return "No Have";
         case InvalidTime:
             return "Invalid Time";
         case NoPermission:
@@ -79,10 +81,14 @@ namespace X {
             return "Logout";
         case LogoutFeedback:
             return "Logout Feedback";
-        case Borrow:
-            return "Borrow";
-        case BorrowFeedback:
-            return "Borrow Feedback";
+        case BorrowBook:
+            return "BorrowBook";
+        case BorrowBookFeedback:
+            return "BorrowBook Feedback";
+        case ReturnBook:
+            return "ReturnBook";
+        case ReturnBookFeedback:
+            return "ReturnBook Feedback";
         case GetBook:
             return "Get Book";
         case GetBookFeedback:
@@ -96,9 +102,9 @@ namespace X {
         case GetLoginRecordFeedback:
             return "Get Login Record Feedback";
         case GetBorrowRecord:
-            return "Get Borrow Record";
+            return "Get BorrowBook Record";
         case GetBorrowRecordFeedback:
-            return "Get Borrow Record Feedback";
+            return "Get BorrowBook Record Feedback";
         case GetBrowseRecord:
             return "Get Browse Record";
         case GetBrowseRecordFeedback:

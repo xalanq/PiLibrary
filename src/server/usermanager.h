@@ -64,7 +64,8 @@ public:
     ErrorCode checkRegister(const xstring &username, const xstring &nickname, const xstring &password, const xstring &email);
     ErrorCode registerUser(const ptree &pt);
 
-    ErrorCode borrow(const ptree &pt);
+    ErrorCode borrowBook(const ptree &pt);
+    ErrorCode returnBook(const ptree &pt);
 
     ptree getBookCore(const ptree &pt);
     ErrorCode setBookCore(const ptree &pt);

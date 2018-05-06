@@ -74,7 +74,7 @@ void SocketWrapper::readHeader() {
             auto p = sessionManager.findToken(token);
             if ((p == nullptr || p->getPriority() < AbstractUser::ADMINISTER) && bytes > SocketInfo::BODY_SIZE) {
                 _from(readHeader) << "body size is too big.\n";
-                writeError(X::UnknownError);
+                write(X::UnknownError, X::Error);
             } else
                 readBody(std::move(token), std::move(length), std::move(ac));
         }
@@ -99,7 +99,7 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
                 info.decodeBody(static_cast<xint>(bytes), pt);
             } catch (std::exception &e) {
                 _from(readBody) << "can't decode body. " << e.what() << '\n';
-                writeError(X::UnknownError);
+                write(X::UnknownError, X::Error);
                 return;
             }
             if (ac == X::Login)
@@ -108,8 +108,10 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
                 doRegister(std::move(pt), token);
             else if (ac == X::Logout)
                 doLogout(std::move(pt), token);
-            else if (ac == X::Borrow)
-                doBorrow(std::move(pt), token);
+            else if (ac == X::BorrowBook)
+                doBorrowBook(std::move(pt), token);
+            else if (ac == X::ReturnBook)
+                doReturn(std::move(pt), token);
             else if (ac == X::GetBook)
                 doGetBook(std::move(pt), token);
             else if (ac == X::SetBook)
@@ -123,12 +125,13 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
             else if (ac == X::GetKeep)
                 doGetRecord(std::move(pt), token, "keep", X::GetKeepFeedback);
             else
-                writeError(X::UnknownError);
+                write(X::UnknownError, X::Error);
         }
     );
 }
 
-void SocketWrapper::write(const xll &token, const ptree &pt, const ActionCode &ac) {
+void SocketWrapper::write(const ErrorCode &ec, const ActionCode &ac, const xll &token, ptree pt) {
+    pt.put("error_code", ec);
     auto self(shared_from_this());
     xstring str = SocketInfo::encodePtree(pt);
     auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
@@ -149,12 +152,6 @@ void SocketWrapper::write(const xll &token, const ptree &pt, const ActionCode &a
             read();
         }
     );
-}
-
-void SocketWrapper::writeError(const ErrorCode &ec) {
-    ptree pt;
-    pt.put("error_code", ec);
-    write(0, pt, X::Error);
 }
 
 void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
@@ -190,18 +187,13 @@ void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
             }
         }
     }
-    writeLogin(tk, std::move(tr), ec);
-}
-
-void SocketWrapper::writeLogin(const xll &token, ptree pt, const ErrorCode &ec) {
-    pt.put("error_code", ec);
-    write(token, pt, X::LoginFeedback);
+    write(ec, X::LoginFeedback, tk, std::move(tr));
 }
 
 void SocketWrapper::doRegister(const ptree &pt, const xll &token) {
     if (token != 0) {
         _from(doRegister) << "token != 0\n";
-        writeRegister(X::RegisterFailed);
+        write(X::RegisterFailed, X::RegisterFeedback);
         return;
     }
     _from(doRegister);
@@ -210,13 +202,7 @@ void SocketWrapper::doRegister(const ptree &pt, const xll &token) {
         _from(doRegister) << "succeed to register\n";
     else
         _from(doRegister) << "fail to register: " << X::what(ec) << '\n';
-    writeRegister(ec);
-}
-
-void SocketWrapper::writeRegister(const ErrorCode &ec) {
-    ptree pt;
-    pt.put("error_code", ec);
-    write(0, pt, X::RegisterFeedback);
+    write(ec, X::RegisterFeedback);
 }
 
 void SocketWrapper::doLogout(const ptree &pt, const xll &token) {
@@ -229,25 +215,19 @@ void SocketWrapper::doLogout(const ptree &pt, const xll &token) {
         ec = X::InvalidToken;
     } else
         _from(doLogout) << "succeed to logout\n";
-    writeLogout(ec);
+    write(ec, X::LogoutFeedback);
 }
 
-void SocketWrapper::writeLogout(const ErrorCode &ec) {
-    ptree pt;
-    pt.put("error_code", ec);
-    write(0, pt, X::LogoutFeedback);
-}
-
-void SocketWrapper::doBorrow(ptree pt, const xll &token) {
+void SocketWrapper::doBorrowBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
-        _from(doBorrow) << "token == 0\n";
+        _from(doBorrowBook) << "token == 0\n";
         ec = X::NotLogin;
     } else {
         auto it = sessionManager.findToken(token);
         if (it == nullptr) {
-            _from(doBorrow) << "not found session\n";
+            _from(doBorrowBook) << "not found session\n";
             ec = X::NotLogin;
         } else {
             tk = token;
@@ -255,21 +235,46 @@ void SocketWrapper::doBorrow(ptree pt, const xll &token) {
             auto priority = it->getPriority();
             pt.put<xint>("userid", userid);
             pt.put<xint>("priority", priority);
-            _from(doBorrow);
-            ec = userManager.borrow(pt);
+            _from(doBorrowBook);
+            ec = userManager.borrowBook(pt);
             if (ec == X::NoError)
-                _from(doBorrow) << "succeed to borrow\n";
+                _from(doBorrowBook) << "succeed to borrow a book\n";
             else
-                _from(doBorrow) << "fail to borrow: " << X::what(ec) << "\n";
+                _from(doBorrowBook) << "fail to borrow a book: " << X::what(ec) << "\n";
         }
     }
-    writeBorrow(tk, ec);
+    write(ec, X::BorrowBookFeedback, tk);
 }
 
-void SocketWrapper::writeBorrow(const xll &token, const ErrorCode &ec) {
-    ptree pt;
-    pt.put("error_code", ec);
-    write(token, pt, X::BorrowFeedback);
+void SocketWrapper::doReturn(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doReturn) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doReturn) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            auto priority = it->getPriority();
+            if (priority < AbstractUser::ADMINISTER) {
+                _from(doReturn) << "no permission\n";
+                ec = X::NoPermission;
+            } else {
+                _from(doReturn);
+                pt.put("returnTime", Session::getNowTime());
+                ec = userManager.returnBook(pt);
+                if (ec == X::NoError)
+                    _from(doReturn) << "succeed to return a book\n";
+                else
+                    _from(doReturn) << "fail to return a book: " << X::what(ec) << "\n";
+            }
+        }
+    }
+    write(ec, X::ReturnBookFeedback, tk);
 }
 
 void SocketWrapper::doGetBook(ptree pt, const xll &token) {
@@ -303,12 +308,7 @@ void SocketWrapper::doGetBook(ptree pt, const xll &token) {
             }
         }
     }
-    writeGetBook(tk, std::move(tr), ec);
-}
-
-void SocketWrapper::writeGetBook(const xll &token, ptree pt, const ErrorCode &ec) {
-    pt.put("error_code", ec);
-    write(token, pt, X::GetBookFeedback);
+    write(ec, X::GetBookFeedback, tk, std::move(tr));
 }
 
 void SocketWrapper::doSetBook(const ptree &pt, const xll &token) {
@@ -340,13 +340,7 @@ void SocketWrapper::doSetBook(const ptree &pt, const xll &token) {
             }
         }
     }
-    writeSetBook(tk, ec);
-}
-
-void SocketWrapper::writeSetBook(const xll &token, const ErrorCode &ec) {
-    ptree pt;
-    pt.put("error_code", ec);
-    write(token, pt, X::SetBookFeedback);
+    write(ec, X::SetBookFeedback, tk);
 }
 
 void SocketWrapper::doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback) {
@@ -370,10 +364,6 @@ void SocketWrapper::doGetRecord(ptree pt, const xll &token, const xstring &type,
             tr = userManager.getRecord(pt);
         }
     }
-    writeGetRecord(tk, std::move(tr), ec, feedback);
+    write(ec, feedback, tk, std::move(tr));
 }
 
-void SocketWrapper::writeGetRecord(const xll &token, ptree pt, const ErrorCode &ec, const ActionCode &feedback) {
-    pt.put("error_code", ec);
-    write(token, pt, feedback);
-}

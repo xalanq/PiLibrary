@@ -50,6 +50,7 @@ namespace X {
 
         NoRestBook,
         AlreadyHave,
+        NoHave,
         InvalidTime,
 
         NoPermission
@@ -64,8 +65,10 @@ namespace X {
         RegisterFeedback,
         Logout,
         LogoutFeedback,
-        Borrow,
-        BorrowFeedback,
+        BorrowBook,
+        BorrowBookFeedback,
+        ReturnBook,
+        ReturnBookFeedback,
         GetBook,
         GetBookFeedback,
         SetBook,
