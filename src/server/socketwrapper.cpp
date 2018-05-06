@@ -74,15 +74,14 @@ void SocketWrapper::readHeader() {
             auto p = sessionManager.findToken(token);
             if ((p == nullptr || p->getPriority() < AbstractUser::ADMINISTER) && bytes > SocketInfo::BODY_SIZE) {
                 _from(readHeader) << "body size is too big.\n";
-                read();
-                return;
-            }
-            readBody(std::move(token), std::move(length), std::move(ac));
+                writeError(X::UnknownError);
+            } else
+                readBody(std::move(token), std::move(length), std::move(ac));
         }
     );
 }
 
-void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
+void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
     info.setSize(length);
     auto self(shared_from_this());
     boost::asio::async_read(
@@ -97,10 +96,10 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
             }
             ptree pt;
             try {
-                info.decodeBody(static_cast<uint>(bytes), pt);
+                info.decodeBody(static_cast<xint>(bytes), pt);
             } catch (std::exception &e) {
                 _from(readBody) << "can't decode body. " << e.what() << '\n';
-                read();
+                writeError(X::UnknownError);
                 return;
             }
             if (ac == X::Login)
@@ -109,6 +108,8 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
                 doRegister(std::move(pt), token);
             else if (ac == X::Logout)
                 doLogout(std::move(pt), token);
+            else if (ac == X::Borrow)
+                doBorrow(std::move(pt), token);
             else if (ac == X::GetBook)
                 doGetBook(std::move(pt), token);
             else if (ac == X::SetBook)
@@ -122,17 +123,17 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
             else if (ac == X::GetKeep)
                 doGetRecord(std::move(pt), token, "keep", X::GetKeepFeedback);
             else
-                read();
+                writeError(X::UnknownError);
         }
     );
 }
 
-void SocketWrapper::write(const ull &token, const ptree &pt, const ActionCode &ac) {
+void SocketWrapper::write(const xll &token, const ptree &pt, const ActionCode &ac) {
     auto self(shared_from_this());
-    string str = SocketInfo::encodePtree(pt);
+    xstring str = SocketInfo::encodePtree(pt);
     auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
     info.setSize(size);
-    info.encode(token, static_cast<uint>(str.size()), ac, str);
+    info.encode(token, static_cast<xint>(str.size()), ac, str);
     _to(write) << "sending feedback, size = " << size << '\n';
 
     boost::asio::async_write(
@@ -150,10 +151,16 @@ void SocketWrapper::write(const ull &token, const ptree &pt, const ActionCode &a
     );
 }
 
-void SocketWrapper::doLogin(const ptree &pt, const ull &token) {
+void SocketWrapper::writeError(const ErrorCode &ec) {
+    ptree pt;
+    pt.put("error_code", ec);
+    write(0, pt, X::Error);
+}
+
+void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
     auto tr = ptree();
     auto ec = X::NoError;
-    ull tk = 0;
+    xll tk = 0;
     if (token != 0) {
         _from(doLogin) << "token != 0\n";
         ec = X::LoginFailed;
@@ -165,18 +172,18 @@ void SocketWrapper::doLogin(const ptree &pt, const ull &token) {
             ec = X::NoSuchUser;
         } else {
             tk = sessionManager.getRandToken();
-            auto userid = p.get<uint>("userid", 0);
-            auto priority = p.get<uint>("priority", 0);
-            _from(doLogin) << "token: " << tk << ", userid: " << userid << '\n';
+            auto userid = p.get<xint>("userid", 0);
+            auto priority = p.get<xint>("priority", 0);
             auto loginTime = Session::getNowTime();
+            _from(doLogin) << "token: " << tk << ", userid: " << userid << ", loginTime: " << loginTime << '\n';
             if (sessionManager.add(tk, userid, loginTime + sessionManager.getDefaultAlive(), priority, true)) {
                 _from(doLogin) << "login successfully\n";
-                ptree pt;
-                pt.put<uint>("userid", userid);
-                pt.put<string>("ip", socket.remote_endpoint().address().to_string());
-                pt.put<std::time_t>("time", loginTime);
-                userManager.recordLogin(pt);
                 tr = std::move(p);
+                ptree t;
+                t.put<xint>("userid", userid);
+                t.put<xstring>("ip", socket.remote_endpoint().address().to_string());
+                t.put<xll>("time", loginTime);
+                userManager.recordLogin(t);
             } else {
                 _from(doLogin) << "failed to login\n";
                 ec = X::LoginFailed;
@@ -186,12 +193,12 @@ void SocketWrapper::doLogin(const ptree &pt, const ull &token) {
     writeLogin(tk, std::move(tr), ec);
 }
 
-void SocketWrapper::writeLogin(const ull &token, ptree pt, const ErrorCode &ec) {
+void SocketWrapper::writeLogin(const xll &token, ptree pt, const ErrorCode &ec) {
     pt.put("error_code", ec);
     write(token, pt, X::LoginFeedback);
 }
 
-void SocketWrapper::doRegister(const ptree &pt, const ull &token) {
+void SocketWrapper::doRegister(const ptree &pt, const xll &token) {
     if (token != 0) {
         _from(doRegister) << "token != 0\n";
         writeRegister(X::RegisterFailed);
@@ -212,7 +219,7 @@ void SocketWrapper::writeRegister(const ErrorCode &ec) {
     write(0, pt, X::RegisterFeedback);
 }
 
-void SocketWrapper::doLogout(const ptree &pt, const ull &token) {
+void SocketWrapper::doLogout(const ptree &pt, const xll &token) {
     auto ec = X::NoError;
     if (token == 0) {
         _from(doLogout) << "token = 0\n";
@@ -230,10 +237,40 @@ void SocketWrapper::writeLogout(const ErrorCode &ec) {
     write(0, pt, X::LogoutFeedback);
 }
 
-void SocketWrapper::doGetBook(ptree pt, const ull &token) {
+void SocketWrapper::doBorrow(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doBorrow) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doBorrow) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            auto userid = it->getUserid();
+            auto priority = it->getPriority();
+            pt.put<xint>("userid", userid);
+            pt.put<xint>("priority", priority);
+            _from(doBorrow);
+            ec = userManager.borrow(pt);
+        }
+    }
+    writeBorrow(tk, ec);
+}
+
+void SocketWrapper::writeBorrow(const xll &token, const ErrorCode &ec) {
+    ptree pt;
+    pt.put("error_code", ec);
+    write(token, pt, X::BorrowFeedback);
+}
+
+void SocketWrapper::doGetBook(ptree pt, const xll &token) {
     auto tr = ptree();
     auto ec = X::NoError;
-    ull tk = 0;
+    xll tk = 0;
     if (token == 0) {
         _from(doGetBook) << "token == 0\n";
         ec = X::NotLogin;
@@ -246,15 +283,15 @@ void SocketWrapper::doGetBook(ptree pt, const ull &token) {
             tk = token;
             auto userid = it->getUserid();
             auto priority = it->getPriority();
-            pt.put<uint>("userid", userid);
-            pt.put<uint>("priority", priority);
+            pt.put<xint>("userid", userid);
+            pt.put<xint>("priority", priority);
             _from(doGetBook);
             auto p = userManager.getBookCore(pt);
             if (p.empty()) {
                 _from(doGetBook) << "p is empty\n";
                 ec = X::InvalidBook;
             } else {
-                pt.put<std::time_t>("time", Session::getNowTime());
+                pt.put<xll>("time", Session::getNowTime());
                 _from(doGetBook);
                 userManager.recordBrowse(pt);
                 tr = std::move(p);
@@ -264,14 +301,14 @@ void SocketWrapper::doGetBook(ptree pt, const ull &token) {
     writeGetBook(tk, std::move(tr), ec);
 }
 
-void SocketWrapper::writeGetBook(const ull &token, ptree pt, const ErrorCode &ec) {
+void SocketWrapper::writeGetBook(const xll &token, ptree pt, const ErrorCode &ec) {
     pt.put("error_code", ec);
     write(token, pt, X::GetBookFeedback);
 }
 
-void SocketWrapper::doSetBook(const ptree &pt, const ull &token) {
+void SocketWrapper::doSetBook(const ptree &pt, const xll &token) {
     auto ec = X::NoError;
-    ull tk = 0;
+    xll tk = 0;
     if (token == 0) {
         _from(doSetBook) << "token = 0\n";
         ec = X::NotLogin;
@@ -282,7 +319,7 @@ void SocketWrapper::doSetBook(const ptree &pt, const ull &token) {
             ec = X::NotLogin;
         } else {
             tk = token;
-            uint bookPriority = pt.get<uint>("priority", AbstractUser::SUPER_ADMINISTER);
+            xint bookPriority = pt.get<xint>("priority", AbstractUser::SUPER_ADMINISTER);
             auto priority = it->getPriority();
             _from(doSetBook) << "userid: " << it->getUserid() << ", priority: " << priority << ", bookPriority: " << bookPriority << '\n';
             if (bookPriority > priority || priority < AbstractUser::ADMINISTER) {
@@ -301,16 +338,16 @@ void SocketWrapper::doSetBook(const ptree &pt, const ull &token) {
     writeSetBook(tk, ec);
 }
 
-void SocketWrapper::writeSetBook(const ull &token, const ErrorCode &ec) {
+void SocketWrapper::writeSetBook(const xll &token, const ErrorCode &ec) {
     ptree pt;
     pt.put("error_code", ec);
     write(token, pt, X::SetBookFeedback);
 }
 
-void SocketWrapper::doGetRecord(ptree pt, const ull &token, const string &type, const ActionCode &feedback) {
+void SocketWrapper::doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback) {
     auto tr = ptree();
     auto ec = X::NoError;
-    ull tk = 0;
+    xll tk = 0;
     if (token == 0) {
         _from(doGetRecord) << "token == 0\n";
         ec = X::NotLogin;
@@ -322,8 +359,8 @@ void SocketWrapper::doGetRecord(ptree pt, const ull &token, const string &type, 
         } else {
             tk = token;
             auto userid = it->getUserid();
-            pt.put<uint>("userid", userid);
-            pt.put<string>("type", type);
+            pt.put<xint>("userid", userid);
+            pt.put<xstring>("type", type);
             _from(doGetRecord);
             tr = userManager.getRecord(pt);
         }
@@ -331,7 +368,7 @@ void SocketWrapper::doGetRecord(ptree pt, const ull &token, const string &type, 
     writeGetRecord(tk, std::move(tr), ec, feedback);
 }
 
-void SocketWrapper::writeGetRecord(const ull &token, ptree pt, const ErrorCode &ec, const ActionCode &feedback) {
+void SocketWrapper::writeGetRecord(const xll &token, ptree pt, const ErrorCode &ec, const ActionCode &feedback) {
     pt.put("error_code", ec);
     write(token, pt, feedback);
 }

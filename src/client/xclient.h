@@ -6,8 +6,8 @@
 #include <core/xcore.h>
 
 namespace X {
-    extern const string &APP_NAME;
-    extern const string &VERSION;
-    extern const string &saltBegin;
-    extern const string &saltEnd;
+    extern const xstring &APP_NAME;
+    extern const xstring &VERSION;
+    extern const xstring &saltBegin;
+    extern const xstring &saltEnd;
 }

@@ -13,19 +13,23 @@
 using std::cerr;
 
 namespace X {
-    typedef unsigned int uint;
-    typedef unsigned long long ull;
-    typedef std::string string;
+    typedef int xint;
+    typedef long long xll;
+    typedef std::string xstring;
 
-    extern const string AUTHOR[];
-    extern const string EMAIL[];
-    extern const string &WEBSITE;
-    extern const string &GITHUB;
+    extern const xstring AUTHOR[];
+    extern const xstring EMAIL[];
+    extern const xstring &WEBSITE;
+    extern const xstring &GITHUB;
     extern const std::regex patternUsername;
     extern const std::regex patternEmail;
 
     enum ErrorCode {
         NoError = 0,
+
+        UnknownError,
+
+        InvalidBody,
 
         LoginFailed,
         NoSuchUser,
@@ -43,17 +47,25 @@ namespace X {
 
         InvalidBook,
         NoSuchBook,
+
+        NoRestBook,
+        AlreadyHave,
+        InvalidTime,
+
         NoPermission
     };
 
     enum ActionCode {
         NoAction = 0,
+        Error,
         Login,
         LoginFeedback,
         Register,
         RegisterFeedback,
         Logout,
         LogoutFeedback,
+        Borrow,
+        BorrowFeedback,
         GetBook,
         GetBookFeedback,
         SetBook,
@@ -68,9 +80,9 @@ namespace X {
         GetKeepFeedback
     };
 
-    extern string what(const ErrorCode &ec);
-    extern string what(const ActionCode &ac);
+    extern xstring what(const ErrorCode &ec);
+    extern xstring what(const ActionCode &ac);
 
-    extern void tcp_sync_read(boost::asio::ip::tcp::socket &socket, ull &token, ActionCode &ac, boost::property_tree::ptree &pt);
-    extern void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const ull &token, const ActionCode &ac, const boost::property_tree::ptree &pt);
+    extern void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, boost::property_tree::ptree &pt);
+    extern void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const boost::property_tree::ptree &pt);
 }

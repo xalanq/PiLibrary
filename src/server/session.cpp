@@ -1,9 +1,12 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <cstdlib>
+#include <ctime>
+
 #include <server/session.h>
 
-Session::Session(const ull &token, const uint &userid, const time_t &alive, const uint &priority) :
+Session::Session(const xll &token, const xint &userid, const xll &alive, const xint &priority) :
     token(token),
     userid(userid),
     alive(alive),
@@ -11,38 +14,38 @@ Session::Session(const ull &token, const uint &userid, const time_t &alive, cons
 
 }
 
-std::time_t Session::getNowTime() {
+Session::xll Session::getNowTime() {
     return time(0);
 }
 
-Session::ull Session::getToken() const {
+Session::xll Session::getToken() const {
     return token;
 }
 
-void Session::setToken(const ull &value) {
+void Session::setToken(const xll &value) {
     token = value;
 }
 
-Session::uint Session::getUserid() const {
+Session::xint Session::getUserid() const {
     return userid;
 }
 
-void Session::setUserid(const uint &value) {
+void Session::setUserid(const xint &value) {
     userid = value;
 }
 
-std::time_t Session::getAlive() const {
+Session::xll Session::getAlive() const {
     return alive;
 }
 
-void Session::setAlive(const std::time_t &value) {
+void Session::setAlive(const xll &value) {
     alive = value;
 }
 
-Session::uint Session::getPriority() const {
+Session::xint Session::getPriority() const {
     return priority;
 }
 
-void Session::setPriority(const uint &value) {
+void Session::setPriority(const xint &value) {
     priority = value;
 }

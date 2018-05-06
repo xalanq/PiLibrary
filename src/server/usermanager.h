@@ -16,6 +16,7 @@
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
+#include <mongocxx/pipeline.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <core/abstractuser.h>
@@ -37,30 +38,33 @@ namespace mongo {
     using mongocxx::client;
     using mongocxx::collection;
     using mongocxx::pool;
+    using mongocxx::pipeline;
     using mongocxx::uri;
     using mongocxx::validation_criteria;
 }
 
 class UserManager {
 public:
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
     typedef X::ErrorCode ErrorCode;
     typedef boost::property_tree::ptree ptree;
 
-    UserManager(const string &mongo_url, const string &mongo_db_name);
+    UserManager(const xstring &mongo_url, const xstring &mongo_db_name);
     ~UserManager();
 
-    bool isUser(const uint &userid);
-    bool isUser(const string &username);
+    bool isUser(const xint &userid);
+    bool isUser(const xstring &username);
 
-    uint getPriority(const uint &userid);
+    xint getPriority(const xint &userid);
 
     ptree loginUser(const ptree &pt);
 
-    ErrorCode checkRegister(const string &username, const string &nickname, const string &password, const string &email);
+    ErrorCode checkRegister(const xstring &username, const xstring &nickname, const xstring &password, const xstring &email);
     ErrorCode registerUser(const ptree &pt);
+
+    ErrorCode borrow(const ptree &pt);
 
     ptree getBookCore(const ptree &pt);
     ErrorCode setBookCore(const ptree &pt);
@@ -74,6 +78,6 @@ public:
 
 private:
     mongo::pool pool;
-    string _db_name;
+    xstring _db_name;
     const char *db_name;
 };

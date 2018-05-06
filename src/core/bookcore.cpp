@@ -5,74 +5,74 @@
 
 BookCore::~BookCore() { }
 
-BookCore::uint BookCore::getBookid() const {
+BookCore::xint BookCore::getBookid() const {
     return bookid;
 }
 
-void BookCore::setBookid(const uint &value) {
+void BookCore::setBookid(const xint &value) {
     bookid = value;
 }
 
-BookCore::string BookCore::getTitle() const {
+BookCore::xstring BookCore::getTitle() const {
     return title;
 }
 
-void BookCore::setTitle(const string &value) {
+void BookCore::setTitle(const xstring &value) {
     title = value;
 }
 
-BookCore::string BookCore::getAuthor() const {
+BookCore::xstring BookCore::getAuthor() const {
     return author;
 }
 
-void BookCore::setAuthor(const string &value) {
+void BookCore::setAuthor(const xstring &value) {
     author = value;
 }
 
-BookCore::string BookCore::getISBN() const {
+BookCore::xstring BookCore::getISBN() const {
     return ISBN;
 }
 
-void BookCore::setISBN(const string &value) {
+void BookCore::setISBN(const xstring &value) {
     ISBN = value;
 }
 
-BookCore::string BookCore::getPublisher() const {
+BookCore::xstring BookCore::getPublisher() const {
     return publisher;
 }
 
-void BookCore::setPublisher(const string &value) {
+void BookCore::setPublisher(const xstring &value) {
     publisher = value;
 }
 
-BookCore::uint BookCore::getAmount() const {
+BookCore::xint BookCore::getAmount() const {
     return amount;
 }
 
-void BookCore::setAmount(const uint &value) {
+void BookCore::setAmount(const xint &value) {
     amount = value;
 }
 
-BookCore::string BookCore::getIntroduction() const {
+BookCore::xstring BookCore::getIntroduction() const {
     return introduction;
 }
 
-void BookCore::setIntroduction(const string &value) {
+void BookCore::setIntroduction(const xstring &value) {
     introduction = value;
 }
 
-BookCore::string BookCore::getPosition() const {
+BookCore::xstring BookCore::getPosition() const {
     return position;
 }
 
-void BookCore::setPosition(const string &value) {
+void BookCore::setPosition(const xstring &value) {
     position = value;
 }
 
-BookCore::uint BookCore::getPriority() const {
+BookCore::xint BookCore::getPriority() const {
     return priority;
 }
 
-void BookCore::setPriority(const uint &value) {
+void BookCore::setPriority(const xint &value) {
     priority = value;
 }

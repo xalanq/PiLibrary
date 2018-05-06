@@ -17,23 +17,23 @@
 class SessionManager {
 public:
     typedef std::shared_ptr<Session> ptr;
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
 
-    SessionManager(const uint &defaulAlive);
+    SessionManager(const xll &defaultAlive);
     void removeExpired();
     bool add(const ptr &p, bool force = false);
     bool add(const Session &session, bool force = false);
-    bool add(const ull &token, const uint &userid, const std::time_t &alive, const uint &priority, bool force = false);
+    bool add(const xll &token, const xint &userid, const xll &alive, const xint &priority, bool force = false);
     bool remove(const ptr &p);
-    bool removeByToken(const ull &token);
-    bool removeByUserid(const uint &userid);
-    bool setAliveTime(const ull &token, const std::time_t &alive);
-    ptr findToken(const ull &token);
-    ptr findUserid(const uint &userid);
-    ull getRandToken();
-    uint getDefaultAlive() const;
+    bool removeByToken(const xll &token);
+    bool removeByUserid(const xint &userid);
+    bool setAliveTime(const xll &token, const xll &alive);
+    ptr findToken(const xll &token);
+    ptr findUserid(const xint &userid);
+    xll getRandToken();
+    xll getDefaultAlive() const;
 
     struct compareAlive {
         bool operator () (const ptr &a, const ptr &b) const {
@@ -55,8 +55,8 @@ private:
     std::multiset<ptr, compareAlive> dataAlive;
     std::set<ptr, compareToken> dataToken;
     std::set<ptr, compareUserid> dataUserid;
-    std::uniform_int_distribution<ull> distr;
+    std::uniform_int_distribution<xll> distr;
     std::mt19937_64 eng;
-    uint defaultAlive;
+    xll defaultAlive;
     boost::shared_mutex _access;
 };

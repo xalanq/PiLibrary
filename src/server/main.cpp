@@ -31,18 +31,18 @@ int main() {
         boost::property_tree::read_json("config.json", config);
     else
         cerr << "Config file is not exist, create new one[./config.json]\n";
-    if (!config.get_optional<string>("server_url"))
+    if (!config.get_optional<X::xstring>("server_url"))
         config.put("server_url", "127.0.0.1");
-    if (!config.get_optional<int>("server_port"))
+    if (!config.get_optional<X::xint>("server_port"))
         config.put("server_port", 2333);
-    if (!config.get_optional<string>("mongodb_url"))
+    if (!config.get_optional<X::xstring>("mongodb_url"))
         config.put("mongodb_url", "mongodb://localhost:23332/?minPoolSize=32&maxPoolSize=32");
-    if (!config.get_optional<string>("mongodb_db_name"))
+    if (!config.get_optional<X::xstring>("mongodb_db_name"))
         config.put("mongodb_db_name", "pi");
-    if (!config.get_optional<int>("default_alive_ms"))
-        config.put<int>("default_alive_ms", 30000);
-    if (!config.get_optional<int>("thread_number"))
-        config.put<int>("thread_number", 32);
+    if (!config.get_optional<X::xll>("default_alive_ms"))
+        config.put<X::xll>("default_alive_ms", 30000ll);
+    if (!config.get_optional<X::xint>("thread_number"))
+        config.put<X::xint>("thread_number", 32);
     boost::property_tree::write_json("config.json", config);
     Server::start(config);
     return 0;

@@ -11,9 +11,9 @@
 
 class Book : public BookCore {
 public:
-    void addResource(const string &name, const string &path);
-    void removeResource(const string &name);
+    void addResource(const xstring &name, const xstring &path);
+    void removeResource(const xstring &name);
 
 private:
-    std::map<string, string> resource;
+    std::map<xstring, xstring> resource;
 };

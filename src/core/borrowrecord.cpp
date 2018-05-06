@@ -3,11 +3,11 @@
 
 #include <core/borrowrecord.h>
 
-BorrowRecord::uint BorrowRecord::getBookid() const {
+BorrowRecord::xint BorrowRecord::getBookid() const {
     return bookid;
 }
 
-void BorrowRecord::setBookid(const uint &value) {
+void BorrowRecord::setBookid(const xint &value) {
     bookid = value;
 }
 

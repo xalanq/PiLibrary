@@ -3,10 +3,10 @@
 
 #include <core/administer.h>
 
-Administer::uint Administer::getAuthority() const {
+Administer::xint Administer::getAuthority() const {
     return authority;
 }
 
-void Administer::setAuthority(const uint &value) {
+void Administer::setAuthority(const xint &value) {
     authority = value;
 }

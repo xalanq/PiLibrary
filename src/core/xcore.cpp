@@ -7,17 +7,21 @@
 #include <core/xcore.h>
 
 namespace X {
-    const string AUTHOR[] = {"xalanq", "chang-ran"};
-    const string EMAIL[] = {"xalanq@gmail.com", "chang-r17@mails.tsinghua.edu.cn"};
-    const string &WEBSITE = "blog.xalanq.com";
-    const string &GITHUB = "github.com/xalanq/PiLibrary";
+    const xstring AUTHOR[] = {"xalanq", "chang-ran"};
+    const xstring EMAIL[] = {"xalanq@gmail.com", "chang-r17@mails.tsinghua.edu.cn"};
+    const xstring &WEBSITE = "blog.xalanq.com";
+    const xstring &GITHUB = "github.com/xalanq/PiLibrary";
     const std::regex patternUsername("[\\w\\.\\-]+");
     const std::regex patternEmail("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
 
-    string what(const ErrorCode &ec) {
+    xstring what(const ErrorCode &ec) {
         switch (ec) {
         case NoError:
             return "No Error";
+        case UnknownError:
+            return "Unknown Error";
+        case InvalidBody:
+            return "Invalid Body";
         case LoginFailed:
             return "Login Failed";
         case NoSuchUser:
@@ -44,6 +48,12 @@ namespace X {
             return "Invalid Book";
         case NoSuchBook:
             return "No Such Book";
+        case NoRestBook:
+            return "No Rest Book";
+        case AlreadyHave:
+            return "Already Have";
+        case InvalidTime:
+            return "Invalid Time";
         case NoPermission:
             return "No Permission";
         default:
@@ -51,10 +61,12 @@ namespace X {
         }
     }
 
-    string what(const ActionCode &ac) {
+    xstring what(const ActionCode &ac) {
         switch (ac) {
         case NoAction:
             return "No Action";
+        case Error:
+            return "Error";
         case Login:
             return "Login";
         case LoginFeedback:
@@ -67,6 +79,10 @@ namespace X {
             return "Logout";
         case LogoutFeedback:
             return "Logout Feedback";
+        case Borrow:
+            return "Borrow";
+        case BorrowFeedback:
+            return "Borrow Feedback";
         case GetBook:
             return "Get Book";
         case GetBookFeedback:
@@ -96,7 +112,7 @@ namespace X {
         }
     }
 
-    void tcp_sync_read(boost::asio::ip::tcp::socket &socket, ull &token, ActionCode &ac, boost::property_tree::ptree &pt) {
+    void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, boost::property_tree::ptree &pt) {
         SocketInfo info;
 
         info.setSize(SocketInfo::HEADER_SIZE);
@@ -127,13 +143,13 @@ namespace X {
         info.decodeBody(length, pt);
     }
 
-    void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const ull &token, const ActionCode &ac, const boost::property_tree::ptree &pt) {
+    void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const boost::property_tree::ptree &pt) {
         SocketInfo info;
         auto str = SocketInfo::encodePtree(pt);
         auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
 
         info.setSize(size);
-        info.encode(token, static_cast<uint> (str.size()), ac, str);
+        info.encode(token, static_cast<xint> (str.size()), ac, str);
 
         boost::asio::write(
             socket,

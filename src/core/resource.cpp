@@ -3,10 +3,10 @@
 
 #include <core/resource.h>
 
-void R::remove(const X::string &path) {
+void R::remove(const xstring &path) {
 
 }
 
-void R::add(const std::string &path, const char *data) {
+void R::add(const xstring &path, const char *data) {
 
 }

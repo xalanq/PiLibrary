@@ -3,36 +3,33 @@
 
 #pragma once
 
-#include <cstdlib>
-#include <ctime>
-
 #include <server/xserver.h>
 
 class Session {
 public:
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
 
-    Session(const ull &token = 0, const uint &userid = 0, const std::time_t &alive = 0, const uint &priority = 0);
+    Session(const xll &token = 0, const xint &userid = 0, const xll &alive = 0, const xint &priority = 0);
 
-    static time_t getNowTime();
+    static xll getNowTime();
 
-    ull getToken() const;
-    void setToken(const ull &value);
+    xll getToken() const;
+    void setToken(const xll &value);
 
-    uint getUserid() const;
-    void setUserid(const uint &value);
+    xint getUserid() const;
+    void setUserid(const xint &value);
 
-    std::time_t getAlive() const;
-    void setAlive(const std::time_t &value);
+    xll getAlive() const;
+    void setAlive(const xll &value);
 
-    uint getPriority() const;
-    void setPriority(const uint &value);
+    xint getPriority() const;
+    void setPriority(const xint &value);
 
 private:
-    ull token;
-    uint userid;
-    std::time_t alive;
-    uint priority;
+    xll token;
+    xint userid;
+    xll alive;
+    xint priority;
 };

@@ -9,19 +9,19 @@
 
 class LoginRecord {
 public:
-    typedef X::uint uint;
-    typedef X::ull ull;
-    typedef X::string string;
+    typedef X::xint xint;
+    typedef X::xll xll;
+    typedef X::xstring xstring;
 
-    string getIp() const;
-    void setIp(const string &value);
+    xstring getIp() const;
+    void setIp(const xstring &value);
 
-    std::time_t getTime() const;
-    void setTime(const std::time_t &value);
+    xll getTime() const;
+    void setTime(const xll &value);
 
     bool operator < (const LoginRecord &b) const;
 
 private:
-    string ip;
-    std::time_t time;
+    xstring ip;
+    xll time;
 };

@@ -9,19 +9,19 @@
 
 class BrowseRecord {
 public:
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
     
-    uint getBookid() const;
-    void setBookid(const uint &value);
+    xint getBookid() const;
+    void setBookid(const xint &value);
 
-    std::time_t getTime() const;
-    void setTime(const std::time_t &value);
+    xll getTime() const;
+    void setTime(const xll &value);
 
     bool operator < (const BrowseRecord &a) const;
 
 private:
-    uint bookid;
-    std::time_t time;
+    xint bookid;
+    xll time;
 };

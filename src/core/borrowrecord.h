@@ -9,12 +9,12 @@
 
 class BorrowRecord {
 public:
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
 
-    uint getBookid() const;
-    void setBookid(const uint &value);
+    xint getBookid() const;
+    void setBookid(const xint &value);
 
     void setTime(const std::time_t &beginTime, const std::time_t &endTime);
 
@@ -27,7 +27,7 @@ public:
     bool operator < (const BorrowRecord &t) const;
 
 private:
-    uint bookid;
+    xint bookid;
     std::time_t beginTime;
     std::time_t endTime;
 };

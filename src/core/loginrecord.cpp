@@ -3,19 +3,19 @@
 
 #include <core/loginrecord.h>
 
-LoginRecord::string LoginRecord::getIp() const {
+LoginRecord::xstring LoginRecord::getIp() const {
     return ip;
 }
 
-void LoginRecord::setIp(const string &value) {
+void LoginRecord::setIp(const xstring &value) {
     ip = value;
 }
 
-std::time_t LoginRecord::getTime() const {
+LoginRecord::xll LoginRecord::getTime() const {
     return time;
 }
 
-void LoginRecord::setTime(const std::time_t &value) {
+void LoginRecord::setTime(const xll &value) {
     time = value;
 }
 

@@ -13,7 +13,7 @@ int main() {
     try {
         for (int op; std::cin >> op; ) {
             tcp::socket s(io_service);
-            X::ull token = 0;
+            X::xll token = 0;
             boost::property_tree::ptree pt;
             X::ActionCode ac;
 

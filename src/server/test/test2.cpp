@@ -12,7 +12,7 @@ int main() {
     srand(time(0) + clock());
     try {
         tcp::socket s(io_service);
-        X::ull token = 0;
+        X::xll token = 0;
         boost::property_tree::ptree pt;
         X::ActionCode ac;
 
@@ -29,14 +29,14 @@ int main() {
         X::tcp_sync_read(s, token, ac, pt);
 
         cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
-        X::ull loginToken = token;
+        X::xll loginToken = token;
 
         for (int op; std::cin >> op; ) {
             token = loginToken;
             pt = boost::property_tree::ptree();
             if (op == 1) {
                 // GetBook
-                pt.put("bookid", int(rand() % 5 + 1));
+                pt.put("bookid", rand() % 5 + 1);
                 cerr << "GetBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::GetBook, pt);
@@ -57,10 +57,10 @@ int main() {
                 pt.put("author", "xalanq");
                 pt.put("ISBN", "ISBN??");
                 pt.put("publisher", "me");
-                pt.put("amount", int(233));
+                pt.put("amount", 233);
                 pt.put("introduction", "this is a book");
                 pt.put("position", "li wen zheng");
-                pt.put("priority", int(1));
+                pt.put("priority", 1);
                 cerr << "GetBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::SetBook, pt);

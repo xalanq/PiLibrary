@@ -17,9 +17,9 @@ public:
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
     typedef boost::property_tree::ptree ptree;
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
     typedef X::ErrorCode ErrorCode;
     typedef X::ActionCode ActionCode;
 
@@ -30,27 +30,31 @@ public:
 private:
     void read();
     void readHeader();
-    void readBody(ull token, uint length, ActionCode ac);
+    void readBody(xll token, xint length, ActionCode ac);
 
-    void write(const ull &token, const ptree &pt, const ActionCode &ac);
+    void write(const xll &token, const ptree &pt, const ActionCode &ac);
+    void writeError(const ErrorCode &ec);
 
-    void doLogin(const ptree &pt, const ull &token);
-    void writeLogin(const ull &token, ptree pt, const ErrorCode &ec = X::NoError);
+    void doLogin(const ptree &pt, const xll &token);
+    void writeLogin(const xll &token, ptree pt, const ErrorCode &ec = X::NoError);
 
-    void doRegister(const ptree &pt, const ull &token);
+    void doRegister(const ptree &pt, const xll &token);
     void writeRegister(const ErrorCode &ec = X::NoError);
 
-    void doLogout(const ptree &pt, const ull &token);
+    void doLogout(const ptree &pt, const xll &token);
     void writeLogout(const ErrorCode &ec = X::NoError);
 
-    void doGetBook(ptree pt, const ull &token);
-    void writeGetBook(const ull &token, ptree pt, const ErrorCode &ec = X::NoError);
+    void doBorrow(ptree pt, const xll &token);
+    void writeBorrow(const xll &token, const ErrorCode &ec = X::NoError);
 
-    void doSetBook(const ptree &pt, const ull &token);
-    void writeSetBook(const ull &token, const ErrorCode &ec = X::NoError);
+    void doGetBook(ptree pt, const xll &token);
+    void writeGetBook(const xll &token, ptree pt, const ErrorCode &ec = X::NoError);
 
-    void doGetRecord(ptree pt, const ull &token, const string &type, const ActionCode &feedback);
-    void writeGetRecord(const ull &token, ptree pt, const ErrorCode &ec, const ActionCode &feedback);
+    void doSetBook(const ptree &pt, const xll &token);
+    void writeSetBook(const xll &token, const ErrorCode &ec = X::NoError);
+
+    void doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback);
+    void writeGetRecord(const xll &token, ptree pt, const ErrorCode &ec, const ActionCode &feedback);
 
     boost::asio::ip::tcp::socket socket;
     SocketInfo info;

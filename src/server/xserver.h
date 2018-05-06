@@ -6,6 +6,6 @@
 #include <core/xcore.h>
 
 namespace X {
-    extern const string &APP_NAME;
-    extern const string &VERSION;
+    extern const xstring &APP_NAME;
+    extern const xstring &VERSION;
 }

@@ -18,7 +18,7 @@ class SignUpThread : public QThread {
     Q_OBJECT
 
 public:
-    SignUpThread(const X::string &username, const X::string &nickname, const X::string &password, const X::string &email, QObject *parent = Q_NULLPTR);
+    SignUpThread(const QString &username, const QString &nickname, const QString &password, const QString &email, QObject *parent = Q_NULLPTR);
 
 signals:
     void done(const int &ec);
@@ -28,10 +28,10 @@ private:
 
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::endpoint ep;
-    X::string username;
-    X::string nickname;
-    X::string password;
-    X::string email;
+    X::xstring username;
+    X::xstring nickname;
+    X::xstring password;
+    X::xstring email;
 };
 
 class DialogSignUp : public QDialog {

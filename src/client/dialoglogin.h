@@ -24,15 +24,15 @@ public:
     LoginThread(const QString &username, const QString &password, QObject *parent = Q_NULLPTR);
 
 signals:
-    void done(const unsigned long long &token, const int &ec);
+    void done(const long long &token, const int &ec);
 
 private:
     void run() override;
 
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::endpoint ep;
-    QString username;
-    QString password;
+    X::xstring username;
+    X::xstring password;
 };
 
 class DialogLogin : public QDialog {
@@ -42,11 +42,11 @@ public:
     DialogLogin(QWidget *parent = Q_NULLPTR);
 
 signals:
-    void done(const X::ull &token);
+    void done(const long long &token);
 
 public slots:
     void slotLoginBegin();
-    void slotLoginEnd(const unsigned long long &token, const int &ec);
+    void slotLoginEnd(const X::xll &token, const int &ec);
     void slotRegister();
 
 private:

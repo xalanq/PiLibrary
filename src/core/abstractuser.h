@@ -13,26 +13,26 @@ public:
         ADMINISTER = 50,
         SUPER_ADMINISTER = 100
     };
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
 
     virtual ~AbstractUser() = 0;
 
-    uint getUserid() const;
-    void setUserid(const uint &value);
+    xint getUserid() const;
+    void setUserid(const xint &value);
 
-    string getUsername() const;
-    void setUsername(const string &value);
+    xstring getUsername() const;
+    void setUsername(const xstring &value);
 
-    string getNickname() const;
-    void setNickname(const string &value);
+    xstring getNickname() const;
+    void setNickname(const xstring &value);
 
-    string getPassword() const;
-    void setPassword(const string &value);
+    xstring getPassword() const;
+    void setPassword(const xstring &value);
 
-    uint getPriority() const;
-    void setPriority(const uint &value);
+    xint getPriority() const;
+    void setPriority(const xint &value);
 
     void addLoginRecord(const LoginRecord &record);
     void removeLoginRecord(const LoginRecord &record);
@@ -40,10 +40,10 @@ public:
     LoginRecordManager getLoginRecordManager() const;
 
 private:
-    uint userid;
-    string nickname;
-    string username;
-    string password;
-    uint priority;
+    xint userid;
+    xstring nickname;
+    xstring username;
+    xstring password;
+    xint priority;
     LoginRecordManager loginRecordManager;
 };

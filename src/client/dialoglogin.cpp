@@ -21,19 +21,19 @@ LoginThread::LoginThread(const QString &username, const QString &password, QObje
     ep(boost::asio::ip::address::from_string(
           QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
        QSettings().value("Network/server_port", 2333).toInt()),
-    username(username),
-    password(password) {
+    username(username.toStdString()),
+    password(password.toStdString()) {
 
 }
 
 void LoginThread::run() {
-    X::ull token;
+    X::xll token;
     boost::property_tree::ptree pt;
     X::ActionCode ac;
     X::ErrorCode ec;
 
-    pt.put("username", username.toStdString());
-    pt.put("password", password.toStdString()); 
+    pt.put("username", username);
+    pt.put("password", password); 
 
     try {
         boost::asio::ip::tcp::socket socket(io_service);
@@ -84,7 +84,7 @@ void DialogLogin::slotLoginBegin() {
     thread->start();
 }
 
-void DialogLogin::slotLoginEnd(const unsigned long long &token, const int &ec) {
+void DialogLogin::slotLoginEnd(const X::xll &token, const int &ec) {
     if (ec == int(X::NoError)) {
         emit done(token);
         close();

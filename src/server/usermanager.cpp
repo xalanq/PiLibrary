@@ -5,7 +5,7 @@
 
 #include <server/usermanager.h>
 
-UserManager::UserManager(const string &mongo_url, const string &mongo_db_name) :
+UserManager::UserManager(const xstring &mongo_url, const xstring &mongo_db_name) :
     pool(mongo::uri(mongo_url)),
     _db_name(mongo_db_name),
     db_name(_db_name.c_str()) {
@@ -16,19 +16,19 @@ UserManager::~UserManager() {
 
 }
 
-bool UserManager::isUser(const uint &userid) {
+bool UserManager::isUser(const xint &userid) {
     cerr << "userid: " << userid << '\n';
     using namespace mongo;
     auto client = pool.acquire();
     auto doc = (*client)[db_name]["user"].find_one(
         make_document(
-            kvp("userid", int(userid))
+            kvp("userid", userid)
         )
     );
     return bool(doc);
 }
 
-bool UserManager::isUser(const string &username) {
+bool UserManager::isUser(const xstring &username) {
     cerr << "username: " << username << '\n';
     using namespace mongo;
     auto client = pool.acquire();
@@ -40,25 +40,25 @@ bool UserManager::isUser(const string &username) {
     return bool(doc);
 }
 
-UserManager::uint UserManager::getPriority(const uint &userid) {
+UserManager::xint UserManager::getPriority(const xint &userid) {
     cerr << "userid: " << userid << '\n';
     using namespace mongo;
     auto client = pool.acquire();
     auto doc = (*client)[db_name]["user"].find_one(
         make_document(
-            kvp("userid", int(userid))
+            kvp("userid", userid)
         )
     );
     if (!doc)
         return 0;
-    return uint(doc->view()["priority"].get_int32().value);
+    return xint(doc->view()["priority"].get_int32().value);
 }
 
 // return user info
 UserManager::ptree UserManager::loginUser(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    string username = pt.get("username", "");
-    string password = pt.get("password", "");
+    xstring username = pt.get("username", "");
+    xstring password = pt.get("password", "");
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -86,7 +86,7 @@ UserManager::ptree UserManager::loginUser(const ptree &pt) {
     return std::move(p);
 }
 
-UserManager::ErrorCode UserManager::checkRegister(const string &username, const string &nickname, const string &password, const string &email) {
+UserManager::ErrorCode UserManager::checkRegister(const xstring &username, const xstring &nickname, const xstring &password, const xstring &email) {
     if (username.size() < 1 || username.size() > 100 || !std::regex_match(username, X::patternUsername))
         return X::InvalidUsername;
     if (nickname.size() < 1 || nickname.size() > 100)
@@ -100,10 +100,10 @@ UserManager::ErrorCode UserManager::checkRegister(const string &username, const 
 
 UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    string username = pt.get("username", "");
-    string nickname = pt.get("nickname", "");
-    string password = pt.get("password", "");
-    string email = pt.get("email", "");
+    xstring username = pt.get("username", "");
+    xstring nickname = pt.get("nickname", "");
+    xstring password = pt.get("password", "");
+    xstring email = pt.get("email", "");
 
     auto ec = checkRegister(username, nickname, password, email);
     if (!ec && isUser(username))
@@ -112,28 +112,28 @@ UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
         using namespace mongo;
         auto client = pool.acquire();
         auto info = (*client)[db_name]["info"].find_one({});
-        uint userid = 1;
+        xint userid = 1;
         if (info) {
-            userid = uint(info->view()["userCount"].get_int32().value) + 1;
+            userid = xint(info->view()["userCount"].get_int32().value) + 1;
             (*client)[db_name]["info"].update_one(
                 {},
                 make_document(
                     kvp("$set", make_document(
-                        kvp("userCount", int(userid))
+                        kvp("userCount", userid)
                     ))
                 )
             );
         } else {
             (*client)[db_name]["info"].insert_one(
                 make_document(
-                    kvp("userCount", int(1)),
-                    kvp("bookCount", int(0))
+                    kvp("userCount", 1),
+                    kvp("bookCount", 0)
                 )
             );
         }
         (*client)[db_name]["user"].insert_one(
             make_document(
-                kvp("userid", int(userid)),
+                kvp("userid", userid),
                 kvp("username", bsoncxx::types::b_utf8(username)),
                 kvp("nickname", bsoncxx::types::b_utf8(nickname)),
                 kvp("password", bsoncxx::types::b_utf8(password)),
@@ -149,11 +149,102 @@ UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
     return ec;
 }
 
+// maybe need to verify time
+UserManager::ErrorCode UserManager::borrow(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto userid = pt.get<xint>("userid");
+    auto bookid = pt.get<xint>("bookid", 0);
+    auto priority = pt.get<xint>("priority", 0);
+    auto beginTime = pt.get<xll>("beginTime", 1);
+    auto endTime = pt.get<xll>("endTime", 0);
+
+    if (beginTime >= endTime)
+        return X::InvalidTime;
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    mongo::pipeline p;
+    p.match(
+        make_document(
+            kvp("bookid", bookid),
+            kvp("priority", make_document(
+                kvp("$lte", priority)
+            ))
+    ));
+    p.project(
+        make_document(
+            kvp("_id", 0),
+            kvp("amount", 1),
+            kvp("count", make_document(
+                kvp("$size", "$keep")
+            ))
+        )
+    );
+    auto cur = (*client)[db_name]["book"].aggregate(p);
+    ErrorCode ec = X::NoSuchBook;
+    if (cur.begin() != cur.end()) {
+        auto view = *cur.begin();
+        auto amount = xint(view["amount"].get_int32().value);
+        auto count = xint(view["count"].get_int32().value);
+        if (count + 1 > amount)
+            ec = X::NoRestBook;
+        else {
+            mongocxx::options::find opt;
+            opt.projection(
+                make_document(
+                    kvp("_id", 0),
+                    kvp("bookid", 1)
+                )
+            );
+            auto doc = (*client)[db_name]["book"].find_one(
+                make_document(
+                    kvp("bookid", bookid),
+                    kvp("keep.userid", userid)
+                )
+            );
+            if (doc)
+                ec = X::AlreadyHave;
+            else {
+                (*client)[db_name]["user"].update_one(
+                    make_document(
+                        kvp("userid", userid)
+                    ),
+                    make_document(
+                        kvp("$push", make_document(
+                            kvp("keep", make_document(
+                                kvp("bookid", bookid),
+                                kvp("beginTime", beginTime),
+                                kvp("endTime", endTime)
+                            ))
+                        ))
+                    )
+                );
+                (*client)[db_name]["book"].update_one(
+                    make_document(
+                        kvp("bookid", userid)
+                    ),
+                    make_document(
+                        kvp("$push", make_document(
+                            kvp("keep", make_document(
+                                kvp("userid", userid),
+                                kvp("beginTime", beginTime),
+                                kvp("endTime", endTime)
+                            ))
+                        ))
+                    )
+                );
+                ec = X::NoError;
+            }
+        }
+    }
+    return ec;
+}
+
 // maybe just use pt to search book not just by bookid
 UserManager::ptree UserManager::getBookCore(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    auto bookid = pt.get<uint>("bookid", 0);
-    auto priority = pt.get<uint>("priority", 0);
+    auto bookid = pt.get<xint>("bookid", 0);
+    auto priority = pt.get<xint>("priority", 0);
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -168,9 +259,9 @@ UserManager::ptree UserManager::getBookCore(const ptree &pt) {
     );
     auto doc = (*client)[db_name]["book"].find_one(
         make_document(
-            kvp("bookid", int(bookid)),
+            kvp("bookid", bookid),
             kvp("priority", make_document(
-                kvp("$lte", int(priority))
+                kvp("$lte", priority)
             ))
         ),
         opt
@@ -183,15 +274,15 @@ UserManager::ptree UserManager::getBookCore(const ptree &pt) {
 
 UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    uint bookid = pt.get<uint>("bookid", 0);
-    auto title = pt.get_optional<string>("title");
-    auto author = pt.get_optional<string>("author");
-    auto ISBN = pt.get_optional<string>("ISBN");
-    auto publisher = pt.get_optional<string>("publisher");
-    auto amount = pt.get_optional<uint>("amount");
-    auto introduction = pt.get_optional<string>("introduction");
-    auto position = pt.get_optional<string>("position");
-    auto priority = pt.get_optional<uint>("priority");
+    auto bookid = pt.get<xint>("bookid", 0);
+    auto title = pt.get_optional<xstring>("title");
+    auto author = pt.get_optional<xstring>("author");
+    auto ISBN = pt.get_optional<xstring>("ISBN");
+    auto publisher = pt.get_optional<xstring>("publisher");
+    auto amount = pt.get_optional<xint>("amount");
+    auto introduction = pt.get_optional<xstring>("introduction");
+    auto position = pt.get_optional<xstring>("position");
+    auto priority = pt.get_optional<xint>("priority");
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -199,7 +290,7 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
     if (bookid) {
         auto info = (*client)[db_name]["book"].find_one(
             make_document(
-                kvp("bookid", int(bookid))
+                kvp("bookid", bookid)
             )
         );
         if (info && (title || author || ISBN || publisher || amount || introduction || position || priority)) {
@@ -214,18 +305,18 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
             if (publisher)
                 doc << "publisher" << bsoncxx::types::b_utf8(*publisher);
             if (amount)
-                doc << "amount" << int(*amount);
+                doc << "amount" << *amount;
             if (introduction)
                 doc << "introduction" << bsoncxx::types::b_utf8(*introduction);
             if (position)
                 doc << "position" << bsoncxx::types::b_utf8(*position);
             if (priority)
-                doc << "priority" << int(*priority);
+                doc << "priority" << *priority;
             doc << close_document;
             bsoncxx::document::value val = doc << finalize;
             (*client)[db_name]["book"].update_one(
                 make_document(
-                    kvp("bookid", int(bookid))
+                    kvp("bookid", bookid)
                 ),
                 val.view()
             );
@@ -236,34 +327,34 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
         auto info = (*client)[db_name]["info"].find_one({});
         bookid = 1;
         if (info) {
-            bookid = uint(info->view()["bookCount"].get_int32().value) + 1;
+            bookid = xint(info->view()["bookCount"].get_int32().value) + 1;
             (*client)[db_name]["info"].update_one(
                 {},
                 make_document(
                     kvp("$set", make_document(
-                        kvp("bookCount", int(bookid))
+                        kvp("bookCount", bookid)
                     ))
                 )
             );
         } else {
             (*client)[db_name]["info"].insert_one(
                 make_document(
-                    kvp("bookCount", int(1)),
-                    kvp("userCount", int(0))
+                    kvp("bookCount", 1),
+                    kvp("userCount", 0)
                 )
             );
         }
         (*client)[db_name]["book"].insert_one(
             make_document(
-                kvp("bookid", int(bookid)),
+                kvp("bookid", bookid),
                 kvp("title", bsoncxx::types::b_utf8(title ? *title : "")),
                 kvp("author", bsoncxx::types::b_utf8(author ? *author : "")),
                 kvp("ISBN", bsoncxx::types::b_utf8(ISBN ? *ISBN : "")),
                 kvp("publisher", bsoncxx::types::b_utf8(publisher ? *publisher : "")),
-                kvp("amount", int(amount ? *amount : 0)),
+                kvp("amount", amount ? *amount : 0),
                 kvp("introduction", bsoncxx::types::b_utf8(introduction ? *introduction : "")),
                 kvp("position", bsoncxx::types::b_utf8(position ? *position : "")),
-                kvp("priority", int(priority ? *priority : AbstractUser::SUPER_ADMINISTER)),
+                kvp("priority", priority ? *priority : AbstractUser::SUPER_ADMINISTER),
                 kvp("borrowRecord", make_array()),
                 kvp("keep", make_array()),
                 kvp("resource", make_array())
@@ -275,10 +366,10 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
 
 UserManager::ptree UserManager::getRecord(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    auto type = pt.get<string>("type");
-    auto userid = pt.get<uint>("userid");
-    auto number = pt.get<uint>("number");
-    auto begin = pt.get<uint>("begin");
+    auto type = pt.get<xstring>("type");
+    auto userid = pt.get<xint>("userid");
+    auto number = pt.get<xint>("number", 0);
+    auto begin = pt.get<xint>("begin", 0);
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -289,13 +380,13 @@ UserManager::ptree UserManager::getRecord(const ptree &pt) {
             kvp("_id", 0),
             kvp("userid", 1),
             kvp(type, make_document(
-                kvp("$slice", -int(begin + number))
+                kvp("$slice", -(begin + number))
             ))
         )
     );
     auto doc = (*client)[db_name]["user"].find_one(
         make_document(
-            kvp("userid", int(userid))
+            kvp("userid", userid)
         ),
         opt
     );
@@ -308,15 +399,15 @@ UserManager::ptree UserManager::getRecord(const ptree &pt) {
 // need: userid, ip, time, ensure the user is exist
 void UserManager::recordLogin(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    auto userid = pt.get<uint>("userid");
-    auto ip = pt.get<string>("ip");
-    auto time = long long(pt.get<std::time_t>("time"));
+    auto userid = pt.get<xint>("userid");
+    auto ip = pt.get<xstring>("ip");
+    auto time = pt.get<xll>("time");
 
     using namespace mongo;
     auto client = pool.acquire();
     (*client)[db_name]["user"].update_one(
         make_document(
-            kvp("userid", int(userid))
+            kvp("userid", userid)
         ),
         make_document(
             kvp("$push", make_document(
@@ -332,26 +423,26 @@ void UserManager::recordLogin(const ptree &pt) {
 // need: userid, bookid, beginTime, endTime
 void UserManager::recordBorrow(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    auto userid = pt.get<uint>("userid");
-    auto bookid = pt.get<uint>("bookid");
-    auto beginTime = long long(pt.get<std::time_t>("beginTime"));
-    auto endTime = long long(pt.get<std::time_t>("endTime"));
+    auto userid = pt.get<xint>("userid");
+    auto bookid = pt.get<xint>("bookid");
+    auto beginTime = pt.get<xll>("beginTime");
+    auto endTime = pt.get<xll>("endTime");
 
     using namespace mongo;
     auto client = pool.acquire();
     (*client)[db_name]["user"].update_one(
         make_document(
-            kvp("userid", int(userid))
+            kvp("userid", userid)
         ),
         make_document(
             kvp("$push", make_document(
                 kvp("borrowRecord", make_document(
-                    kvp("bookid", int(bookid)), 
+                    kvp("bookid", bookid), 
                     kvp("beginTime", beginTime),
                     kvp("endTime", endTime)
                 )),
                 kvp("keep", make_document(
-                    kvp("bookid", int(bookid)),
+                    kvp("bookid", bookid),
                     kvp("beginTime", beginTime),
                     kvp("endTime", endTime)
                 ))
@@ -360,17 +451,17 @@ void UserManager::recordBorrow(const ptree &pt) {
     );
     (*client)[db_name]["book"].update_one(
         make_document(
-            kvp("bookid", int(userid))
+            kvp("bookid", userid)
         ),
         make_document(
             kvp("$push", make_document(
                 kvp("borrowRecord", make_document(
-                    kvp("userid", int(userid)), 
+                    kvp("userid", userid), 
                     kvp("beginTime", beginTime),
                     kvp("endTime", endTime)
                 )),
                 kvp("keep", make_document(
-                    kvp("userid", int(userid)),
+                    kvp("userid", userid),
                     kvp("beginTime", beginTime),
                     kvp("endTime", endTime)
                 ))
@@ -382,20 +473,20 @@ void UserManager::recordBorrow(const ptree &pt) {
 // need: userid, bookid, time
 void UserManager::recordBrowse(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    auto userid = pt.get<uint>("userid");
-    auto bookid = pt.get<uint>("bookid");
-    auto time = long long(pt.get<std::time_t>("time"));
+    auto userid = pt.get<xint>("userid");
+    auto bookid = pt.get<xint>("bookid");
+    auto time = pt.get<xll>("time");
 
     using namespace mongo;
     auto client = pool.acquire();
     (*client)[db_name]["user"].update_one(
         make_document(
-            kvp("userid", int(userid))
+            kvp("userid", userid)
         ), 
         make_document(
             kvp("$push", make_document(
                 kvp("browseRecord", make_document(
-                    kvp("bookid", int(bookid)), 
+                    kvp("bookid", bookid), 
                     kvp("time", time)
                 ))
             ))

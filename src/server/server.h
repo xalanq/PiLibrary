@@ -18,9 +18,9 @@ public:
     typedef boost::property_tree::ptree ptree;
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
 
     Server(boost::asio::io_service &service, const ptree &config);
     static void start(const ptree &config);
@@ -31,7 +31,7 @@ private:
 
     boost::asio::ip::tcp::acceptor acceptor;
     boost::asio::ip::tcp::socket socket;
-    int thread_number;
+    xint thread_number;
     UserManager userManager;
     SessionManager sessionManager;
 };

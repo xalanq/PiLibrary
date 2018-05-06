@@ -3,11 +3,11 @@
 
 #include <core/book.h>
 
-void Book::addResource(const string &name, const string &path) {
+void Book::addResource(const xstring &name, const xstring &path) {
     resource[name] = path;
 }
 
-void Book::removeResource(const string &name) {
+void Book::removeResource(const xstring &name) {
     auto it = resource.find(name);
     if (it != resource.end()) {
         R::remove(it->second);

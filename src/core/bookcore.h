@@ -8,45 +8,45 @@
 class BookCore {
 public:
     virtual ~BookCore() = 0;
-    typedef X::ull ull;
-    typedef X::uint uint;
-    typedef X::string string;
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
 
-    uint getBookid() const;
-    void setBookid(const uint &value);
+    xint getBookid() const;
+    void setBookid(const xint &value);
 
-    string getTitle() const;
-    void setTitle(const string &value);
+    xstring getTitle() const;
+    void setTitle(const xstring &value);
 
-    string getAuthor() const;
-    void setAuthor(const string &value);
+    xstring getAuthor() const;
+    void setAuthor(const xstring &value);
 
-    string getISBN() const;
-    void setISBN(const string &value);
+    xstring getISBN() const;
+    void setISBN(const xstring &value);
 
-    string getPublisher() const;
-    void setPublisher(const string &value);
+    xstring getPublisher() const;
+    void setPublisher(const xstring &value);
 
-    uint getAmount() const;
-    void setAmount(const uint &value);
+    xint getAmount() const;
+    void setAmount(const xint &value);
 
-    string getIntroduction() const;
-    void setIntroduction(const string &value);
+    xstring getIntroduction() const;
+    void setIntroduction(const xstring &value);
 
-    string getPosition() const;
-    void setPosition(const string &value);
+    xstring getPosition() const;
+    void setPosition(const xstring &value);
 
-    uint getPriority() const;
-    void setPriority(const uint &value);
+    xint getPriority() const;
+    void setPriority(const xint &value);
 
 private:
-    uint bookid;
-    string title;
-    string author;
-    string ISBN;
-    string publisher;
-    uint amount;
-    string introduction;
-    string position;
-    uint priority;
+    xint bookid;
+    xstring title;
+    xstring author;
+    xstring ISBN;
+    xstring publisher;
+    xint amount;
+    xstring introduction;
+    xstring position;
+    xint priority;
 };

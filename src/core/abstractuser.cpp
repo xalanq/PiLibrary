@@ -5,43 +5,43 @@
 
 AbstractUser::~AbstractUser() { }
 
-AbstractUser::uint AbstractUser::getUserid() const {
+AbstractUser::xint AbstractUser::getUserid() const {
     return userid;
 }
 
-void AbstractUser::setUserid(const uint &value) {
+void AbstractUser::setUserid(const xint &value) {
     userid = value;
 }
 
-AbstractUser::string AbstractUser::getUsername() const {
+AbstractUser::xstring AbstractUser::getUsername() const {
     return username;
 }
 
-void AbstractUser::setUsername(const string &value) {
+void AbstractUser::setUsername(const xstring &value) {
     username = value;
 }
 
-AbstractUser::string AbstractUser::getNickname() const {
+AbstractUser::xstring AbstractUser::getNickname() const {
     return nickname;
 }
 
-void AbstractUser::setNickname(const string &value) {
+void AbstractUser::setNickname(const xstring &value) {
     nickname = value;
 }
 
-AbstractUser::string AbstractUser::getPassword() const {
+AbstractUser::xstring AbstractUser::getPassword() const {
     return password;
 }
 
-void AbstractUser::setPassword(const string &value) {
+void AbstractUser::setPassword(const xstring &value) {
     password = value;
 }
 
-AbstractUser::uint AbstractUser::getPriority() const {
+AbstractUser::xint AbstractUser::getPriority() const {
     return priority;
 }
 
-void AbstractUser::setPriority(const uint &value) {
+void AbstractUser::setPriority(const xint &value) {
     priority = value;
 }
 

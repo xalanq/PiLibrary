@@ -6,6 +6,10 @@
 #include <core/xcore.h>
 
 namespace R {
-    void remove(const X::string &path);
-    void add(const X::string &path, const char *data);
+    typedef X::xll xll;
+    typedef X::xint xint;
+    typedef X::xstring xstring;
+
+    void remove(const xstring &path);
+    void add(const xstring &path, const char *data);
 }

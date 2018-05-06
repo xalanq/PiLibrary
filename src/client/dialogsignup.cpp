@@ -12,21 +12,21 @@
 
 #include <client/dialogsignup.h>
 
-SignUpThread::SignUpThread(const X::string &username, const X::string &nickname, const X::string &password, const X::string &email, QObject *parent) :
+SignUpThread::SignUpThread(const QString &username, const QString &nickname, const QString &password, const QString &email, QObject *parent) :
     QThread(parent),
     io_service(),
     ep(boost::asio::ip::address::from_string(
           QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
        QSettings().value("Network/server_port", 2333).toInt()),
-    username(username),
-    nickname(nickname),
-    password(password),
-    email(email) {
+    username(username.toStdString()),
+    nickname(nickname.toStdString()),
+    password(password.toStdString()),
+    email(email.toStdString()) {
 
 }
 
 void SignUpThread::run() {
-    X::ull token;
+    X::xll token;
     boost::property_tree::ptree pt;
     X::ActionCode ac;
     X::ErrorCode ec;
@@ -75,7 +75,7 @@ DialogSignUp::DialogSignUp(QWidget *parent) :
 void DialogSignUp::slotSignUpBegin() {
     labelMessage->hide();
 
-    auto username = editUsername->text().toStdString();
+    auto &&username = editUsername->text().toStdString();
     if (username.size() < 1 || username.size() > 100 || !std::regex_match(username, X::patternUsername)) {
         labelMessage->show();
         if (username.size() < 1 || username.size() > 100)
@@ -86,7 +86,7 @@ void DialogSignUp::slotSignUpBegin() {
         return;
     }
 
-    auto nickname = editNickname->text().toStdString();
+    auto &&nickname = editNickname->text().toStdString();
     if (nickname.size() < 1 || nickname.size() > 100) {
         labelMessage->show();
         labelMessage->setText(tr("Nickname's length should be in [1, 100]"));
@@ -94,8 +94,8 @@ void DialogSignUp::slotSignUpBegin() {
         return;
     }
 
-    auto password = editPassword->text().toStdString();
-    auto passwordConfirm = editPasswordConfirm->text().toStdString();
+    auto &&password = editPassword->text().toStdString();
+    auto &&passwordConfirm = editPasswordConfirm->text().toStdString();
     if (password != passwordConfirm) {
         labelMessage->show();
         labelMessage->setText(tr("Different passwords"));
@@ -110,7 +110,7 @@ void DialogSignUp::slotSignUpBegin() {
         return;
     }
 
-    auto email = editEmail->text().toStdString();
+    auto &&email = editEmail->text().toStdString();
     if (email.size() < 5 || email.size() > 100 || !std::regex_match(email, X::patternEmail)) {
         labelMessage->show();
         if (email.size() < 5 || email.size() > 100)
@@ -121,12 +121,17 @@ void DialogSignUp::slotSignUpBegin() {
         return;
     }
 
-    password = QString(QCryptographicHash::hash(QString::fromStdString(X::saltBegin + editPassword->text().toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex()).toStdString();
 
     labelMessage->show();
     labelMessage->setText("Registering...");
 
-    SignUpThread *thread = new SignUpThread(std::move(username), std::move(nickname), std::move(password), std::move(email), this);
+    SignUpThread *thread = new SignUpThread(
+        editUsername->text(),
+        editNickname->text(),
+        QCryptographicHash::hash(QString::fromStdString(X::saltBegin + editPassword->text().toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex(),
+        editEmail->text(),
+        this
+    );
     connect(thread, &SignUpThread::done, this, &DialogSignUp::slotSignUpEnd);
     connect(thread, &SignUpThread::finished, thread, &QObject::deleteLater);
     thread->start();

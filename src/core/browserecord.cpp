@@ -3,19 +3,19 @@
 
 #include <core/browserecord.h>
 
-BrowseRecord::uint BrowseRecord::getBookid() const {
+BrowseRecord::xint BrowseRecord::getBookid() const {
     return bookid;
 }
 
-void BrowseRecord::setBookid(const uint &value) {
+void BrowseRecord::setBookid(const xint &value) {
     bookid = value;
 }
 
-std::time_t BrowseRecord::getTime() const {
+BrowseRecord::xll BrowseRecord::getTime() const {
     return time;
 }
 
-void BrowseRecord::setTime(const std::time_t &value) {
+void BrowseRecord::setTime(const xll &value) {
     time = value;
 }
 

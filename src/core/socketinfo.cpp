@@ -28,21 +28,21 @@ size_t SocketInfo::getSize() const {
     return size;
 }
 
-SocketInfo::ull SocketInfo::decodeHeaderToken() const {
-    return *static_cast<const ull *> ((const void *)(buffer));
+SocketInfo::xll SocketInfo::decodeHeaderToken() const {
+    return *static_cast<const xll *> ((const void *)(buffer));
 }
 
-SocketInfo::uint SocketInfo::decodeHeaderLength() const {
-    return *static_cast<const uint *> ((const void *)(buffer + sizeof(ull)));
+SocketInfo::xint SocketInfo::decodeHeaderLength() const {
+    return *static_cast<const xint *> ((const void *)(buffer + sizeof(xll)));
 }
 
 SocketInfo::ActionCode SocketInfo::decodeHeaderActionCode() const {
-    return *static_cast<const ActionCode *> ((const void *)(buffer + sizeof(ull) + sizeof(uint)));
+    return *static_cast<const ActionCode *> ((const void *)(buffer + sizeof(xll) + sizeof(xint)));
 }
 
-void SocketInfo::decodeBody(const uint &length, ptree &pt) const {
+void SocketInfo::decodeBody(const xint &length, ptree &pt) const {
     std::stringstream ss;
-    const std::string str(buffer, length);
+    const xstring str(buffer, length);
     ss << str;
     boost::property_tree::read_json(ss, pt);
 }
@@ -51,23 +51,23 @@ void SocketInfo::encodeIndentifier() {
     buffer[0] = IDENTIFIER;
 }
 
-void SocketInfo::encodeHeaderToken(const ull &token) {
-    memcpy(buffer + 1, (const void *)(&token), sizeof(ull));
+void SocketInfo::encodeHeaderToken(const xll &token) {
+    memcpy(buffer + 1, (const void *)(&token), sizeof(xll));
 }
 
-void SocketInfo::encodeHeaderLength(const uint &length) {
-    memcpy(buffer + 1 + sizeof(ull), (const void *)(&length), sizeof(uint));
+void SocketInfo::encodeHeaderLength(const xint &length) {
+    memcpy(buffer + 1 + sizeof(xll), (const void *)(&length), sizeof(xint));
 }
 
 void SocketInfo::encodeHeaderActionCode(const ActionCode &ac) {
-    memcpy(buffer + 1 + sizeof(ull) + sizeof(uint), (const void *)(&ac), sizeof(ActionCode));
+    memcpy(buffer + 1 + sizeof(xll) + sizeof(xint), (const void *)(&ac), sizeof(ActionCode));
 }
 
-void SocketInfo::encodeBody(const string &str) {
-    memcpy(buffer + 1 + sizeof(ull) + sizeof(uint) + sizeof(ActionCode), str.c_str(), str.size());
+void SocketInfo::encodeBody(const xstring &str) {
+    memcpy(buffer + 1 + sizeof(xll) + sizeof(xint) + sizeof(ActionCode), str.c_str(), str.size());
 }
 
-void SocketInfo::encode(const ull &token, const uint &bodyLength, const ActionCode &ac, const string &str) {
+void SocketInfo::encode(const xll &token, const xint &bodyLength, const ActionCode &ac, const xstring &str) {
     encodeIndentifier();
     encodeHeaderToken(token);
     encodeHeaderLength(bodyLength);
@@ -75,17 +75,17 @@ void SocketInfo::encode(const ull &token, const uint &bodyLength, const ActionCo
     encodeBody(str);
 }
 
-void SocketInfo::encode(const ull &token, const uint &bodyLength, const ActionCode &ac, const ptree &pt) {
+void SocketInfo::encode(const xll &token, const xint &bodyLength, const ActionCode &ac, const ptree &pt) {
     encode(token, bodyLength, ac, encodePtree(pt));
 }
 
-std::string SocketInfo::encodePtree(const ptree &pt, bool pretty) {
+SocketInfo::xstring SocketInfo::encodePtree(const ptree &pt, bool pretty) {
     std::stringstream ss;
     boost::property_tree::write_json(ss, pt, pretty);
     return std::move(ss.str());
 }
 
-void SocketInfo::decodePtree(const string &str, ptree &pt) {
+void SocketInfo::decodePtree(const xstring &str, ptree &pt) {
     std::stringstream ss;
     ss << str;
     boost::property_tree::read_json(ss, pt);

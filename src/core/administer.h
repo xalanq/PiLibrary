@@ -18,9 +18,9 @@ public:
         EDIT_ADMINISTER = 32
     };
 
-    uint getAuthority() const;
-    void setAuthority(const uint &value);
+    xint getAuthority() const;
+    void setAuthority(const xint &value);
 
 private:
-    uint authority;
+    xint authority;
 };
