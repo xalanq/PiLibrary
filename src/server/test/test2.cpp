@@ -47,7 +47,11 @@ int main() {
             } else if (op == 2 || op == 3) {
                 static int cnt = 0;
                 // SetBook or ModifyBook
-                int t = ++cnt;
+                int t;
+                if (op == 2)
+                    t = ++cnt;
+                else
+                    t = rand() % cnt + 1;
                 pt.put("bookid", int(op == 2 ? 0 : t));
                 pt.put("title", (op == 2 ? "book " : "update book ") + std::to_string(t));
                 pt.put("author", "xalanq");

@@ -49,14 +49,8 @@ private:
     void doSetBook(const ptree &pt, const ull &token);
     void writeSetBook(const ull &token, const ErrorCode &ec = X::NoError);
 
-    void doGetLoginReccord(ptree pt, const ull &token);
-    void writeGetLoginRecord(const ull &token, ptree pt, const ErrorCode &ec = X::NoError);
-
-    void doGetBorrowReccord(ptree pt, const ull &token);
-    void writeGetBorrowRecord(const ull &token, ptree pt, const ErrorCode &ec = X::NoError);
-
-    void doGetBrowseReccord(ptree pt, const ull &token);
-    void writeGetBrowseRecord(const ull &token, ptree pt, const ErrorCode &ec = X::NoError);
+    void doGetRecord(ptree pt, const ull &token, const string &type, const ActionCode &feedback);
+    void writeGetRecord(const ull &token, ptree pt, const ErrorCode &ec, const ActionCode &feedback);
 
     boost::asio::ip::tcp::socket socket;
     SocketInfo info;

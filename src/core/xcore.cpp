@@ -77,16 +77,20 @@ namespace X {
             return "Set Book Feedback";
         case GetLoginRecord:
             return "Get Login Record";
-        case GetLoginRecordFeedBack:
+        case GetLoginRecordFeedback:
             return "Get Login Record Feedback";
         case GetBorrowRecord:
             return "Get Borrow Record";
-        case GetBorrowRecordFeedBack:
+        case GetBorrowRecordFeedback:
             return "Get Borrow Record Feedback";
         case GetBrowseRecord:
             return "Get Browse Record";
-        case GetBrowseRecordFeedBack:
+        case GetBrowseRecordFeedback:
             return "Get Browse Record Feedback";
+        case GetKeep:
+            return "Get Keep";
+        case GetKeepFeedback:
+            return "Get Keep Keepback";
         default:
             return "No Such Action";
         }

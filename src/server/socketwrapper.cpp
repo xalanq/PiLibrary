@@ -114,11 +114,13 @@ void SocketWrapper::readBody(ull token, uint length, ActionCode ac) {
             else if (ac == X::SetBook)
                 doSetBook(std::move(pt), token);
             else if (ac == X::GetLoginRecord)
-                doGetLoginReccord(std::move(pt), token);
+                doGetRecord(std::move(pt), token, "loginRecord", X::GetLoginRecordFeedback);
             else if (ac == X::GetBorrowRecord)
-                doGetBorrowReccord(std::move(pt), token);
+                doGetRecord(std::move(pt), token, "borrowRecord", X::GetBorrowRecordFeedback);
             else if (ac == X::GetBrowseRecord)
-                doGetBrowseReccord(std::move(pt), token);
+                doGetRecord(std::move(pt), token, "browseRecord", X::GetBrowseRecordFeedback);
+            else if (ac == X::GetKeep)
+                doGetRecord(std::move(pt), token, "keep", X::GetKeepFeedback);
             else
                 read();
         }
@@ -305,87 +307,31 @@ void SocketWrapper::writeSetBook(const ull &token, const ErrorCode &ec) {
     write(token, pt, X::SetBookFeedback);
 }
 
-void SocketWrapper::doGetLoginReccord(ptree pt, const ull &token) {
+void SocketWrapper::doGetRecord(ptree pt, const ull &token, const string &type, const ActionCode &feedback) {
     auto tr = ptree();
     auto ec = X::NoError;
     ull tk = 0;
     if (token == 0) {
-        _from(doGetLoginReccord) << "token == 0\n";
+        _from(doGetRecord) << "token == 0\n";
         ec = X::NotLogin;
     } else {
         auto it = sessionManager.findToken(token);
         if (it == nullptr) {
-            _from(doGetLoginReccord) << "not found session\n";
+            _from(doGetRecord) << "not found session\n";
             ec = X::NotLogin;
         } else {
             tk = token;
             auto userid = it->getUserid();
             pt.put<uint>("userid", userid);
-            _from(doGetLoginReccord);
-            tr = userManager.getLoginRecord(pt);
+            pt.put<string>("type", type);
+            _from(doGetRecord);
+            tr = userManager.getRecord(pt);
         }
     }
-    writeGetLoginRecord(tk, std::move(tr), ec);
+    writeGetRecord(tk, std::move(tr), ec, feedback);
 }
 
-void SocketWrapper::writeGetLoginRecord(const ull &token, ptree pt, const ErrorCode &ec) {
+void SocketWrapper::writeGetRecord(const ull &token, ptree pt, const ErrorCode &ec, const ActionCode &feedback) {
     pt.put("error_code", ec);
-    write(token, pt, X::GetLoginRecordFeedBack);
-}
-
-void SocketWrapper::doGetBorrowReccord(ptree pt, const ull &token) {
-    auto tr = ptree();
-    auto ec = X::NoError;
-    ull tk = 0;
-    if (token == 0) {
-        _from(doGetBorrowReccord) << "token == 0\n";
-        ec = X::NotLogin;
-    } else {
-        auto it = sessionManager.findToken(token);
-        if (it == nullptr) {
-            _from(doGetBorrowReccord) << "not found session\n";
-            ec = X::NotLogin;
-        } else {
-            tk = token;
-            auto userid = it->getUserid();
-            pt.put<uint>("userid", userid);
-            _from(doGetBorrowReccord());
-            tr = userManager.getBorrowRecord(pt);
-        }
-    }
-    writeGetBorrowRecord(token, std::move(tr), ec);
-}
-
-
-void SocketWrapper::writeGetBorrowRecord(const ull &token, ptree pt, const ErrorCode &ec) {
-    pt.put("error_code", ec);
-    write(token, pt, X::GetBorrowRecordFeedBack);
-}
-
-void SocketWrapper::doGetBrowseReccord(ptree pt, const ull &token) {
-    auto tr = ptree();
-    auto ec = X::NoError;
-    ull tk = 0;
-    if (token == 0) {
-        _from(doGetBrowseReccord) << "token == 0\n";
-        ec = X::NotLogin;
-    } else {
-        auto it = sessionManager.findToken(token);
-        if (it == nullptr) {
-            _from(doGetBrowseReccord) << "not found session\n";
-            ec = X::NotLogin;
-        } else {
-            tk = token;
-            auto userid = it->getUserid();
-            pt.put<uint>("userid", userid);
-            _from(doGetBrowseReccord);
-            tr = userManager.getBrowseRecord(pt);
-        }
-    }
-    writeGetBrowseRecord(tk, std::move(tr), ec);
-}
-
-void SocketWrapper::writeGetBrowseRecord(const ull &token, ptree pt, const ErrorCode &ec) {
-    pt.put("error_code", ec);
-    write(token, pt, X::GetBrowseRecordFeedBack);
+    write(token, pt, feedback);
 }

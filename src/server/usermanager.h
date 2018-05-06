@@ -23,22 +23,22 @@
 #include <server/xserver.h>
 
 namespace mongo {
+    using bsoncxx::builder::stream::array;
+    using bsoncxx::builder::stream::close_array;
+    using bsoncxx::builder::stream::close_document;
+    using bsoncxx::builder::stream::document;
+    using bsoncxx::builder::stream::finalize;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
     using bsoncxx::builder::basic::make_array;
-    using bsoncxx::builder::stream::document;
-    using bsoncxx::builder::stream::array;
-    using bsoncxx::builder::stream::open_document;
-    using bsoncxx::builder::stream::close_document;
     using bsoncxx::builder::stream::open_array;
-    using bsoncxx::builder::stream::close_array;
-    using bsoncxx::builder::stream::finalize;
+    using bsoncxx::builder::stream::open_document;
     using bsoncxx::stdx::string_view;
+    using mongocxx::client;
     using mongocxx::collection;
-    using mongocxx::validation_criteria;
     using mongocxx::pool;
     using mongocxx::uri;
-    using mongocxx::client;
+    using mongocxx::validation_criteria;
 }
 
 class UserManager {
@@ -65,12 +65,7 @@ public:
     ptree getBookCore(const ptree &pt);
     ErrorCode setBookCore(const ptree &pt);
 
-    ptree getLoginRecord(const ptree &pt);
-
-    ptree getBorrowRecord(const ptree &pt);
-
-    ptree getBrowseRecord(const ptree &pt);
-
+    ptree getRecord(const ptree &pt);
 
     // not open for user, so ensure the userid exists in the below methods
     void recordLogin(const ptree &pt);
