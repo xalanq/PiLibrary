@@ -153,8 +153,8 @@ UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
 UserManager::ErrorCode UserManager::borrow(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
     auto userid = pt.get<xint>("userid");
+    auto priority = pt.get<xint>("priority");
     auto bookid = pt.get<xint>("bookid", 0);
-    auto priority = pt.get<xint>("priority", 0);
     auto beginTime = pt.get<xll>("beginTime", 1);
     auto endTime = pt.get<xll>("endTime", 0);
 
@@ -215,17 +215,27 @@ UserManager::ErrorCode UserManager::borrow(const ptree &pt) {
                                 kvp("bookid", bookid),
                                 kvp("beginTime", beginTime),
                                 kvp("endTime", endTime)
+                            )),
+                            kvp("borrowRecord", make_document(
+                                kvp("bookid", bookid),
+                                kvp("beginTime", beginTime),
+                                kvp("endTime", endTime)
                             ))
                         ))
                     )
                 );
                 (*client)[db_name]["book"].update_one(
                     make_document(
-                        kvp("bookid", userid)
+                        kvp("bookid", bookid)
                     ),
                     make_document(
                         kvp("$push", make_document(
                             kvp("keep", make_document(
+                                kvp("userid", userid),
+                                kvp("beginTime", beginTime),
+                                kvp("endTime", endTime)
+                            )),
+                            kvp("borrowRecord", make_document(
                                 kvp("userid", userid),
                                 kvp("beginTime", beginTime),
                                 kvp("endTime", endTime)
@@ -243,8 +253,8 @@ UserManager::ErrorCode UserManager::borrow(const ptree &pt) {
 // maybe just use pt to search book not just by bookid
 UserManager::ptree UserManager::getBookCore(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
+    auto priority = pt.get<xint>("priority");
     auto bookid = pt.get<xint>("bookid", 0);
-    auto priority = pt.get<xint>("priority", 0);
 
     using namespace mongo;
     auto client = pool.acquire();

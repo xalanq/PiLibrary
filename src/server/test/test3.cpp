@@ -1,7 +1,11 @@
-#include "../xserver.h"
-#include "../../core/socketinfo.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+
+#include <core/xcore.h>
+#include <core/socketinfo.h>
 
 using boost::asio::ip::tcp;
 boost::asio::io_service io_service;

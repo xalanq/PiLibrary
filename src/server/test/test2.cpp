@@ -1,7 +1,13 @@
-#include "../xserver.h"
-#include "../../core/socketinfo.h"
+// Copyright 2018 xalanq, chang-ran
+// License: LGPL v3.0
+
+#include <ctime>
+
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+
+#include <core/xcore.h>
+#include <core/socketinfo.h>
 
 using boost::asio::ip::tcp;
 boost::asio::io_service io_service;
@@ -20,7 +26,9 @@ int main() {
         s.connect(ep);
         
         // login
-        pt.put("username", "xalanq" + std::to_string(rand() % 10));
+        int id;
+        std::cin >> id;
+        pt.put("username", "xalanq" + std::to_string(id));
         pt.put("password", "hash(123456)");
         cerr << "Login send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
@@ -36,7 +44,7 @@ int main() {
             pt = boost::property_tree::ptree();
             if (op == 1) {
                 // GetBook
-                pt.put("bookid", rand() % 5 + 1);
+                pt.put("bookid", rand() % 10 + 1);
                 cerr << "GetBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::GetBook, pt);
@@ -45,7 +53,7 @@ int main() {
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
             } else if (op == 2 || op == 3) {
-                static int cnt = 0;
+                static int cnt = 1;
                 // SetBook or ModifyBook
                 int t;
                 if (op == 2)
@@ -68,7 +76,20 @@ int main() {
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
-            } else {
+            } else if (op == 4) {
+                // BorrowBook
+                pt.put("bookid", rand() % 10 + 1);
+                pt.put("beginTime", X::xll(time(0)));
+                pt.put("endTime", X::xll(time(0)) + 1000000);
+                cerr << "BorrowBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
+
+                X::tcp_sync_write(s, token, X::Borrow, pt);
+                pt = boost::property_tree::ptree();
+                X::tcp_sync_read(s, token, ac, pt);
+
+                cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
+            }
+            else {
                 // logout
                 pt = boost::property_tree::ptree();
                 cerr << "Logout send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';

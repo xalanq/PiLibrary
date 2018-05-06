@@ -177,7 +177,7 @@ void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
             auto loginTime = Session::getNowTime();
             _from(doLogin) << "token: " << tk << ", userid: " << userid << ", loginTime: " << loginTime << '\n';
             if (sessionManager.add(tk, userid, loginTime + sessionManager.getDefaultAlive(), priority, true)) {
-                _from(doLogin) << "login successfully\n";
+                _from(doLogin) << "succeed to login\n";
                 tr = std::move(p);
                 ptree t;
                 t.put<xint>("userid", userid);
@@ -185,7 +185,7 @@ void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
                 t.put<xll>("time", loginTime);
                 userManager.recordLogin(t);
             } else {
-                _from(doLogin) << "failed to login\n";
+                _from(doLogin) << "fail to login\n";
                 ec = X::LoginFailed;
             }
         }
@@ -227,7 +227,8 @@ void SocketWrapper::doLogout(const ptree &pt, const xll &token) {
     } else if (!sessionManager.removeByToken(token)) {
         _from(doLogout) << "token is invalid\n";
         ec = X::InvalidToken;
-    }
+    } else
+        _from(doLogout) << "succeed to logout\n";
     writeLogout(ec);
 }
 
@@ -256,6 +257,10 @@ void SocketWrapper::doBorrow(ptree pt, const xll &token) {
             pt.put<xint>("priority", priority);
             _from(doBorrow);
             ec = userManager.borrow(pt);
+            if (ec == X::NoError)
+                _from(doBorrow) << "succeed to borrow\n";
+            else
+                _from(doBorrow) << "fail to borrow: " << X::what(ec) << "\n";
         }
     }
     writeBorrow(tk, ec);
