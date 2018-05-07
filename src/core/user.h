@@ -4,21 +4,28 @@
 #pragma once
 
 #include <core/abstractuser.h>
-#include <core/borrowrecordmanager.h>
-#include <core/browserecordmanager.h>
-#include <core/loginrecordmanager.h>
+#include <core/borrowrecord.h>
+#include <core/browserecord.h>
+#include <core/recordmanager.h>
 #include <core/xcore.h>
 
 class User : public AbstractUser {
 public:
 
-    BrowseRecordManager getBrowseRecord() const;
-    void setBrowseRecord(const BrowseRecordManager &value);
+    void addBorrowRecord(const BorrowRecord &record);
+    RecordManager<BorrowRecord>& getBorrowRecordManager();
+    void clearBorrowRecordManager();
 
-    BorrowRecordManager getBorrowRecord() const;
-    void setBorrowRecord(const BorrowRecordManager &value);
+    void addKeepRecord(const BorrowRecord &record);
+    RecordManager<BorrowRecord>& getKeepRecordManager();
+    void clearKeepRecordManager();
+
+    void addBrowseRecord(const BrowseRecord &record);
+    RecordManager<BrowseRecord>& getBrowseRecordManager();
+    void clearBrowseRecordManager();
 
 private:
-    BrowseRecordManager browseRecord;
-    BorrowRecordManager borrowRecord;
+    RecordManager<BorrowRecord> borrowRecordManager;
+    RecordManager<BorrowRecord> keepRecordManager;
+    RecordManager<BrowseRecord> browseRecordManager;
 };

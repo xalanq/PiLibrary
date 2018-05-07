@@ -121,7 +121,6 @@ void DialogSignUp::slotSignUpBegin() {
         return;
     }
 
-
     labelMessage->show();
     labelMessage->setText("Registering...");
 

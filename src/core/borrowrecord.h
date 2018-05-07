@@ -8,26 +8,33 @@
 #include <core/xcore.h>
 
 class BorrowRecord {
+
 public:
     typedef X::xll xll;
     typedef X::xint xint;
     typedef X::xstring xstring;
 
+    virtual ~BorrowRecord();
+
     xint getBookid() const;
     void setBookid(const xint &value);
 
-    void setTime(const std::time_t &beginTime, const std::time_t &endTime);
+    void setTime(const xll &beginTime, const xll &endTime, const xll &returnTime);
 
-    std::time_t getBeginTime() const;
-    void setBeginTime(const std::time_t &value);
+    xll getBeginTime() const;
+    void setBeginTime(const xll &value);
 
-    std::time_t getEndTime() const;
-    void setEndTime(const std::time_t &value);
+    xll getEndTime() const;
+    void setEndTime(const xll &value);
+
+    xll getReturnTime() const;
+    void setReturnTime(const xll &value);
     
     bool operator < (const BorrowRecord &t) const;
 
 private:
     xint bookid;
-    std::time_t beginTime;
-    std::time_t endTime;
+    xll beginTime;
+    xll endTime;
+    xll returnTime;
 };

@@ -3,18 +3,38 @@
 
 #include <core/user.h>
 
-BrowseRecordManager User::getBrowseRecord() const {
-    return browseRecord;
+void User::addBorrowRecord(const BorrowRecord &record) {
+    borrowRecordManager.add(record);
 }
 
-void User::setBrowseRecord(const BrowseRecordManager &value) {
-    browseRecord = value;
+RecordManager<BorrowRecord>& User::getBorrowRecordManager() {
+    return borrowRecordManager;
 }
 
-BorrowRecordManager User::getBorrowRecord() const {
-    return borrowRecord;
+void User::clearBorrowRecordManager() {
+    borrowRecordManager.clear();
 }
 
-void User::setBorrowRecord(const BorrowRecordManager &value) {
-    borrowRecord = value;
+void User::addKeepRecord(const BorrowRecord &record) {
+    keepRecordManager.add(record);
+}
+
+RecordManager<BorrowRecord>& User::getKeepRecordManager() {
+    return keepRecordManager;
+}
+
+void User::clearKeepRecordManager() {
+    keepRecordManager.clear();
+}
+
+void User::addBrowseRecord(const BrowseRecord &record) {
+    browseRecordManager.add(record);
+}
+
+RecordManager<BrowseRecord>& User::getBrowseRecordManager() {
+    return browseRecordManager;
+}
+
+void User::clearBrowseRecordManager() {
+    browseRecordManager.clear();
 }

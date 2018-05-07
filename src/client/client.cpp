@@ -6,6 +6,17 @@
 
 Client::Client(QWidget *parent) : 
     QMainWindow(parent) {
-    DialogLogin dialog(this);
+
+    setUI();
+    setConnection();
+}
+
+void Client::setUI() {
+    DialogLogin dialog(userManager, this);
     dialog.exec();
 }
+
+void Client::setConnection() {
+
+}
+

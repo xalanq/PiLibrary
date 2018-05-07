@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include <core/abstractuser.h>
+#include <core/user.h>
 #include <core/xcore.h>
 
-class Administer : public AbstractUser
+class Administer : public User
 {
 public:
     enum {

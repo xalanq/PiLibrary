@@ -15,16 +15,19 @@
 #include <QPushButton>
 #include <QThread>
 
+#include <client/usermanager.h>
 #include <client/xclient.h>
 
 class LoginThread : public QThread {
     Q_OBJECT
 
 public:
+    typedef boost::property_tree::ptree ptree;
+
     LoginThread(const QString &username, const QString &password, QObject *parent = Q_NULLPTR);
 
 signals:
-    void done(const long long &token, const int &ec);
+    void done(const int &ec, const X::xll &token, const ptree &pt);
 
 private:
     void run() override;
@@ -39,14 +42,13 @@ class DialogLogin : public QDialog {
     Q_OBJECT
 
 public:
-    DialogLogin(QWidget *parent = Q_NULLPTR);
+    typedef boost::property_tree::ptree ptree;
 
-signals:
-    void done(const long long &token);
+    DialogLogin(UserManager &userManager, QWidget *parent = Q_NULLPTR);
 
 public slots:
     void slotLoginBegin();
-    void slotLoginEnd(const X::xll &token, const int &ec);
+    void slotLoginEnd(const int &ec, const X::xll &token, const ptree &pt);
     void slotRegister();
 
 private:
@@ -55,6 +57,8 @@ private:
     void loadSetting();
 
 private:
+    UserManager &userManager;
+
     QComboBox *cbboxUsername;
     QLineEdit *editPassword;
 

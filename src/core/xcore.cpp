@@ -82,13 +82,13 @@ namespace X {
         case LogoutFeedback:
             return "Logout Feedback";
         case BorrowBook:
-            return "BorrowBook";
+            return "Borrow Book";
         case BorrowBookFeedback:
-            return "BorrowBook Feedback";
+            return "Borrow Book Feedback";
         case ReturnBook:
-            return "ReturnBook";
+            return "Return Book";
         case ReturnBookFeedback:
-            return "ReturnBook Feedback";
+            return "Return Book Feedback";
         case GetBook:
             return "Get Book";
         case GetBookFeedback:
@@ -102,17 +102,17 @@ namespace X {
         case GetLoginRecordFeedback:
             return "Get Login Record Feedback";
         case GetBorrowRecord:
-            return "Get BorrowBook Record";
+            return "Get Borrow Record";
         case GetBorrowRecordFeedback:
-            return "Get BorrowBook Record Feedback";
+            return "Get Borrow Record Feedback";
         case GetBrowseRecord:
             return "Get Browse Record";
         case GetBrowseRecordFeedback:
             return "Get Browse Record Feedback";
-        case GetKeep:
-            return "Get Keep";
-        case GetKeepFeedback:
-            return "Get Keep Keepback";
+        case GetKeepRecord:
+            return "Get Keep Record";
+        case GetKeepRecordFeedback:
+            return "Get Keep Record Feedback";
         default:
             return "No Such Action";
         }

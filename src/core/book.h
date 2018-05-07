@@ -6,8 +6,8 @@
 #include <map>
 
 #include <core/bookcore.h>
-#include <core/resource.h>
 #include <core/xcore.h>
+#include <core/resource.h>
 
 class Book : public BookCore {
 public:

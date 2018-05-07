@@ -7,6 +7,7 @@
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QHBoxLayout>
+#include <QMetaType>
 #include <QSettings>
 #include <QVBoxLayout>
 
@@ -24,6 +25,8 @@ LoginThread::LoginThread(const QString &username, const QString &password, QObje
     username(username.toStdString()),
     password(password.toStdString()) {
 
+    qRegisterMetaType<X::xll>("X::xll");
+    qRegisterMetaType<ptree>("ptree");
 }
 
 void LoginThread::run() {
@@ -39,24 +42,27 @@ void LoginThread::run() {
         boost::asio::ip::tcp::socket socket(io_service);
         socket.connect(ep);
         X::tcp_sync_write(socket, 0, X::Login, pt);
-        pt = boost::property_tree::ptree();
+        pt = ptree();
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
         ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
     } catch (std::exception &e) {
-        token = 0;
         ec = X::LoginFailed;
+        token = 0;
+        pt = ptree();
     }
 
     if (ac != X::LoginFeedback) {
-        token = 0;
         ec = X::LoginFailed;
+        token = 0;
+        pt = ptree();
     }
 
-    emit done(token, int(ec));
+    emit done(int(ec), token, pt);
 }
 
-DialogLogin::DialogLogin(QWidget *parent) :
+DialogLogin::DialogLogin(UserManager &userManager, QWidget *parent) :
+    userManager(userManager),
     QDialog(parent) {
 
     cbboxUsername = new QComboBox(this);
@@ -84,9 +90,10 @@ void DialogLogin::slotLoginBegin() {
     thread->start();
 }
 
-void DialogLogin::slotLoginEnd(const X::xll &token, const int &ec) {
+void DialogLogin::slotLoginEnd(const int &ec, const X::xll &token, const ptree &pt) {
     if (ec == int(X::NoError)) {
-        emit done(token);
+        userManager.setToken(token);
+        userManager.setUser(pt);
         close();
     } else {
         QString s;

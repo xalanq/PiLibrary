@@ -3,6 +3,8 @@
 
 #include <core/borrowrecord.h>
 
+BorrowRecord::~BorrowRecord() { }
+
 BorrowRecord::xint BorrowRecord::getBookid() const {
     return bookid;
 }
@@ -11,25 +13,34 @@ void BorrowRecord::setBookid(const xint &value) {
     bookid = value;
 }
 
-void BorrowRecord::setTime(const time_t &beginTime, const time_t &endTime) {
-    this->beginTime = beginTime;
-    this->endTime = endTime;
+void BorrowRecord::setTime(const xll &beginTime, const xll &endTime, const xll &returnTime) {
+    setBeginTime(beginTime);
+    setEndTime(endTime);
+    setReturnTime(returnTime);
 }
 
-std::time_t BorrowRecord::getBeginTime() const {
+BorrowRecord::xll BorrowRecord::getBeginTime() const {
     return beginTime;
 }
 
-void BorrowRecord::setBeginTime(const std::time_t &value) {
+void BorrowRecord::setBeginTime(const xll &value) {
     beginTime = value;
 }
 
-std::time_t BorrowRecord::getEndTime() const {
+BorrowRecord::xll BorrowRecord::getEndTime() const {
     return endTime;
 }
 
-void BorrowRecord::setEndTime(const std::time_t &value) {
+void BorrowRecord::setEndTime(const xll &value) {
     endTime = value;
+}
+
+BorrowRecord::xll BorrowRecord::getReturnTime() const {
+    return returnTime;
+}
+
+void BorrowRecord::setReturnTime(const xll &value) {
+    returnTime = value;
 }
 
 bool BorrowRecord::operator < (const BorrowRecord &t) const {

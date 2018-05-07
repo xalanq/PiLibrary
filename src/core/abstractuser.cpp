@@ -5,6 +5,14 @@
 
 AbstractUser::~AbstractUser() { }
 
+AbstractUser::xll AbstractUser::getToken() const {
+    return token;
+}
+
+void AbstractUser::setToken(const xll &value) {
+    token = value;
+}
+
 AbstractUser::xint AbstractUser::getUserid() const {
     return userid;
 }
@@ -29,12 +37,12 @@ void AbstractUser::setNickname(const xstring &value) {
     nickname = value;
 }
 
-AbstractUser::xstring AbstractUser::getPassword() const {
-    return password;
+AbstractUser::xstring AbstractUser::getEmail() const {
+    return email;
 }
 
-void AbstractUser::setPassword(const xstring &value) {
-    password = value;
+void AbstractUser::setEmail(const xstring &value) {
+    email = value;
 }
 
 AbstractUser::xint AbstractUser::getPriority() const {
@@ -49,14 +57,11 @@ void AbstractUser::addLoginRecord(const LoginRecord &record) {
     loginRecordManager.add(record);
 }
 
-void AbstractUser::removeLoginRecord(const LoginRecord &record) {
-    loginRecordManager.remove(record);
+RecordManager<LoginRecord>& AbstractUser::getLoginRecordManager() {
+    return loginRecordManager;
 }
 
 void AbstractUser::clearLoginRecordManeger() {
     loginRecordManager.clear();
 }
 
-LoginRecordManager AbstractUser::getLoginRecordManager() const {
-    return loginRecordManager;
-}

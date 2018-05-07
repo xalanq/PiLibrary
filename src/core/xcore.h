@@ -79,8 +79,8 @@ namespace X {
         GetBorrowRecordFeedback,
         GetBrowseRecord,
         GetBrowseRecordFeedback,
-        GetKeep,
-        GetKeepFeedback
+        GetKeepRecord,
+        GetKeepRecordFeedback
     };
 
     extern xstring what(const ErrorCode &ec);

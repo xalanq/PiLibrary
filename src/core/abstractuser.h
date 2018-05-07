@@ -3,7 +3,8 @@
 
 #pragma once
 
-#include <core/loginrecordmanager.h>
+#include <core/loginrecord.h>
+#include <core/recordmanager.h>
 #include <core/xcore.h>
 
 class AbstractUser {
@@ -19,6 +20,9 @@ public:
 
     virtual ~AbstractUser() = 0;
 
+    xll getToken() const;
+    void setToken(const xll &value);
+
     xint getUserid() const;
     void setUserid(const xint &value);
 
@@ -28,22 +32,22 @@ public:
     xstring getNickname() const;
     void setNickname(const xstring &value);
 
-    xstring getPassword() const;
-    void setPassword(const xstring &value);
+    xstring getEmail() const;
+    void setEmail(const xstring &value);
 
     xint getPriority() const;
     void setPriority(const xint &value);
 
     void addLoginRecord(const LoginRecord &record);
-    void removeLoginRecord(const LoginRecord &record);
+    RecordManager<LoginRecord>& getLoginRecordManager();
     void clearLoginRecordManeger();
-    LoginRecordManager getLoginRecordManager() const;
 
 private:
+    xll token;
     xint userid;
     xstring nickname;
     xstring username;
-    xstring password;
+    xstring email;
     xint priority;
-    LoginRecordManager loginRecordManager;
+    RecordManager<LoginRecord> loginRecordManager;
 };
