@@ -65,7 +65,7 @@ int main() {
             pt.put("begin", 0);
             cerr << "GetKeep send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
-            X::tcp_sync_write(s, token, X::GetKeep, pt);
+            X::tcp_sync_write(s, token, X::GetKeepRecord, pt);
             pt = boost::property_tree::ptree();
             X::tcp_sync_read(s, token, ac, pt);
 

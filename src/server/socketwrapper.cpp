@@ -6,6 +6,7 @@
 
 #include <boost/property_tree/json_parser.hpp>
 
+#include <core/abstractuser.h>
 #include <server/socketwrapper.h>
 
 #define _from(func) cerr << "(" << #func << ") from " << socket.remote_endpoint().address() << " : " 
@@ -122,8 +123,8 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
                 doGetRecord(std::move(pt), token, "borrowRecord", X::GetBorrowRecordFeedback);
             else if (ac == X::GetBrowseRecord)
                 doGetRecord(std::move(pt), token, "browseRecord", X::GetBrowseRecordFeedback);
-            else if (ac == X::GetKeep)
-                doGetRecord(std::move(pt), token, "keep", X::GetKeepFeedback);
+            else if (ac == X::GetKeepRecord)
+                doGetRecord(std::move(pt), token, "keepRecord", X::GetKeepRecordFeedback);
             else
                 write(X::UnknownError, X::Error);
         }
@@ -295,15 +296,14 @@ void SocketWrapper::doGetBook(ptree pt, const xll &token) {
             auto priority = it->getPriority();
             pt.put<xint>("userid", userid);
             pt.put<xint>("priority", priority);
+            pt.put<xll>("time", Session::getNowTime());
             _from(doGetBook);
             auto p = userManager.getBookCore(pt);
             if (p.empty()) {
-                _from(doGetBook) << "p is empty\n";
+                _from(doGetBook) << "fail to get a book: p is empty\n";
                 ec = X::InvalidBook;
             } else {
-                pt.put<xll>("time", Session::getNowTime());
-                _from(doGetBook);
-                userManager.recordBrowse(pt);
+                _from(doGetBook) << "succeed to get a book\n";
                 tr = std::move(p);
             }
         }

@@ -19,8 +19,6 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <core/abstractuser.h>
-#include <core/socketinfo.h>
 #include <server/xserver.h>
 
 namespace mongo {
@@ -74,8 +72,6 @@ public:
 
     // not open for user, so ensure the userid exists in the below methods
     void recordLogin(const ptree &pt);
-    void recordBorrow(const ptree &pt);
-    void recordBrowse(const ptree &pt);
 
 private:
     mongo::pool pool;
