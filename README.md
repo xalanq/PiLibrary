@@ -19,7 +19,7 @@ Use commands like these:
 
 ```
 cd build
-cmake -DBOOST_ROOT=/usr/lib/boost -DCMAKE_PREFIX_PATH=/usr/lib/mongo-cxx-driver -DCMAKE_BUILD_TYPE=Release ..
+cmake -DBOOST_ROOT=/usr/lib/boost -DCMAKE_PREFIX_PATH=/usr/lib/mongo-cxx-driver;/usr/lib/mongo-c-driver -DCMAKE_BUILD_TYPE=Release ..
 ```
 
 Ensure you have modified the path like `-DBOOST_ROOT=[path]` into your own path.
@@ -36,7 +36,7 @@ Use commands like these:
 
 ```
 cd build
-cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT=E:\Boost\boost_1_67_0 -DCMAKE_PREFIX_PATH=E:\mongo\mongo-cxx-driver -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT=E:\Boost\boost_1_67_0 -DCMAKE_PREFIX_PATH=E:\mongo\mongo-cxx-driver;E:\mongo\mongo-c-driver -DCMAKE_BUILD_TYPE=Release ..
 ```
 
 Ensure you have modified the path like `-DBOOST_ROOT=[path]` into your own path.
