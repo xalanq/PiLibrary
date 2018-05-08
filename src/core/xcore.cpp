@@ -40,6 +40,10 @@ namespace X {
             return "Invalid Email";
         case AlreadyRegister:
             return "Already Register";
+        case ModifyFailed:
+            return "Modify Failed";
+        case InvalidNewPassword:
+            return "Invalid New Password";
         case NotLogin:
             return "No Login";
         case InvalidToken:
@@ -75,6 +79,10 @@ namespace X {
             return "Login Feedback";
         case Register:
             return "Register";
+        case Modify:
+            return "Modify";
+        case ModifyFeedback:
+            return "Modify Feedback";
         case RegisterFeedback:
             return "Register Feedback";
         case Logout:
@@ -116,6 +124,30 @@ namespace X {
         default:
             return "No Such Action";
         }
+    }
+
+    bool checkUsername(const xstring &username) {
+        if (username.size() < 1 || username.size() > 100 || !std::regex_match(username, patternUsername))
+            return false;
+        return true;
+    }
+
+    bool checkNickname(const xstring &nickname) {
+        if (nickname.size() < 1 || nickname.size() > 100)
+            return false;
+        return true;
+    }
+
+    bool checkPassword(const xstring &password) {
+        if (password.size() < 6 || password.size() > 100)
+            return false;
+        return true;
+    }
+
+    bool checkEmail(const xstring &email) {
+        if (email.size() < 5 || email.size() > 100 || !std::regex_match(email, patternEmail))
+            return false;
+        return true;
     }
 
     void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, boost::property_tree::ptree &pt) {

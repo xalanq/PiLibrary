@@ -7,6 +7,7 @@
 
 #include <QCryptographicHash>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QSettings>
 #include <QVBoxLayout>
 
@@ -163,7 +164,7 @@ void DialogSignUp::slotSignUpEnd(const int &ec) {
             labelMessage->setText(tr("Invalid email"));
             editEmail->setFocus();
         } else {
-            labelMessage->setText(QString::fromStdString(X::what(static_cast<X::ActionCode> (ec))));
+            labelMessage->setText(QString::fromStdString(X::what(static_cast<X::ErrorCode> (ec))));
         }
     }
 }
@@ -200,15 +201,15 @@ void DialogSignUp::setUI() {
 void DialogSignUp::setConnection() {
     connect(
         btns->button(QDialogButtonBox::Cancel),
-        SIGNAL(clicked()),
+        &QPushButton::clicked,
         this,
-        SLOT(close())
+        &DialogSignUp::close
     );
 
     connect(
         btns->button(QDialogButtonBox::Ok),
-        SIGNAL(clicked()),
+        &QPushButton::clicked,
         this,
-        SLOT(slotSignUpBegin())
+        &DialogSignUp::slotSignUpBegin
     );
 }

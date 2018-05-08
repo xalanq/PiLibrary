@@ -6,6 +6,10 @@
 #include <memory>
 
 #include <core/abstractuser.h>
+#include <core/borrowrecord.h>
+#include <core/browserecord.h>
+#include <core/loginrecord.h>
+#include <core/recordmanager.h>
 #include <client/xclient.h>
 
 class UserManager {
@@ -16,6 +20,13 @@ public:
     typedef X::xstring xstring;
 
     bool isAdminister() const;
+
+    xll getToken() const;
+    std::shared_ptr<AbstractUser> getUser();
+    RecordManager<LoginRecord>* getLoginRecordManager();
+    RecordManager<BorrowRecord>* getBorrowRecordManager();
+    RecordManager<BorrowRecord>* getKeepRecordManager();
+    RecordManager<BrowseRecord>* getBrowseRecordManager();
 
     void setToken(const xll &token);
     bool setUser(const ptree &pt);

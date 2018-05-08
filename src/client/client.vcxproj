@@ -129,9 +129,17 @@
     <ClCompile Include="..\core\xcore.cpp" />
     <ClCompile Include="client.cpp" />
     <ClCompile Include="dialoglogin.cpp" />
+    <ClCompile Include="dialogmodify.cpp" />
     <ClCompile Include="dialogsignup.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mainwidget.cpp" />
+    <ClCompile Include="pageabout.cpp" />
+    <ClCompile Include="pagebrowse.cpp" />
+    <ClCompile Include="pagerecord.cpp" />
+    <ClCompile Include="pagereturn.cpp" />
+    <ClCompile Include="pagesetting.cpp" />
     <ClCompile Include="usermanager.cpp" />
+    <ClCompile Include="widgethead.cpp" />
     <ClCompile Include="xclient.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +155,14 @@
     <ClInclude Include="..\core\socketinfo.h" />
     <ClInclude Include="..\core\user.h" />
     <ClInclude Include="..\core\xcore.h" />
+    <QtMoc Include="dialogmodify.h" />
+    <QtMoc Include="pagesetting.h" />
+    <QtMoc Include="pagereturn.h" />
+    <QtMoc Include="pagerecord.h" />
+    <QtMoc Include="pageabout.h" />
+    <QtMoc Include="pagebrowse.h" />
+    <QtMoc Include="widgethead.h" />
+    <QtMoc Include="mainwidget.h" />
     <ClInclude Include="usermanager.h" />
     <ClInclude Include="xclient.h" />
     <QtMoc Include="dialogsignup.h" />

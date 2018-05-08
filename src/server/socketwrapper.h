@@ -37,8 +37,9 @@ private:
     void doLogin(const ptree &pt, const xll &token);
     void doRegister(const ptree &pt, const xll &token);
     void doLogout(const ptree &pt, const xll &token);
+    void doModify(ptree pt, const xll &token);
     void doBorrowBook(ptree pt, const xll &token);
-    void doReturn(ptree pt, const xll &token);
+    void doReturnBook(ptree pt, const xll &token);
     void doGetBook(ptree pt, const xll &token);
     void doSetBook(const ptree &pt, const xll &token);
     void doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback);

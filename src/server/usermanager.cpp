@@ -88,18 +88,6 @@ UserManager::ptree UserManager::loginUser(const ptree &pt) {
     return std::move(p);
 }
 
-UserManager::ErrorCode UserManager::checkRegister(const xstring &username, const xstring &nickname, const xstring &password, const xstring &email) {
-    if (username.size() < 1 || username.size() > 100 || !std::regex_match(username, X::patternUsername))
-        return X::InvalidUsername;
-    if (nickname.size() < 1 || nickname.size() > 100)
-        return X::InvalidNickname;
-    if (password.size() < 6 || password.size() > 100)
-        return X::InvalidPassword;
-    if (email.size() < 5 || email.size() > 100 || !std::regex_match(email, X::patternEmail))
-        return X::InvalidEmail;
-    return X::NoError;
-}
-
 UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
     xstring username = pt.get("username", "");
@@ -107,48 +95,101 @@ UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
     xstring password = pt.get("password", "");
     xstring email = pt.get("email", "");
 
-    auto ec = checkRegister(username, nickname, password, email);
-    if (!ec && isUser(username))
-        ec = X::AlreadyRegister;
-    if (!ec) {
-        using namespace mongo;
-        auto client = pool.acquire();
-        auto info = (*client)[db_name]["info"].find_one({});
-        xint userid = 1;
-        if (info) {
-            userid = xint(info->view()["userCount"].get_int32().value) + 1;
-            (*client)[db_name]["info"].update_one(
-                {},
-                make_document(
-                    kvp("$set", make_document(
-                        kvp("userCount", userid)
-                    ))
-                )
-            );
-        } else {
-            (*client)[db_name]["info"].insert_one(
-                make_document(
-                    kvp("userCount", 1),
-                    kvp("bookCount", 0)
-                )
-            );
-        }
-        (*client)[db_name]["user"].insert_one(
+    if (!X::checkUsername(username))
+        return X::InvalidUsername;
+    if (!X::checkNickname(nickname))
+        return X::InvalidNickname;
+    if (!X::checkPassword(password))
+        return X::InvalidPassword;
+    if (!X::checkEmail(email))
+        return X::InvalidEmail;
+    if (isUser(username))
+        return X::AlreadyRegister;
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    auto info = (*client)[db_name]["info"].find_one({});
+    xint userid = 1;
+    if (info) {
+        userid = xint(info->view()["userCount"].get_int32().value) + 1;
+        (*client)[db_name]["info"].update_one(
+            {},
             make_document(
-                kvp("userid", userid),
-                kvp("username", bsoncxx::types::b_utf8(username)),
-                kvp("nickname", bsoncxx::types::b_utf8(nickname)),
-                kvp("password", bsoncxx::types::b_utf8(password)),
-                kvp("email", bsoncxx::types::b_utf8(email)),
-                kvp("priority", int(AbstractUser::USER)),
-                kvp("loginRecord", make_array()),
-                kvp("borrowRecord", make_array()),
-                kvp("keepRecord", make_array()),
-                kvp("browseRecord", make_array())
+                kvp("$set", make_document(
+                    kvp("userCount", userid)
+                ))
+            )
+        );
+    } else {
+        (*client)[db_name]["info"].insert_one(
+            make_document(
+                kvp("userCount", 1),
+                kvp("bookCount", 0)
             )
         );
     }
-    return ec;
+    (*client)[db_name]["user"].insert_one(
+        make_document(
+            kvp("userid", userid),
+            kvp("username", bsoncxx::types::b_utf8(username)),
+            kvp("nickname", bsoncxx::types::b_utf8(nickname)),
+            kvp("password", bsoncxx::types::b_utf8(password)),
+            kvp("email", bsoncxx::types::b_utf8(email)),
+            kvp("priority", int(AbstractUser::USER)),
+            kvp("loginRecord", make_array()),
+            kvp("borrowRecord", make_array()),
+            kvp("keepRecord", make_array()),
+            kvp("browseRecord", make_array())
+        )
+    );
+
+    return X::NoError;
+}
+
+UserManager::ErrorCode UserManager::modifyUser(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto userid = pt.get<xint>("userid");
+    auto nickname = pt.get_optional<xstring>("nickname");
+    auto email = pt.get_optional<xstring>("email");
+    auto passwordOld = pt.get_optional<xstring>("passwordOld");
+    auto passwordNew = pt.get_optional<xstring>("passwordNew");
+
+    if (!nickname || !X::checkNickname(*nickname))
+        return X::InvalidNickname;
+    if (!email || !X::checkEmail(*email))
+        return X::InvalidEmail;
+    if (!passwordOld)
+        return X::InvalidPassword;
+    if (passwordNew && !X::checkPassword(*passwordNew))
+        return X::InvalidNewPassword;
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    auto info = (*client)[db_name]["user"].find_one(
+        make_document(
+            kvp("userid", userid),
+            kvp("password", bsoncxx::types::b_utf8(*passwordOld))
+        )
+    );
+    if (!info)
+        return X::InvalidPassword;
+
+    auto doc = document();
+    doc << "$set" << open_document;
+    doc << "nickname" << bsoncxx::types::b_utf8(*nickname);
+    doc << "email" << bsoncxx::types::b_utf8(*email);
+    if (passwordNew)
+        doc << "password" << bsoncxx::types::b_utf8(*passwordNew);
+    doc << close_document;
+    bsoncxx::document::value val = doc << finalize;
+    (*client)[db_name]["user"].update_one(
+        make_document(
+            kvp("userid", userid)
+        ),
+        val.view()
+    );
+
+    return X::NoError;
 }
 
 // maybe need to verify time

@@ -6,9 +6,12 @@
 #include <QApplication>
 #include <QCryptographicHash>
 #include <QDebug>
+#include <QDesktopWidget>
 #include <QHBoxLayout>
 #include <QMetaType>
+#include <QPushButton>
 #include <QSettings>
+#include <QStringList>
 #include <QVBoxLayout>
 
 #include <client/dialoglogin.h>
@@ -78,6 +81,55 @@ DialogLogin::DialogLogin(UserManager &userManager, QWidget *parent) :
     loadSetting();
 }
 
+DialogLogin::~DialogLogin() {
+    saveSetting();
+}
+
+void DialogLogin::loadSetting() {
+    QSettings setting;
+    setting.beginGroup("LoginDialog");
+
+    auto list = setting.value("Username").toStringList();
+    auto current = setting.value("Current").toString();
+    int pos = -1;
+    for (int i = 0; i < list.size(); ++i) {
+        cbboxUsername->addItem(list[i]);
+        if (list[i] == current)
+            pos = i;
+    }
+    if (pos != -1) {
+        cbboxUsername->setCurrentIndex(pos);
+        editPassword->setFocus();
+    }
+
+    setting.endGroup();
+}
+
+void DialogLogin::saveSetting() {
+    if (userManager.getToken()) {
+        QSettings setting;
+        setting.beginGroup("LoginDialog");
+
+        QStringList list;
+        auto current = cbboxUsername->currentText();
+        bool flag = 1;
+        for (int i = 0; i < cbboxUsername->count(); ++i) {
+            auto name = cbboxUsername->itemText(i);
+            list.append(name);
+            if (name == current)
+                flag = 0;
+        }
+        if (flag)
+            list.append(current);
+        list.sort();
+
+        setting.setValue("Username", list);
+        setting.setValue("Current", current);
+
+        setting.endGroup();
+    }
+}
+
 void DialogLogin::slotLoginBegin() {
     labelMessage->show();
     labelMessage->setText(tr("Connecting..."));
@@ -94,7 +146,7 @@ void DialogLogin::slotLoginEnd(const int &ec, const X::xll &token, const ptree &
     if (ec == int(X::NoError)) {
         userManager.setToken(token);
         userManager.setUser(pt);
-        close();
+        accept();
     } else {
         QString s;
         if (ec == int(X::NoSuchUser))
@@ -102,7 +154,7 @@ void DialogLogin::slotLoginEnd(const int &ec, const X::xll &token, const ptree &
         else if (ec == int(X::LoginFailed))
             s = tr("Login failed, check network");
         else
-            s = QString::fromStdString(X::what(static_cast<X::ActionCode> (ec)));
+            s = QString::fromStdString(X::what(static_cast<X::ErrorCode> (ec)));
         labelMessage->setText(s);
     }
 }
@@ -138,24 +190,22 @@ void DialogLogin::setUI() {
     layout->setSizeConstraint(QLayout::SetFixedSize);
 
     setLayout(layout);
+    adjustSize();
+    move(QApplication::desktop()->screen()->rect().center() - rect().center());
 }
 
 void DialogLogin::setConnection() {
     connect(
         btnSignUp,
-        SIGNAL(clicked()),
+        &QPushButton::clicked,
         this,
-        SLOT(slotRegister())
+        &DialogLogin::slotRegister
     );
 
     connect(
         btns->button(QDialogButtonBox::Ok),
-        SIGNAL(clicked()),
+        &QPushButton::clicked,
         this,
-        SLOT(slotLoginBegin())
+        &DialogLogin::slotLoginBegin
     );
-}
-
-void DialogLogin::loadSetting() {
-
 }

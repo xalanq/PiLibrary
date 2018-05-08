@@ -8,6 +8,7 @@
 #include <core/xcore.h>
 
 namespace X {
+    extern const xstring &ORG_NAME;
     extern const xstring &APP_NAME;
     extern const xstring &VERSION;
     extern const xstring &saltBegin;

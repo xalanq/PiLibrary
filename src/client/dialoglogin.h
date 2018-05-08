@@ -45,6 +45,9 @@ public:
     typedef boost::property_tree::ptree ptree;
 
     DialogLogin(UserManager &userManager, QWidget *parent = Q_NULLPTR);
+    ~DialogLogin();
+    void loadSetting();
+    void saveSetting();
 
 public slots:
     void slotLoginBegin();
@@ -54,7 +57,6 @@ public slots:
 private:
     void setUI();
     void setConnection();
-    void loadSetting();
 
 private:
     UserManager &userManager;

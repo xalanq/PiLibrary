@@ -13,6 +13,7 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
+    QCoreApplication::setOrganizationName(QString::fromStdString(X::ORG_NAME));
     QCoreApplication::setApplicationName(QString::fromStdString(X::APP_NAME));
 
     auto language = QSettings().value("Settings/language", "default").toString();

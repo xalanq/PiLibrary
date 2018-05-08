@@ -109,10 +109,12 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
                 doRegister(std::move(pt), token);
             else if (ac == X::Logout)
                 doLogout(std::move(pt), token);
+            else if (ac == X::Modify)
+                doModify(std::move(pt), token);
             else if (ac == X::BorrowBook)
                 doBorrowBook(std::move(pt), token);
             else if (ac == X::ReturnBook)
-                doReturn(std::move(pt), token);
+                doReturnBook(std::move(pt), token);
             else if (ac == X::GetBook)
                 doGetBook(std::move(pt), token);
             else if (ac == X::SetBook)
@@ -219,6 +221,31 @@ void SocketWrapper::doLogout(const ptree &pt, const xll &token) {
     write(ec, X::LogoutFeedback);
 }
 
+void SocketWrapper::doModify(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doModify) << "token = 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doModify) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("userid", it->getUserid());
+            _from(doModify);
+            ec = userManager.modifyUser(pt);
+            if (!ec)
+                _from(doModify) << "succeed to modify\n";
+            else
+                _from(doModify) << "fail to modify: " << X::what(ec) << '\n';
+        }
+    }
+    write(ec, X::ModifyFeedback, tk);
+}
+
 void SocketWrapper::doBorrowBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
@@ -247,31 +274,31 @@ void SocketWrapper::doBorrowBook(ptree pt, const xll &token) {
     write(ec, X::BorrowBookFeedback, tk);
 }
 
-void SocketWrapper::doReturn(ptree pt, const xll &token) {
+void SocketWrapper::doReturnBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
-        _from(doReturn) << "token == 0\n";
+        _from(doReturnBook) << "token == 0\n";
         ec = X::NotLogin;
     } else {
         auto it = sessionManager.findToken(token);
         if (it == nullptr) {
-            _from(doReturn) << "not found session\n";
+            _from(doReturnBook) << "not found session\n";
             ec = X::NotLogin;
         } else {
             tk = token;
             auto priority = it->getPriority();
             if (priority < AbstractUser::ADMINISTER) {
-                _from(doReturn) << "no permission\n";
+                _from(doReturnBook) << "no permission\n";
                 ec = X::NoPermission;
             } else {
-                _from(doReturn);
+                _from(doReturnBook);
                 pt.put("returnTime", Session::getNowTime());
                 ec = userManager.returnBook(pt);
                 if (ec == X::NoError)
-                    _from(doReturn) << "succeed to return a book\n";
+                    _from(doReturnBook) << "succeed to return a book\n";
                 else
-                    _from(doReturn) << "fail to return a book: " << X::what(ec) << "\n";
+                    _from(doReturnBook) << "fail to return a book: " << X::what(ec) << "\n";
             }
         }
     }

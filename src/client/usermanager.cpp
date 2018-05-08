@@ -13,6 +13,41 @@ bool UserManager::isAdminister() const {
     return bool(it);
 }
 
+UserManager::xll UserManager::getToken() const {
+    return token;
+}
+
+std::shared_ptr<AbstractUser> UserManager::getUser() {
+    return user;
+}
+
+RecordManager<LoginRecord>* UserManager::getLoginRecordManager() {
+    if (user)
+        return &user->getLoginRecordManager();
+    return nullptr;
+}
+
+RecordManager<BorrowRecord>* UserManager::getBorrowRecordManager() {
+    auto it = std::dynamic_pointer_cast<User>(user);
+    if (it)
+        return &it->getBorrowRecordManager();
+    return nullptr;
+}
+
+RecordManager<BorrowRecord>* UserManager::getKeepRecordManager() {
+    auto it = std::dynamic_pointer_cast<User>(user);
+    if (it)
+        return &it->getKeepRecordManager();
+    return nullptr;
+}
+
+RecordManager<BrowseRecord>* UserManager::getBrowseRecordManager() {
+    auto it = std::dynamic_pointer_cast<User>(user);
+    if (it)
+        return &it->getBrowseRecordManager();
+    return nullptr;
+}
+
 void UserManager::setToken(const xll &token) {
     this->token = token;
 }

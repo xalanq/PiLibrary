@@ -3,8 +3,10 @@
 
 #pragma once
 
+#include <QSettings>
 #include <QtWidgets/QMainWindow>
 
+#include <client/mainwidget.h>
 #include <client/usermanager.h>
 #include <client/xclient.h>
 
@@ -18,12 +20,16 @@ public:
     typedef X::xstring xstring;
 
     Client(QWidget *parent = Q_NULLPTR);
+    void loadSetting();
+    void saveSetting();
 
 private:
     void setUI();
     void setConnection();
+    void login();
 
 private:
     UserManager userManager;
-
+    MainWidget *mainWidget;
+    QSettings setting {};
 };

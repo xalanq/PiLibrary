@@ -53,19 +53,23 @@ public:
     ~UserManager();
 
     bool isUser(const xint &userid);
+
     bool isUser(const xstring &username);
 
     xint getPriority(const xint &userid);
 
     ptree loginUser(const ptree &pt);
 
-    ErrorCode checkRegister(const xstring &username, const xstring &nickname, const xstring &password, const xstring &email);
     ErrorCode registerUser(const ptree &pt);
 
+    ErrorCode modifyUser(const ptree &pt);
+
     ErrorCode borrowBook(const ptree &pt);
+
     ErrorCode returnBook(const ptree &pt);
 
     ptree getBookCore(const ptree &pt);
+
     ErrorCode setBookCore(const ptree &pt);
 
     ptree getRecord(const ptree &pt);

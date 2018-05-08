@@ -42,6 +42,9 @@ namespace X {
         InvalidEmail,
         AlreadyRegister,
 
+        ModifyFailed,
+        InvalidNewPassword,
+
         NotLogin,
         InvalidToken,
 
@@ -63,6 +66,8 @@ namespace X {
         LoginFeedback,
         Register,
         RegisterFeedback,
+        Modify,
+        ModifyFeedback,
         Logout,
         LogoutFeedback,
         BorrowBook,
@@ -85,6 +90,11 @@ namespace X {
 
     extern xstring what(const ErrorCode &ec);
     extern xstring what(const ActionCode &ac);
+
+    extern bool checkUsername(const xstring &username);
+    extern bool checkNickname(const xstring &nickname);
+    extern bool checkPassword(const xstring &password);
+    extern bool checkEmail(const xstring &email);
 
     extern void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, boost::property_tree::ptree &pt);
     extern void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const boost::property_tree::ptree &pt);
