@@ -35,8 +35,8 @@ LoginThread::LoginThread(const QString &username, const QString &password, QObje
 void LoginThread::run() {
     X::xll token;
     boost::property_tree::ptree pt;
-    X::ActionCode ac;
-    X::ErrorCode ec;
+    X::ActionCode ac = X::NoAction;
+    X::ErrorCode ec = X::NoError;
 
     pt.put("username", username);
     pt.put("password", password); 
@@ -49,7 +49,7 @@ void LoginThread::run() {
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
         ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &e) {
+    } catch (std::exception &) {
         ec = X::LoginFailed;
         token = 0;
         pt = ptree();

@@ -3,7 +3,7 @@ project(core)
 file(GLOB core_sources *.cpp)
 add_library(core ${core_sources})
 
-SET(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 

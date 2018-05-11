@@ -29,8 +29,8 @@ SignUpThread::SignUpThread(const QString &username, const QString &nickname, con
 void SignUpThread::run() {
     X::xll token;
     boost::property_tree::ptree pt;
-    X::ActionCode ac;
-    X::ErrorCode ec;
+    X::ActionCode ac = X::NoAction;
+    X::ErrorCode ec = X::NoError;
 
     pt.put("username", username);
     pt.put("nickname", nickname);
@@ -45,7 +45,7 @@ void SignUpThread::run() {
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
         ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &e) {
+    } catch (std::exception &) {
         ec = X::RegisterFailed;
     }
 

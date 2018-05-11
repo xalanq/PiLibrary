@@ -19,7 +19,7 @@ int main() {
             tcp::socket s(io_service);
             X::xll token = 0;
             boost::property_tree::ptree pt;
-            X::ActionCode ac;
+            X::ActionCode ac = X::NoAction;
 
             cerr << "connect to " << ep.address() << ":" << 2333 << '\n';
             s.connect(ep);

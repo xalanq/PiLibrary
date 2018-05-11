@@ -30,8 +30,8 @@ ModifyThread::ModifyThread(const X::xll &token, const QString &nickname, const Q
 void ModifyThread::run() {
     X::xll token = this->token;
     boost::property_tree::ptree pt;
-    X::ActionCode ac;
-    X::ErrorCode ec;
+    X::ActionCode ac = X::NoAction;
+    X::ErrorCode ec = X::NoError;
 
     pt.put("nickname", nickname);
     pt.put("email", email); 
@@ -47,7 +47,7 @@ void ModifyThread::run() {
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
         ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &e) {
+    } catch (std::exception &) {
         ec = X::ModifyFailed;
     }
 
