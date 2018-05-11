@@ -14,12 +14,6 @@ find_package(Qt5Gui)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${Boost_INCLUDE_DIR})
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-include_directories(${Qt5Core_INCLUDE_DIRS})
-include_directories(${Qt5Gui_INCLUDE_DIRS})
-add_definitions(${Qt5Core_DEFINITIONS})
-add_definitions(${Qt5Widgets_DEFINITIONS})
-add_definitions(${Qt5Gui_DEFINITIONS})
 
 file(GLOB client_sources *.cpp)
 add_executable(client ${client_sources})
