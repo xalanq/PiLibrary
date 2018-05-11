@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <QLabel>
+#include <QPushButton>
 #include <QWidget>
 
 class PageAbout : public QWidget {
@@ -10,5 +12,12 @@ class PageAbout : public QWidget {
 
 public:
     PageAbout(QWidget *parent = Q_NULLPTR);
-    ~PageAbout();
+
+private:
+    void setUI();
+    void setConnection();
+
+private:
+    QLabel *label;
+    QPushButton *btnUpdate;
 };
