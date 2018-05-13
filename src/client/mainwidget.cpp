@@ -10,6 +10,7 @@
 #include <client/mainwidget.h>
 #include <client/pageabout.h>
 #include <client/pagebrowse.h>
+#include <client/pagefavorite.h>
 #include <client/pagerecord.h>
 #include <client/pagereturn.h>
 #include <client/pagesetting.h>
@@ -41,10 +42,14 @@ void MainWidget::setUI() {
     scrollArea->setWidget(pageWidget);
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameStyle(QFrame::NoFrame);
+    scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     auto layoutLeft = new QVBoxLayout;
     layoutLeft->addWidget(widgetHead);
     layoutLeft->addWidget(listWidget);
+    widgetHead->setMaximumHeight(150);
+    widgetHead->setMaximumWidth(200);
+    listWidget->setMaximumWidth(200);
 
     auto layout = new QHBoxLayout;
 
@@ -66,6 +71,7 @@ void MainWidget::setConnection() {
 void MainWidget::initListWidget() {
     QStringList items;
     items.append(tr("Browse"));
+    items.append(tr("Favorite"));
     items.append(tr("Record"));
     if (userManager.isAdminister())
         items.append(tr("Return"));
@@ -80,6 +86,7 @@ void MainWidget::initPageWidget() {
     QList<QWidget *> items;
     items.append(new PageBrowse(userManager, this));
     items.append(new PageRecord(userManager, this));
+    items.append(new PageFavorite(userManager, this));
     if (userManager.isAdminister())
         items.append(new PageReturn(userManager, this));
     items.append(new PageSetting(userManager, this));

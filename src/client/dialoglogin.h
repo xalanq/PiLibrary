@@ -27,7 +27,7 @@ public:
     LoginThread(const QString &username, const QString &password, QObject *parent = Q_NULLPTR);
 
 signals:
-    void done(const int &ec, const X::xll &token, const ptree &pt);
+    void done(const X::ErrorCode &ec, const X::xll &token, const ptree &pt);
 
 private:
     void run() override;
@@ -51,7 +51,7 @@ public:
 
 public slots:
     void slotLoginBegin();
-    void slotLoginEnd(const int &ec, const X::xll &token, const ptree &pt);
+    void slotLoginEnd(const X::ErrorCode &ec, const X::xll &token, const ptree &pt);
     void slotRegister();
 
 private:

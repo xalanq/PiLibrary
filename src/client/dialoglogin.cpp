@@ -28,13 +28,14 @@ LoginThread::LoginThread(const QString &username, const QString &password, QObje
     username(username.toStdString()),
     password(password.toStdString()) {
 
+    qRegisterMetaType<X::ErrorCode>("X::ErrorCode");
     qRegisterMetaType<X::xll>("X::xll");
     qRegisterMetaType<ptree>("ptree");
 }
 
 void LoginThread::run() {
     X::xll token;
-    boost::property_tree::ptree pt;
+    ptree pt;
     X::ActionCode ac = X::NoAction;
     X::ErrorCode ec = X::NoError;
 
@@ -61,7 +62,7 @@ void LoginThread::run() {
         pt = ptree();
     }
 
-    emit done(int(ec), token, pt);
+    emit done(ec, token, pt);
 }
 
 DialogLogin::DialogLogin(UserManager &userManager, QWidget *parent) :
@@ -142,19 +143,19 @@ void DialogLogin::slotLoginBegin() {
     thread->start();
 }
 
-void DialogLogin::slotLoginEnd(const int &ec, const X::xll &token, const ptree &pt) {
-    if (ec == int(X::NoError)) {
+void DialogLogin::slotLoginEnd(const X::ErrorCode &ec, const X::xll &token, const ptree &pt) {
+    if (ec == X::NoError) {
         userManager.setToken(token);
         userManager.setUser(pt);
         accept();
     } else {
         QString s;
-        if (ec == int(X::NoSuchUser))
+        if (ec == X::NoSuchUser)
             s = tr("Wrong username or password");
-        else if (ec == int(X::LoginFailed))
+        else if (ec == X::LoginFailed)
             s = tr("Login failed, check network");
         else
-            s = QString::fromStdString(X::what(static_cast<X::ErrorCode> (ec)));
+            s = QString::fromStdString(X::what(ec));
         labelMessage->setText(s);
     }
 }
