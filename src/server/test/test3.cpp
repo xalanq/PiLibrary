@@ -47,6 +47,18 @@ int main() {
 
             cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
 
+            // GetStarRecord
+            pt = boost::property_tree::ptree();
+            pt.put("number", 50);
+            pt.put("begin", 0);
+            cerr << "GetStarRecord send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
+
+            X::tcp_sync_write(s, token, X::GetStarRecord, pt);
+            pt = boost::property_tree::ptree();
+            X::tcp_sync_read(s, token, ac, pt);
+
+            cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
+
             // GetBorrowRecord
             pt = boost::property_tree::ptree();
             pt.put("number", 50);

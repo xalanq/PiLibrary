@@ -72,9 +72,9 @@ public:
 
     ErrorCode unStarBook(const ptree &pt);
 
-    ptree getBookCore(const ptree &pt);
+    ptree getSingleBook(const ptree &pt);
 
-    ErrorCode setBookCore(const ptree &pt);
+    ErrorCode setSingleBook(const ptree &pt);
 
     ptree getRecord(const ptree &pt);
 

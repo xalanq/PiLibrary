@@ -83,12 +83,12 @@ namespace X {
             return "Login Feedback";
         case Register:
             return "Register";
+        case RegisterFeedback:
+            return "Register Feedback";
         case Modify:
             return "Modify";
         case ModifyFeedback:
             return "Modify Feedback";
-        case RegisterFeedback:
-            return "Register Feedback";
         case Logout:
             return "Logout";
         case LogoutFeedback:

@@ -1,6 +1,7 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <algorithm>
 #include <regex>
 
 #include <core/abstractuser.h>
@@ -469,7 +470,7 @@ UserManager::ErrorCode UserManager::unStarBook(const ptree &pt) {
 }
 
 // maybe just use pt to search book not just by bookid
-UserManager::ptree UserManager::getBookCore(const ptree &pt) {
+UserManager::ptree UserManager::getSingleBook(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
     auto userid = pt.get<xint>("userid");
     auto priority = pt.get<xint>("priority");
@@ -517,7 +518,7 @@ UserManager::ptree UserManager::getBookCore(const ptree &pt) {
     return std::move(p);
 }
 
-UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
+UserManager::ErrorCode UserManager::setSingleBook(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
     auto bookid = pt.get<xint>("bookid", 0);
     auto title = pt.get_optional<xstring>("title");
