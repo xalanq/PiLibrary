@@ -60,6 +60,10 @@ namespace X {
             return "No Have";
         case InvalidTime:
             return "Invalid Time";
+        case AlreadyStar:
+            return "Already Star";
+        case NoSuchStar:
+            return "No Such Star";
         case NoPermission:
             return "No Permission";
         default:
@@ -97,6 +101,14 @@ namespace X {
             return "Return Book";
         case ReturnBookFeedback:
             return "Return Book Feedback";
+        case StarBook:
+            return "Star Book";
+        case StarBookFeedback:
+            return "Star Book Feedback";
+        case UnStarBook:
+            return "Un Star Book";
+        case UnStarBookFeedback:
+            return "Un Star Book Feedback";
         case GetBook:
             return "Get Book";
         case GetBookFeedback:
@@ -109,6 +121,10 @@ namespace X {
             return "Get Login Record";
         case GetLoginRecordFeedback:
             return "Get Login Record Feedback";
+        case GetStarRecord:
+            return "Get Star Record";
+        case GetStarRecordFeedback:
+            return "Get Star Record Feedback";
         case GetBorrowRecord:
             return "Get Borrow Record";
         case GetBorrowRecordFeedback:

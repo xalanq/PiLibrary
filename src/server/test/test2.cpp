@@ -22,11 +22,13 @@ void readme() {
     cout << "3. Set Book\n";
     cout << "4. Borrow Book\n";
     cout << "5. Return Book\n";
+    cout << "6. Star Book\n";
+    cout << "7. Unstar Book\n";
     cout << "Otherwise. Logout\n";
     cout << "input op: ";
 }
 
-// for get book and set book
+// for book operations
 int main() {
     srand(time(0) + clock());
     try {
@@ -126,8 +128,33 @@ int main() {
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
-            }
-            else {
+            } else if (op == 6) {
+                // StarBook
+                std::cout << "input bookid: ";
+                int bookid;
+                std::cin >> bookid;
+                pt.put("bookid", bookid);
+                cerr << "StarBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
+
+                X::tcp_sync_write(s, token, X::StarBook, pt);
+                pt = boost::property_tree::ptree();
+                X::tcp_sync_read(s, token, ac, pt);
+
+                cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
+            } else if (op == 7) {
+                // StarBook
+                std::cout << "input bookid: ";
+                int bookid;
+                std::cin >> bookid;
+                pt.put("bookid", bookid);
+                cerr << "UnStarBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
+
+                X::tcp_sync_write(s, token, X::UnStarBook, pt);
+                pt = boost::property_tree::ptree();
+                X::tcp_sync_read(s, token, ac, pt);
+
+                cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
+            } else {
                 // logout
                 pt = boost::property_tree::ptree();
                 cerr << "Logout send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';

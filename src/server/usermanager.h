@@ -68,6 +68,10 @@ public:
 
     ErrorCode returnBook(const ptree &pt);
 
+    ErrorCode starBook(const ptree &pt);
+
+    ErrorCode unStarBook(const ptree &pt);
+
     ptree getBookCore(const ptree &pt);
 
     ErrorCode setBookCore(const ptree &pt);

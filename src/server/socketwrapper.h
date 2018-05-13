@@ -40,6 +40,8 @@ private:
     void doModify(ptree pt, const xll &token);
     void doBorrowBook(ptree pt, const xll &token);
     void doReturnBook(ptree pt, const xll &token);
+    void doStarBook(ptree pt, const xll &token);
+    void doUnStarBook(ptree pt, const xll &token);
     void doGetBook(ptree pt, const xll &token);
     void doSetBook(const ptree &pt, const xll &token);
     void doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback);

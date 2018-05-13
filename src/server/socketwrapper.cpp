@@ -115,12 +115,18 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
                 doBorrowBook(std::move(pt), token);
             else if (ac == X::ReturnBook)
                 doReturnBook(std::move(pt), token);
+            else if (ac == X::StarBook)
+                doStarBook(std::move(pt), token);
+            else if (ac == X::UnStarBook)
+                doUnStarBook(std::move(pt), token);
             else if (ac == X::GetBook)
                 doGetBook(std::move(pt), token);
             else if (ac == X::SetBook)
                 doSetBook(std::move(pt), token);
             else if (ac == X::GetLoginRecord)
                 doGetRecord(std::move(pt), token, "loginRecord", X::GetLoginRecordFeedback);
+            else if (ac == X::GetStarRecord)
+                doGetRecord(std::move(pt), token, "starRecord", X::GetStarRecordFeedback);
             else if (ac == X::GetBorrowRecord)
                 doGetRecord(std::move(pt), token, "borrowRecord", X::GetBorrowRecordFeedback);
             else if (ac == X::GetBrowseRecord)
@@ -305,6 +311,58 @@ void SocketWrapper::doReturnBook(ptree pt, const xll &token) {
     write(ec, X::ReturnBookFeedback, tk);
 }
 
+void SocketWrapper::doStarBook(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doStarBook) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doStarBook) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("userid", it->getUserid());
+            pt.put<xint>("priority", it->getPriority());
+            pt.put<xll>("time", Session::getNowTime());
+            _from(doStarBook);
+            ec = userManager.starBook(pt);
+            if (ec == X::NoError)
+                _from(doStarBook) << "succeed to star a book\n";
+            else
+                _from(doStarBook) << "fail to star a book: " << X::what(ec) << "\n";
+        }
+    }
+    write(ec, X::StarBookFeedback, tk);
+}
+
+void SocketWrapper::doUnStarBook(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doUnStarBook) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doUnStarBook) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("userid", it->getUserid());
+            _from(doUnStarBook);
+            ec = userManager.unStarBook(pt);
+            if (ec == X::NoError)
+                _from(doUnStarBook) << "succeed to un star a book\n";
+            else
+                _from(doUnStarBook) << "fail to un star a book: " << X::what(ec) << "\n";
+        }
+    }
+    write(ec, X::UnStarBookFeedback, tk);
+}
+
 void SocketWrapper::doGetBook(ptree pt, const xll &token) {
     auto tr = ptree();
     auto ec = X::NoError;
@@ -319,10 +377,8 @@ void SocketWrapper::doGetBook(ptree pt, const xll &token) {
             ec = X::NotLogin;
         } else {
             tk = token;
-            auto userid = it->getUserid();
-            auto priority = it->getPriority();
-            pt.put<xint>("userid", userid);
-            pt.put<xint>("priority", priority);
+            pt.put<xint>("userid", it->getUserid());
+            pt.put<xint>("priority", it->getPriority());
             pt.put<xll>("time", Session::getNowTime());
             _from(doGetBook);
             auto p = userManager.getBookCore(pt);
@@ -384,8 +440,7 @@ void SocketWrapper::doGetRecord(ptree pt, const xll &token, const xstring &type,
             ec = X::NotLogin;
         } else {
             tk = token;
-            auto userid = it->getUserid();
-            pt.put<xint>("userid", userid);
+            pt.put<xint>("userid", it->getUserid());
             pt.put<xstring>("type", type);
             _from(doGetRecord);
             tr = userManager.getRecord(pt);

@@ -56,6 +56,9 @@ namespace X {
         NoHave,
         InvalidTime,
 
+        AlreadyStar,
+        NoSuchStar,
+
         NoPermission
     };
 
@@ -74,12 +77,18 @@ namespace X {
         BorrowBookFeedback,
         ReturnBook,
         ReturnBookFeedback,
+        StarBook,
+        StarBookFeedback,
+        UnStarBook,
+        UnStarBookFeedback,
         GetBook,
         GetBookFeedback,
         SetBook,
         SetBookFeedback,
         GetLoginRecord,
         GetLoginRecordFeedback,
+        GetStarRecord,
+        GetStarRecordFeedback,
         GetBorrowRecord,
         GetBorrowRecordFeedback,
         GetBrowseRecord,

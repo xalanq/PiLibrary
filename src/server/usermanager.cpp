@@ -70,6 +70,7 @@ UserManager::ptree UserManager::loginUser(const ptree &pt) {
             kvp("_id", 0),
             kvp("password", 0),
             kvp("loginRecord", 0),
+            kvp("starRecord", 0),
             kvp("borrowRecord", 0),
             kvp("keepRecord", 0),
             kvp("browseRecord", 0)
@@ -137,6 +138,7 @@ UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
             kvp("email", bsoncxx::types::b_utf8(email)),
             kvp("priority", int(AbstractUser::USER)),
             kvp("loginRecord", make_array()),
+            kvp("starRecord", make_array()),
             kvp("borrowRecord", make_array()),
             kvp("keepRecord", make_array()),
             kvp("browseRecord", make_array())
@@ -355,6 +357,117 @@ UserManager::ErrorCode UserManager::returnBook(const ptree &pt) {
         return X::NoHave;
 }
 
+UserManager::ErrorCode UserManager::starBook(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto userid = pt.get<xint>("userid");
+    auto priority = pt.get<xint>("priority");
+    auto time = pt.get<xll>("time");
+    auto bookid = pt.get<xint>("bookid", 0);
+
+    using namespace mongo;
+    auto client = pool.acquire();
+
+    mongocxx::options::find opt;
+    opt.projection(
+        make_document(
+            kvp("_id", 0),
+            kvp("bookid", 1)
+        )
+    );
+    auto doc = (*client)[db_name]["book"].find_one(
+        make_document(
+            kvp("bookid", bookid),
+            kvp("starRecord.userid", userid)
+        )
+    );
+    if (doc)
+        return X::AlreadyStar;
+
+    auto res = (*client)[db_name]["book"].update_one(
+        make_document(
+            kvp("bookid", bookid),
+            kvp("priority", make_document(
+                kvp("$lte", priority)
+            ))
+        ),
+        make_document(
+            kvp("$inc", make_document(
+                kvp("starCount", 1)
+            )),
+            kvp("$push", make_document(
+                kvp("starRecord", make_document(
+                    kvp("userid", userid),
+                    kvp("time", time)
+                ))
+            ))
+        )
+    );
+    if (res && res->modified_count() > 0) {
+        (*client)[db_name]["user"].update_one(
+            make_document(
+                kvp("userid", userid)
+            ),
+            make_document(
+                kvp("$push", make_document(
+                    kvp("starRecord", make_document(
+                        kvp("bookid", bookid),
+                        kvp("time", time)
+                    ))
+                ))
+            )
+        );
+        return X::NoError;
+    }
+    return X::NoSuchBook;
+}
+
+UserManager::ErrorCode UserManager::unStarBook(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto userid = pt.get<xint>("userid");
+    auto bookid = pt.get<xint>("bookid", 0);
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    auto res = (*client)[db_name]["book"].update_one(
+        make_document(
+            kvp("bookid", bookid)
+        ),
+        make_document(
+            kvp("$pull", make_document(
+                kvp("starRecord", make_document(
+                    kvp("userid", userid)
+                ))
+            ))
+        )
+    );
+    if (res && res->modified_count() > 0) {
+        (*client)[db_name]["book"].update_one(
+            make_document(
+                kvp("bookid", bookid)
+            ),
+            make_document(
+                kvp("$inc", make_document(
+                    kvp("starCount", -1)
+                ))
+            )
+        );
+        (*client)[db_name]["user"].update_one(
+            make_document(
+                kvp("userid", userid)
+            ),
+            make_document(
+                kvp("$pull", make_document(
+                    kvp("starRecord", make_document(
+                        kvp("bookid", bookid)
+                    ))
+                ))
+            )
+        );
+        return X::NoError;
+    }
+    return X::NoSuchStar;
+}
+
 // maybe just use pt to search book not just by bookid
 UserManager::ptree UserManager::getBookCore(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
@@ -369,6 +482,7 @@ UserManager::ptree UserManager::getBookCore(const ptree &pt) {
     opt.projection(
         make_document(
             kvp("_id", 0),
+            kvp("starRecord", 0),
             kvp("keepRecord", 0),
             kvp("borrowRecord", 0),
             kvp("resource", 0)
@@ -486,6 +600,8 @@ UserManager::ErrorCode UserManager::setBookCore(const ptree &pt) {
                 kvp("introduction", bsoncxx::types::b_utf8(introduction ? *introduction : "")),
                 kvp("position", bsoncxx::types::b_utf8(position ? *position : "")),
                 kvp("priority", priority ? *priority : AbstractUser::SUPER_ADMINISTER),
+                kvp("starCount", 0),
+                kvp("starRecord", make_array()),
                 kvp("borrowRecord", make_array()),
                 kvp("keepRecord", make_array()),
                 kvp("resource", make_array())

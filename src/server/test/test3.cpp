@@ -11,7 +11,7 @@ using boost::asio::ip::tcp;
 boost::asio::io_service io_service;
 tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), 2333);
 
-// for login, logout, register
+// for get record
 int main() {
     srand(time(0) + clock());
     try {
