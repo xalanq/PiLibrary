@@ -137,6 +137,10 @@ namespace X {
             return "Get Keep Record";
         case GetKeepRecordFeedback:
             return "Get Keep Record Feedback";
+        case GetNewBookList:
+            return "Get New Book List";
+        case GetNewBookListFeedback:
+            return "Get New Book List Feedback";
         default:
             return "No Such Action";
         }

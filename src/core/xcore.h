@@ -94,7 +94,9 @@ namespace X {
         GetBrowseRecord,
         GetBrowseRecordFeedback,
         GetKeepRecord,
-        GetKeepRecordFeedback
+        GetKeepRecordFeedback,
+        GetNewBookList,
+        GetNewBookListFeedback
     };
 
     extern xstring what(const ErrorCode &ec);

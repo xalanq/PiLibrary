@@ -78,6 +78,8 @@ public:
 
     ptree getRecord(const ptree &pt);
 
+    ptree getNewBookList(const ptree &pt);
+
     // not open for user, so ensure the userid exists in the below methods
     void recordLogin(const ptree &pt);
 

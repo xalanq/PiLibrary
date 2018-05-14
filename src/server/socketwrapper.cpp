@@ -133,6 +133,8 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
                 doGetRecord(std::move(pt), token, "browseRecord", X::GetBrowseRecordFeedback);
             else if (ac == X::GetKeepRecord)
                 doGetRecord(std::move(pt), token, "keepRecord", X::GetKeepRecordFeedback);
+            else if (ac == X::GetNewBookList)
+                doGetNewBookList(std::move(pt), token);
             else
                 write(X::UnknownError, X::Error);
         }
@@ -447,5 +449,27 @@ void SocketWrapper::doGetRecord(ptree pt, const xll &token, const xstring &type,
         }
     }
     write(ec, feedback, tk, std::move(tr));
+}
+
+void SocketWrapper::doGetNewBookList(ptree pt, const xll &token) {
+    auto tr = ptree();
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doGetNewBookList) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doGetNewBookList) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("priority", it->getPriority());
+            _from(doGetNewBookList);
+            tr = userManager.getNewBookList(pt);
+        }
+    }
+    write(ec, X::GetNewBookListFeedback, tk, std::move(tr));
 }
 

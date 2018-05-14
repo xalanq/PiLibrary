@@ -24,6 +24,7 @@ void readme() {
     cout << "5. Return Book\n";
     cout << "6. Star Book\n";
     cout << "7. Unstar Book\n";
+    cout << "8. Get New Book List\n";
     cout << "Otherwise. Logout\n";
     cout << "input op: ";
 }
@@ -150,6 +151,19 @@ int main() {
                 cerr << "UnStarBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::UnStarBook, pt);
+                pt = boost::property_tree::ptree();
+                X::tcp_sync_read(s, token, ac, pt);
+
+                cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
+            } else if (op == 8) {
+                // GetNewBookList
+                std::cout << "input number: ";
+                int number;
+                std::cin >> number;
+                pt.put("number", number);
+                cerr << "GetNewBookList send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
+
+                X::tcp_sync_write(s, token, X::GetNewBookList, pt);
                 pt = boost::property_tree::ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 

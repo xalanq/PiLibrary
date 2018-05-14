@@ -45,6 +45,7 @@ private:
     void doGetBook(ptree pt, const xll &token);
     void doSetBook(const ptree &pt, const xll &token);
     void doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback);
+    void doGetNewBookList(ptree pt, const xll &token);
 
     boost::asio::ip::tcp::socket socket;
     SocketInfo info;
