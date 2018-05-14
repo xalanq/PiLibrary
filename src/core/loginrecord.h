@@ -17,6 +17,8 @@ public:
     xll getTime() const;
     void setTime(const xll &value);
 
+    static LoginRecord fromPtree(const ptree &pt);
+
     bool operator < (const LoginRecord &b) const;
 
 private:

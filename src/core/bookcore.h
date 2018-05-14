@@ -43,14 +43,14 @@ public:
     void setStarCount(const xint &value);
 
 private:
-    xint bookid;
-    xstring title;
-    xstring author;
-    xstring ISBN;
-    xstring publisher;
-    xint amount;
-    xstring introduction;
-    xstring position;
-    xint priority;
-    xint starCount;
+    xint bookid {0};
+    xstring title {""};
+    xstring author {""};
+    xstring ISBN {""};
+    xstring publisher {""};
+    xint amount {0};
+    xstring introduction {""};
+    xstring position {""};
+    xint priority {0};
+    xint starCount {0};
 };

@@ -26,13 +26,11 @@ void ThreadGetBook::run() {
         ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
     } catch (std::exception &) {
         ec = X::InvalidBook;
-        token = 0;
         pt = ptree();
     }
 
     if (ac != X::GetBookFeedback) {
         ec = X::InvalidBook;
-        token = 0;
         pt = ptree();
     }
 

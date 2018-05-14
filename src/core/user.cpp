@@ -15,11 +15,11 @@ void User::clearBorrowRecordManager() {
     borrowRecordManager.clear();
 }
 
-void User::addKeepRecord(const BorrowRecord &record) {
+void User::addKeepRecord(const KeepRecord &record) {
     keepRecordManager.add(record);
 }
 
-RecordManager<BorrowRecord>& User::getKeepRecordManager() {
+RecordManager<KeepRecord>& User::getKeepRecordManager() {
     return keepRecordManager;
 }
 

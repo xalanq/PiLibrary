@@ -7,13 +7,14 @@
 #include <QWidget>
 
 #include <core/bookcore.h>
+#include <core/keeprecord.h>
 
-class ListWidgetBook : public QListWidget {
+class ListWidgetKeepRecord : public QListWidget {
     Q_OBJECT
 
 public:
-    ListWidgetBook(QWidget *parent = Q_NULLPTR);
-    void add(const BookCore &book);
+    ListWidgetKeepRecord(QWidget *parent = Q_NULLPTR);
+    void add(const BookCore &book, const KeepRecord &record);
 
 private:
     void setUI();

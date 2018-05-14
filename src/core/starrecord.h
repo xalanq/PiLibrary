@@ -20,6 +20,8 @@ public:
     xll getTime() const;
     void setTime(const xll &value);
 
+    static StarRecord fromPtree(const ptree &pt);
+
     bool operator < (const StarRecord &b) const;
 
 private:

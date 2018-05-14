@@ -7,13 +7,14 @@
 #include <QWidget>
 
 #include <core/bookcore.h>
+#include <core/starrecord.h>
 
-class ListWidgetBook : public QListWidget {
+class ListWidgetStarRecord : public QListWidget {
     Q_OBJECT
 
 public:
-    ListWidgetBook(QWidget *parent = Q_NULLPTR);
-    void add(const BookCore &book);
+    ListWidgetStarRecord(QWidget *parent = Q_NULLPTR);
+    int add(const BookCore &book, const StarRecord &record);
 
 private:
     void setUI();

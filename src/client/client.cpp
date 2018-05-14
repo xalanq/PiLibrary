@@ -14,7 +14,7 @@ Client::Client(QWidget *parent) :
 
     login();
 
-    mainWidget = new MainWidget(userManager, this);
+    mainWidget = new MainWidget(userManager, bookManager, this);
 
     setUI();
     setConnection();

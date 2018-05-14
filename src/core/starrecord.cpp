@@ -21,6 +21,13 @@ void StarRecord::setTime(const xll &value) {
     time = value;
 }
 
+StarRecord StarRecord::fromPtree(const ptree &pt) {
+    StarRecord record;
+    record.setBookid(pt.get<xint>("bookid", 0));
+    record.setTime(pt.get<xll>("time"));
+    return record;
+}
+
 bool StarRecord::operator < (const StarRecord &b) const {
     return time == b.time ? bookid < b.bookid : time < b.time;
 }

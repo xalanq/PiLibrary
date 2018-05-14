@@ -108,6 +108,8 @@ namespace X {
     extern bool checkPassword(const xstring &password);
     extern bool checkEmail(const xstring &email);
 
+    extern xstring time_to_str(const xll &time);
+
     extern void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt);
     extern void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const ptree &pt);
 }

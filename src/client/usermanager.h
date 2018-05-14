@@ -8,6 +8,7 @@
 #include <core/abstractuser.h>
 #include <core/borrowrecord.h>
 #include <core/browserecord.h>
+#include <core/keeprecord.h>
 #include <core/loginrecord.h>
 #include <core/recordmanager.h>
 #include <core/starrecord.h>
@@ -26,16 +27,16 @@ public:
     RecordManager<LoginRecord>* getLoginRecordManager();
     RecordManager<StarRecord>* getStarRecordManager();
     RecordManager<BorrowRecord>* getBorrowRecordManager();
-    RecordManager<BorrowRecord>* getKeepRecordManager();
+    RecordManager<KeepRecord>* getKeepRecordManager();
     RecordManager<BrowseRecord>* getBrowseRecordManager();
 
     void setToken(const xll &token);
     bool setUser(const ptree &pt);
-    bool setLoginRecord(const ptree &pt);
-    bool setStarRecord(const ptree &pt);
-    bool setBorrowRecord(const ptree &pt);
-    bool setKeepRecord(const ptree &pt);
-    bool setBrowseRecord(const ptree &pt);
+    bool addMultiLoginRecord(const ptree &pt);
+    bool addMultiStarRecord(const ptree &pt);
+    bool addMultiBorrowRecord(const ptree &pt);
+    bool addMultiKeepRecord(const ptree &pt);
+    bool addMultiBrowseRecord(const ptree &pt);
 
 private:
     xll token {0};

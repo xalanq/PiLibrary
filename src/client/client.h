@@ -29,6 +29,7 @@ private:
 
 private:
     UserManager userManager;
+    BookManager bookManager;
     MainWidget *mainWidget;
     QSettings setting {};
 };

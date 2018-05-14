@@ -41,7 +41,7 @@ RecordManager<BorrowRecord>* UserManager::getBorrowRecordManager() {
     return nullptr;
 }
 
-RecordManager<BorrowRecord>* UserManager::getKeepRecordManager() {
+RecordManager<KeepRecord>* UserManager::getKeepRecordManager() {
     auto it = std::dynamic_pointer_cast<User>(user);
     if (it)
         return &it->getKeepRecordManager();
@@ -75,7 +75,7 @@ bool UserManager::setUser(const ptree &pt) {
     return true;
 }
 
-bool UserManager::setLoginRecord(const ptree &pt) {
+bool UserManager::addMultiLoginRecord(const ptree &pt) {
     auto x = pt.get_child_optional("loginRecord");
     if (x && user) {
         auto it = user;
@@ -96,7 +96,7 @@ bool UserManager::setLoginRecord(const ptree &pt) {
     return false;
 }
 
-bool UserManager::setStarRecord(const ptree &pt) {
+bool UserManager::addMultiStarRecord(const ptree &pt) {
     auto x = pt.get_child_optional("starRecord");
     if (x && user) {
         auto it = std::dynamic_pointer_cast<User>(user);
@@ -117,7 +117,7 @@ bool UserManager::setStarRecord(const ptree &pt) {
     return false;
 }
 
-bool UserManager::setBorrowRecord(const ptree &pt) {
+bool UserManager::addMultiBorrowRecord(const ptree &pt) {
     auto x = pt.get_child_optional("borrowRecord");
     if (x && user) {
         auto it = std::dynamic_pointer_cast<User>(user);
@@ -144,7 +144,7 @@ bool UserManager::setBorrowRecord(const ptree &pt) {
     return false;
 }
 
-bool UserManager::setKeepRecord(const ptree &pt) {
+bool UserManager::addMultiKeepRecord(const ptree &pt) {
     auto x = pt.get_child_optional("keepRecord");
     if (x && user) {
         auto it = std::dynamic_pointer_cast<User>(user);
@@ -171,7 +171,7 @@ bool UserManager::setKeepRecord(const ptree &pt) {
     return false;
 }
 
-bool UserManager::setBrowseRecord(const ptree &pt) {
+bool UserManager::addMultiBrowseRecord(const ptree &pt) {
     auto x = pt.get_child_optional("browseRecord");
     if (x && user) {
         auto it = std::dynamic_pointer_cast<User>(user);

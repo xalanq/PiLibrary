@@ -43,6 +43,13 @@ void BorrowRecord::setReturnTime(const xll &value) {
     returnTime = value;
 }
 
+BorrowRecord BorrowRecord::fromPtree(const ptree &pt) {
+    BorrowRecord record;
+    record.setBookid(pt.get<xint>("bookid", 0));
+    record.setTime(pt.get<xll>("beginTime", 0), pt.get<xll>("endTime", 0), pt.get<xll>("returnTime", 0));
+    return std::move(record);
+}
+
 bool BorrowRecord::operator < (const BorrowRecord &t) const {
-    return beginTime == t.beginTime ? (endTime == t.endTime ? bookid < t.bookid : endTime < t.endTime) : beginTime < t.beginTime;
+    return returnTime == t.returnTime ? (endTime == t.endTime ? (beginTime == t.beginTime ? bookid < t.bookid : beginTime < t.beginTime) : endTime < t.endTime) : returnTime < t.returnTime;
 }

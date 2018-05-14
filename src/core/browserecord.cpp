@@ -19,6 +19,13 @@ void BrowseRecord::setTime(const xll &value) {
     time = value;
 }
 
+BrowseRecord BrowseRecord::fromPtree(const ptree &pt) {
+    BrowseRecord record;
+    record.setBookid(pt.get<xint>("bookid", 0));
+    record.setTime(pt.get<xint>("time", 0));
+    return std::move(record);
+}
+
 bool BrowseRecord::operator < (const BrowseRecord &a) const {
     return time == a.time ? bookid < a.bookid : time < a.time;
 }

@@ -17,6 +17,8 @@ public:
     xll getTime() const;
     void setTime(const xll &value);
 
+    static BrowseRecord fromPtree(const ptree &pt);
+
     bool operator < (const BrowseRecord &a) const;
 
 private:

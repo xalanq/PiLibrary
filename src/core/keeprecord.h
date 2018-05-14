@@ -5,19 +5,19 @@
 
 #include <core/xcore.h>
 
-class BorrowRecord {
+class KeepRecord {
 
 public:
     typedef X::xll xll;
     typedef X::xint xint;
     typedef X::xstring xstring;
 
-    virtual ~BorrowRecord();
+    virtual ~KeepRecord();
 
     xint getBookid() const;
     void setBookid(const xint &value);
 
-    void setTime(const xll &beginTime, const xll &endTime, const xll &returnTime);
+    void setTime(const xll &beginTime, const xll &endTime);
 
     xll getBeginTime() const;
     void setBeginTime(const xll &value);
@@ -25,16 +25,12 @@ public:
     xll getEndTime() const;
     void setEndTime(const xll &value);
 
-    xll getReturnTime() const;
-    void setReturnTime(const xll &value);
-
-    static BorrowRecord fromPtree(const ptree &pt);
+    static KeepRecord fromPtree(const ptree &pt);
     
-    bool operator < (const BorrowRecord &t) const;
+    bool operator < (const KeepRecord &t) const;
 
 private:
     xint bookid;
     xll beginTime;
     xll endTime;
-    xll returnTime;
 };

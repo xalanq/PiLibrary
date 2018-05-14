@@ -11,7 +11,7 @@ ListWidgetBook::ListWidgetBook(QWidget *parent) :
     setUI();
 }
 
-void ListWidgetBook::addBook(const BookCore &book) {
+void ListWidgetBook::add(const BookCore &book) {
     QPixmap p(QSize(114, 160));
     QIcon icon;
     p.fill(Qt::black);

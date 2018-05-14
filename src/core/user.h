@@ -6,6 +6,7 @@
 #include <core/abstractuser.h>
 #include <core/borrowrecord.h>
 #include <core/browserecord.h>
+#include <core/keeprecord.h>
 #include <core/recordmanager.h>
 #include <core/starrecord.h>
 #include <core/xcore.h>
@@ -17,8 +18,8 @@ public:
     RecordManager<BorrowRecord>& getBorrowRecordManager();
     void clearBorrowRecordManager();
 
-    void addKeepRecord(const BorrowRecord &record);
-    RecordManager<BorrowRecord>& getKeepRecordManager();
+    void addKeepRecord(const KeepRecord &record);
+    RecordManager<KeepRecord>& getKeepRecordManager();
     void clearKeepRecordManager();
 
     void addBrowseRecord(const BrowseRecord &record);
@@ -32,6 +33,6 @@ public:
 private:
     RecordManager<StarRecord> starRecordManager;
     RecordManager<BorrowRecord> borrowRecordManager;
-    RecordManager<BorrowRecord> keepRecordManager;
+    RecordManager<KeepRecord> keepRecordManager;
     RecordManager<BrowseRecord> browseRecordManager;
 };

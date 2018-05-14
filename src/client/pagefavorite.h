@@ -5,15 +5,25 @@
 
 #include <QWidget>
 
+#include <client/listwidgetstarrecord.h>
+#include <client/bookmanager.h>
 #include <client/usermanager.h>
 
 class PageFavorite : public QWidget {
     Q_OBJECT
 
 public:
-    PageFavorite(UserManager &userManager, QWidget *parent = Q_NULLPTR);
-    ~PageFavorite();
+    PageFavorite(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+
+public slots:
+    void slotGetStarRecord(const std::vector<StarRecord> &records);
+
+private:
+    void setUI();
 
 private:
     UserManager &userManager;
+    BookManager &bookManager;
+
+    ListWidgetStarRecord *listWidgetStarRecord;
 };

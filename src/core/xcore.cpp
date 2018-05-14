@@ -170,6 +170,12 @@ namespace X {
         return true;
     }
 
+    xstring time_to_str(const xll &time) {
+        X::xstring str = asctime(localtime(&time));
+        str.pop_back();
+        return str;
+    }
+
     void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt) {
         SocketInfo info;
 
