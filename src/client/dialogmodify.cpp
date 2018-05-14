@@ -9,46 +9,8 @@
 #include <QSettings>
 #include <QVBoxLayout>
 
-#include <client/DialogModify.h>
-
-ModifyThread::ModifyThread(const xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent) :
-    token(token),
-    nickname(nickname.toStdString()),
-    email(email.toStdString()),
-    passwordOld(passwordOld.toStdString()),
-    passwordNew(passwordNew.toStdString()), 
-    NetworkThread(parent) {
-
-}
-
-void ModifyThread::run() {
-    xll token = this->token;
-    ptree pt;
-    ActionCode ac = X::NoAction;
-    ErrorCode ec = X::NoError;
-
-    pt.put("nickname", nickname);
-    pt.put("email", email); 
-    pt.put("passwordOld", passwordOld);
-    if (passwordNew.size() > 0)
-        pt.put("passwordNew", passwordNew);
-
-    try {
-        auto socket = newSocket();
-        X::tcp_sync_write(socket, token, X::Modify, pt);
-        pt = ptree();
-        X::tcp_sync_read(socket, token, ac, pt);
-        socket.close();
-        ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &) {
-        ec = X::ModifyFailed;
-    }
-
-    if (ac != X::ModifyFeedback)
-        ec = X::ModifyFailed;
-
-    emit done(ec);
-}
+#include <client/dialogmodify.h>
+#include <client/threadmodify.h>
 
 DialogModify::DialogModify(UserManager &userManager, QWidget *parent) : 
     userManager(userManager),
@@ -111,7 +73,7 @@ void DialogModify::slotModifyBegin() {
     labelMessage->show();
     labelMessage->setText("Modifying...");
 
-    auto thread = new ModifyThread(
+    auto thread = new ThreadModify(
         userManager.getToken(),
         nickname,
         email,
@@ -119,8 +81,8 @@ void DialogModify::slotModifyBegin() {
         passwordNew.size() > 0 ? QCryptographicHash::hash(QString::fromStdString(X::saltBegin + passwordNew.toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex() : QString(),
         this
     );
-    connect(thread, &ModifyThread::done, this, &DialogModify::slotModifyEnd);
-    connect(thread, &ModifyThread::finished, thread, &QObject::deleteLater);
+    connect(thread, &ThreadModify::done, this, &DialogModify::slotModifyEnd);
+    connect(thread, &ThreadModify::finished, thread, &QObject::deleteLater);
     thread->start();
 }
 

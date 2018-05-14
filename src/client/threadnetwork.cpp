@@ -3,9 +3,9 @@
 
 #include <QSettings>
 
-#include <client/networkthread.h>
+#include <client/threadnetwork.h>
 
-NetworkThread::NetworkThread(QObject *parent) :
+ThreadNetwork::ThreadNetwork(QObject *parent) :
     io_service(),
     ep(boost::asio::ip::address::from_string(
           QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
@@ -19,7 +19,7 @@ NetworkThread::NetworkThread(QObject *parent) :
     qRegisterMetaType<ActionCode>("ActionCode");
 }
 
-boost::asio::ip::tcp::socket NetworkThread::newSocket() {
+boost::asio::ip::tcp::socket ThreadNetwork::newSocket() {
     boost::asio::ip::tcp::socket socket(io_service);
     socket.connect(ep);
     return std::move(socket);

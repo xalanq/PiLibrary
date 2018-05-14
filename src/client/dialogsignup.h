@@ -9,26 +9,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include <client/networkthread.h>
 #include <client/xclient.h>
-
-class SignUpThread : public NetworkThread {
-    Q_OBJECT
-
-public:
-    SignUpThread(const QString &username, const QString &nickname, const QString &password, const QString &email, QObject *parent = Q_NULLPTR);
-
-signals:
-    void done(const ErrorCode &ec);
-
-private:
-    void run() override;
-
-    xstring username;
-    xstring nickname;
-    xstring password;
-    xstring email;
-};
 
 class DialogSignUp : public QDialog {
     Q_OBJECT
@@ -44,6 +25,7 @@ private:
     void setUI();
     void setConnection();
 
+private:
     QLineEdit *editUsername;
     QLineEdit *editNickname;
     QLineEdit *editPassword;

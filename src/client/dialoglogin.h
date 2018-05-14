@@ -12,26 +12,8 @@
 #include <QObject>
 #include <QPushButton>
 
-#include <client/networkthread.h>
 #include <client/usermanager.h>
 #include <client/xclient.h>
-
-class LoginThread : public NetworkThread {
-    Q_OBJECT
-
-public:
-    LoginThread(const QString &username, const QString &password, QObject *parent = Q_NULLPTR);
-
-signals:
-    void done(const ErrorCode &ec, const xll &token, const ptree &pt);
-
-private:
-    void run() override;
-
-private:
-    xstring username;
-    xstring password;
-};
 
 class DialogLogin : public QDialog {
     Q_OBJECT

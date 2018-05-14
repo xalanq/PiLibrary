@@ -9,7 +9,7 @@
 
 #include <client/xclient.h>
 
-class NetworkThread : public QThread {
+class ThreadNetwork : public QThread {
     Q_OBJECT
 
 public:
@@ -19,8 +19,8 @@ public:
     typedef X::ErrorCode ErrorCode;
     typedef X::ActionCode ActionCode;
 
-    NetworkThread(QObject *parent = Q_NULLPTR);
-    virtual ~NetworkThread() = default;
+    ThreadNetwork(QObject *parent = Q_NULLPTR);
+    virtual ~ThreadNetwork() = default;
 
     boost::asio::ip::tcp::socket newSocket();
 

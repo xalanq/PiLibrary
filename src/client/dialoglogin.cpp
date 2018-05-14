@@ -14,45 +14,8 @@
 
 #include <client/dialoglogin.h>
 #include <client/dialogsignup.h>
+#include <client/threadlogin.h>
 #include <core/socketinfo.h>
-
-
-LoginThread::LoginThread(const QString &username, const QString &password, QObject *parent) :
-    username(username.toStdString()),
-    password(password.toStdString()),
-    NetworkThread(parent) {
-}
-
-void LoginThread::run() {
-    xll token = 0;
-    ptree pt;
-    ActionCode ac = X::NoAction;
-    ErrorCode ec = X::NoError;
-
-    pt.put("username", username);
-    pt.put("password", password); 
-
-    try {
-        auto socket = newSocket();
-        X::tcp_sync_write(socket, token, X::Login, pt);
-        pt = ptree();
-        X::tcp_sync_read(socket, token, ac, pt);
-        socket.close();
-        ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &) {
-        ec = X::LoginFailed;
-        token = 0;
-        pt = ptree();
-    }
-
-    if (ac != X::LoginFeedback) {
-        ec = X::LoginFailed;
-        token = 0;
-        pt = ptree();
-    }
-
-    emit done(ec, token, pt);
-}
 
 DialogLogin::DialogLogin(UserManager &userManager, QWidget *parent) :
     userManager(userManager),
@@ -126,9 +89,9 @@ void DialogLogin::slotLoginBegin() {
     QString username = cbboxUsername->currentText();
     QString password = QCryptographicHash::hash(QString::fromStdString(X::saltBegin + editPassword->text().toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex();
 
-    auto thread = new LoginThread(std::move(username), std::move(password), this);
-    connect(thread, &LoginThread::done, this, &DialogLogin::slotLoginEnd);
-    connect(thread, &LoginThread::finished, thread, &QObject::deleteLater);
+    auto thread = new ThreadLogin(std::move(username), std::move(password), this);
+    connect(thread, &ThreadLogin::done, this, &DialogLogin::slotLoginEnd);
+    connect(thread, &ThreadLogin::finished, thread, &QObject::deleteLater);
     thread->start();
 }
 

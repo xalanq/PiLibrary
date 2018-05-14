@@ -5,79 +5,8 @@
 
 #include <core/book.h>
 #include <client/pagebrowse.h>
-
-GetBookThread::GetBookThread(const xll &token, const xint &bookid, QObject *parent) :
-    token(token),
-    bookid(bookid),
-    NetworkThread(parent) {
-}
-
-void GetBookThread::run() {
-    xll token = this->token;
-    ptree pt;
-    ActionCode ac = X::NoAction;
-    ErrorCode ec = X::NoError;
-
-    pt.put("bookid", this->bookid);
-
-    try {
-        auto socket = newSocket();
-        X::tcp_sync_write(socket, token, X::GetBook, pt);
-        pt = ptree();
-        X::tcp_sync_read(socket, token, ac, pt);
-        socket.close();
-        ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &) {
-        ec = X::InvalidBook;
-        token = 0;
-        pt = ptree();
-    }
-
-    if (ac != X::GetBookFeedback) {
-        ec = X::InvalidBook;
-        token = 0;
-        pt = ptree();
-    }
-
-    emit done(ec, pt);
-}
-
-
-GetNewBookListThread::GetNewBookListThread(const X::xll &token, const X::xint &number, QObject *parent) :
-    token(token),
-    number(number),
-    NetworkThread(parent) {
-}
-
-void GetNewBookListThread::run() {
-    xll token = this->token;
-    ptree pt;
-    ActionCode ac = X::NoAction;
-    ErrorCode ec = X::NoError;
-
-    pt.put("number", this->number);
-
-    try {
-        auto socket = newSocket();
-        X::tcp_sync_write(socket, token, X::GetNewBookList, pt);
-        pt = ptree();
-        X::tcp_sync_read(socket, token, ac, pt);
-        socket.close();
-        ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &) {
-        ec = X::UnknownError;
-        token = 0;
-        pt = ptree();
-    }
-
-    if (ac != X::GetNewBookListFeedback) {
-        ec = X::InvalidBook;
-        token = 0;
-        pt = ptree();
-    }
-
-    emit done(ec, pt);
-}
+#include <client/threadgetbook.h>
+#include <client/threadgetnewbooklist.h>
 
 PageBrowse::PageBrowse(UserManager &userManager, QWidget *parent) :
     userManager(userManager),
@@ -99,9 +28,9 @@ void PageBrowse::slotEndGetNewBookList(const X::ErrorCode &ec, const ptree &pt) 
     auto arr = pt.get_child("bookid");
     for (auto &&child : arr) {
         auto bookid = child.second.get_value<X::xint>();
-        auto thread = new GetBookThread(userManager.getToken(), bookid, this);
-        connect(thread, &GetBookThread::done, this, &PageBrowse::slotEndGetBook);
-        connect(thread, &GetBookThread::finished, thread, &QObject::deleteLater);
+        auto thread = new ThreadGetBook(userManager.getToken(), bookid, this);
+        connect(thread, &ThreadGetBook::done, this, &PageBrowse::slotEndGetBook);
+        connect(thread, &ThreadGetBook::finished, thread, &QObject::deleteLater);
         thread->start();
     }
 }
@@ -111,9 +40,9 @@ void PageBrowse::setUI() {
     layout->addWidget(listWidgetBook);
     setLayout(layout);
     
-    auto thread = new GetNewBookListThread(userManager.getToken(), 15, this);
-    connect(thread, &GetNewBookListThread::done, this, &PageBrowse::slotEndGetNewBookList);
-    connect(thread, &GetNewBookListThread::finished, thread, &QObject::deleteLater);
+    auto thread = new ThreadGetNewBookList(userManager.getToken(), 15, this);
+    connect(thread, &ThreadGetNewBookList::done, this, &PageBrowse::slotEndGetNewBookList);
+    connect(thread, &ThreadGetNewBookList::finished, thread, &QObject::deleteLater);
     thread->start();
 }
 

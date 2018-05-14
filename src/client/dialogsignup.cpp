@@ -10,42 +10,7 @@
 #include <QVBoxLayout>
 
 #include <client/dialogsignup.h>
-
-SignUpThread::SignUpThread(const QString &username, const QString &nickname, const QString &password, const QString &email, QObject *parent) :
-    username(username.toStdString()),
-    nickname(nickname.toStdString()),
-    password(password.toStdString()),
-    email(email.toStdString()),
-    NetworkThread(parent) {
-}
-
-void SignUpThread::run() {
-    xll token = 0;
-    ptree pt;
-    ActionCode ac = X::NoAction;
-    ErrorCode ec = X::NoError;
-
-    pt.put("username", username);
-    pt.put("nickname", nickname);
-    pt.put("password", password); 
-    pt.put("email", email); 
-
-    try {
-        auto socket = newSocket();
-        X::tcp_sync_write(socket, token, X::Register, pt);
-        pt = ptree();
-        X::tcp_sync_read(socket, token, ac, pt);
-        socket.close();
-        ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &) {
-        ec = X::RegisterFailed;
-    }
-
-    if (ac != X::RegisterFeedback)
-        ec = X::RegisterFailed;
-
-    emit done(ec);
-}
+#include <client/threadsignup.h>
 
 DialogSignUp::DialogSignUp(QWidget *parent) : 
     QDialog(parent) {
@@ -116,15 +81,15 @@ void DialogSignUp::slotSignUpBegin() {
     labelMessage->show();
     labelMessage->setText("Registering...");
 
-    auto thread = new SignUpThread(
+    auto thread = new ThreadSignUp(
         editUsername->text(),
         editNickname->text(),
         QCryptographicHash::hash(QString::fromStdString(X::saltBegin + editPassword->text().toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex(),
         editEmail->text(),
         this
     );
-    connect(thread, &SignUpThread::done, this, &DialogSignUp::slotSignUpEnd);
-    connect(thread, &SignUpThread::finished, thread, &QObject::deleteLater);
+    connect(thread, &ThreadSignUp::done, this, &DialogSignUp::slotSignUpEnd);
+    connect(thread, &ThreadSignUp::finished, thread, &QObject::deleteLater);
     thread->start();
 }
 
