@@ -39,6 +39,9 @@ public:
     xint getPriority() const;
     void setPriority(const xint &value);
 
+    xint getStarCount() const;
+    void setStarCount(const xint &value);
+
 private:
     xint bookid;
     xstring title;
@@ -49,4 +52,5 @@ private:
     xstring introduction;
     xstring position;
     xint priority;
+    xint starCount;
 };

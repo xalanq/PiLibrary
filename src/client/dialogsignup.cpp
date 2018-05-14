@@ -3,8 +3,6 @@
 
 #include <regex>
 
-#include <boost/property_tree/ptree.hpp>
-
 #include <QCryptographicHash>
 #include <QMessageBox>
 #include <QPushButton>
@@ -14,23 +12,18 @@
 #include <client/dialogsignup.h>
 
 SignUpThread::SignUpThread(const QString &username, const QString &nickname, const QString &password, const QString &email, QObject *parent) :
-    QThread(parent),
-    io_service(),
-    ep(boost::asio::ip::address::from_string(
-          QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
-       QSettings().value("Network/server_port", 2333).toInt()),
     username(username.toStdString()),
     nickname(nickname.toStdString()),
     password(password.toStdString()),
-    email(email.toStdString()) {
-
+    email(email.toStdString()),
+    NetworkThread(parent) {
 }
 
 void SignUpThread::run() {
-    X::xll token;
-    boost::property_tree::ptree pt;
-    X::ActionCode ac = X::NoAction;
-    X::ErrorCode ec = X::NoError;
+    xll token = 0;
+    ptree pt;
+    ActionCode ac = X::NoAction;
+    ErrorCode ec = X::NoError;
 
     pt.put("username", username);
     pt.put("nickname", nickname);
@@ -38,22 +31,20 @@ void SignUpThread::run() {
     pt.put("email", email); 
 
     try {
-        boost::asio::ip::tcp::socket socket(io_service);
-        socket.connect(ep);
-        X::tcp_sync_write(socket, 0, X::Register, pt);
-        pt = boost::property_tree::ptree();
+        auto socket = newSocket();
+        X::tcp_sync_write(socket, token, X::Register, pt);
+        pt = ptree();
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
-        ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
+        ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
     } catch (std::exception &) {
         ec = X::RegisterFailed;
     }
 
-    if (ac != X::RegisterFeedback) {
+    if (ac != X::RegisterFeedback)
         ec = X::RegisterFailed;
-    }
 
-    emit done(int(ec));
+    emit done(ec);
 }
 
 DialogSignUp::DialogSignUp(QWidget *parent) : 
@@ -125,7 +116,7 @@ void DialogSignUp::slotSignUpBegin() {
     labelMessage->show();
     labelMessage->setText("Registering...");
 
-    SignUpThread *thread = new SignUpThread(
+    auto thread = new SignUpThread(
         editUsername->text(),
         editNickname->text(),
         QCryptographicHash::hash(QString::fromStdString(X::saltBegin + editPassword->text().toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex(),

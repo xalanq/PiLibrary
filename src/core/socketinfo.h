@@ -4,7 +4,6 @@
 #pragma once
 
 #include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
 
 #include <ctime>
 #include <sstream>
@@ -13,7 +12,6 @@
 
 class SocketInfo {
 public:
-    typedef boost::property_tree::ptree ptree;
     typedef X::xll xll;
     typedef X::xint xint;
     typedef X::xstring xstring;

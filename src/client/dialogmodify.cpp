@@ -3,8 +3,6 @@
 
 #include <regex>
 
-#include <boost/property_tree/ptree.hpp>
-
 #include <QCryptographicHash>
 #include <QMessageBox>
 #include <QPushButton>
@@ -13,25 +11,21 @@
 
 #include <client/DialogModify.h>
 
-ModifyThread::ModifyThread(const X::xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent) :
-    QThread(parent),
-    io_service(),
-    ep(boost::asio::ip::address::from_string(
-          QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
-       QSettings().value("Network/server_port", 2333).toInt()),
+ModifyThread::ModifyThread(const xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent) :
     token(token),
     nickname(nickname.toStdString()),
     email(email.toStdString()),
     passwordOld(passwordOld.toStdString()),
-    passwordNew(passwordNew.toStdString()) {
+    passwordNew(passwordNew.toStdString()), 
+    NetworkThread(parent) {
 
 }
 
 void ModifyThread::run() {
-    X::xll token = this->token;
-    boost::property_tree::ptree pt;
-    X::ActionCode ac = X::NoAction;
-    X::ErrorCode ec = X::NoError;
+    xll token = this->token;
+    ptree pt;
+    ActionCode ac = X::NoAction;
+    ErrorCode ec = X::NoError;
 
     pt.put("nickname", nickname);
     pt.put("email", email); 
@@ -40,22 +34,20 @@ void ModifyThread::run() {
         pt.put("passwordNew", passwordNew);
 
     try {
-        boost::asio::ip::tcp::socket socket(io_service);
-        socket.connect(ep);
+        auto socket = newSocket();
         X::tcp_sync_write(socket, token, X::Modify, pt);
-        pt = boost::property_tree::ptree();
+        pt = ptree();
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
-        ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
+        ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
     } catch (std::exception &) {
         ec = X::ModifyFailed;
     }
 
-    if (ac != X::ModifyFeedback) {
+    if (ac != X::ModifyFeedback)
         ec = X::ModifyFailed;
-    }
 
-    emit done(int(ec));
+    emit done(ec);
 }
 
 DialogModify::DialogModify(UserManager &userManager, QWidget *parent) : 
@@ -119,7 +111,7 @@ void DialogModify::slotModifyBegin() {
     labelMessage->show();
     labelMessage->setText("Modifying...");
 
-    ModifyThread *thread = new ModifyThread(
+    auto thread = new ModifyThread(
         userManager.getToken(),
         nickname,
         email,

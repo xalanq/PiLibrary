@@ -27,6 +27,13 @@ RecordManager<LoginRecord>* UserManager::getLoginRecordManager() {
     return nullptr;
 }
 
+RecordManager<StarRecord>* UserManager::getStarRecordManager() {
+    auto it = std::dynamic_pointer_cast<User>(user);
+    if (it)
+        return &it->getStarRecordManager();
+    return nullptr;
+}
+
 RecordManager<BorrowRecord>* UserManager::getBorrowRecordManager() {
     auto it = std::dynamic_pointer_cast<User>(user);
     if (it)
@@ -83,6 +90,27 @@ bool UserManager::setLoginRecord(const ptree &pt) {
             record.setIp(*ip);
             record.setTime(*time);
             it->addLoginRecord(record);
+        }
+        return true;
+    }
+    return false;
+}
+
+bool UserManager::setStarRecord(const ptree &pt) {
+    auto x = pt.get_child_optional("starRecord");
+    if (x && user) {
+        auto it = std::dynamic_pointer_cast<User>(user);
+        for (auto &item: *x) {
+            StarRecord record;
+            auto bookid = item.second.get_optional<xint>("bookid");
+            if (!bookid)
+                return false;
+            auto time = item.second.get_optional<xll>("time");
+            if (!time)
+                return false;
+            record.setBookid(*bookid);
+            record.setTime(*time);
+            it->addStarRecord(record);
         }
         return true;
     }

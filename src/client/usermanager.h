@@ -10,11 +10,11 @@
 #include <core/browserecord.h>
 #include <core/loginrecord.h>
 #include <core/recordmanager.h>
+#include <core/starrecord.h>
 #include <client/xclient.h>
 
 class UserManager {
 public:
-    typedef boost::property_tree::ptree ptree;
     typedef X::xll xll;
     typedef X::xint xint;
     typedef X::xstring xstring;
@@ -24,6 +24,7 @@ public:
     xll getToken() const;
     std::shared_ptr<AbstractUser> getUser();
     RecordManager<LoginRecord>* getLoginRecordManager();
+    RecordManager<StarRecord>* getStarRecordManager();
     RecordManager<BorrowRecord>* getBorrowRecordManager();
     RecordManager<BorrowRecord>* getKeepRecordManager();
     RecordManager<BrowseRecord>* getBrowseRecordManager();
@@ -31,6 +32,7 @@ public:
     void setToken(const xll &token);
     bool setUser(const ptree &pt);
     bool setLoginRecord(const ptree &pt);
+    bool setStarRecord(const ptree &pt);
     bool setBorrowRecord(const ptree &pt);
     bool setKeepRecord(const ptree &pt);
     bool setBrowseRecord(const ptree &pt);

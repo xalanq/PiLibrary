@@ -11,6 +11,7 @@
 #include <boost/property_tree/ptree.hpp>
 
 using std::cerr;
+typedef boost::property_tree::ptree ptree;
 
 namespace X {
     typedef int xint;
@@ -107,6 +108,6 @@ namespace X {
     extern bool checkPassword(const xstring &password);
     extern bool checkEmail(const xstring &email);
 
-    extern void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, boost::property_tree::ptree &pt);
-    extern void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const boost::property_tree::ptree &pt);
+    extern void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt);
+    extern void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const ptree &pt);
 }

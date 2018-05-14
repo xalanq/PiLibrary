@@ -470,7 +470,7 @@ UserManager::ErrorCode UserManager::unStarBook(const ptree &pt) {
 }
 
 // maybe just use pt to search book not just by bookid
-UserManager::ptree UserManager::getSingleBook(const ptree &pt) {
+UserManager::ptree UserManager::getBook(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
     auto userid = pt.get<xint>("userid");
     auto priority = pt.get<xint>("priority");
@@ -518,7 +518,7 @@ UserManager::ptree UserManager::getSingleBook(const ptree &pt) {
     return std::move(p);
 }
 
-UserManager::ErrorCode UserManager::setSingleBook(const ptree &pt) {
+UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
     auto bookid = pt.get<xint>("bookid", 0);
     auto title = pt.get_optional<xstring>("title");

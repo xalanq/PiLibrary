@@ -14,7 +14,6 @@ class Client : public QMainWindow {
     Q_OBJECT
 
 public:
-    typedef boost::property_tree::ptree ptree;
     typedef X::xll xll;
     typedef X::xint xint;
     typedef X::xstring xstring;

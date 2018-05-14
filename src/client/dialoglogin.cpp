@@ -1,8 +1,6 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
-#include <boost/property_tree/ptree.hpp>
-
 #include <QApplication>
 #include <QCryptographicHash>
 #include <QDebug>
@@ -20,36 +18,27 @@
 
 
 LoginThread::LoginThread(const QString &username, const QString &password, QObject *parent) :
-    QThread(parent),
-    io_service(),
-    ep(boost::asio::ip::address::from_string(
-          QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
-       QSettings().value("Network/server_port", 2333).toInt()),
     username(username.toStdString()),
-    password(password.toStdString()) {
-
-    qRegisterMetaType<X::ErrorCode>("X::ErrorCode");
-    qRegisterMetaType<X::xll>("X::xll");
-    qRegisterMetaType<ptree>("ptree");
+    password(password.toStdString()),
+    NetworkThread(parent) {
 }
 
 void LoginThread::run() {
-    X::xll token;
+    xll token = 0;
     ptree pt;
-    X::ActionCode ac = X::NoAction;
-    X::ErrorCode ec = X::NoError;
+    ActionCode ac = X::NoAction;
+    ErrorCode ec = X::NoError;
 
     pt.put("username", username);
     pt.put("password", password); 
 
     try {
-        boost::asio::ip::tcp::socket socket(io_service);
-        socket.connect(ep);
-        X::tcp_sync_write(socket, 0, X::Login, pt);
+        auto socket = newSocket();
+        X::tcp_sync_write(socket, token, X::Login, pt);
         pt = ptree();
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
-        ec = static_cast<X::ErrorCode> (pt.get<int>("error_code"));
+        ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
     } catch (std::exception &) {
         ec = X::LoginFailed;
         token = 0;
@@ -137,7 +126,7 @@ void DialogLogin::slotLoginBegin() {
     QString username = cbboxUsername->currentText();
     QString password = QCryptographicHash::hash(QString::fromStdString(X::saltBegin + editPassword->text().toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex();
 
-    LoginThread *thread = new LoginThread(std::move(username), std::move(password), this);
+    auto thread = new LoginThread(std::move(username), std::move(password), this);
     connect(thread, &LoginThread::done, this, &DialogLogin::slotLoginEnd);
     connect(thread, &LoginThread::finished, thread, &QObject::deleteLater);
     thread->start();

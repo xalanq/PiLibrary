@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
-
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDialog>
@@ -13,37 +11,32 @@
 #include <QLineEdit>
 #include <QObject>
 #include <QPushButton>
-#include <QThread>
 
+#include <client/networkthread.h>
 #include <client/usermanager.h>
 #include <client/xclient.h>
 
-class LoginThread : public QThread {
+class LoginThread : public NetworkThread {
     Q_OBJECT
 
 public:
-    typedef boost::property_tree::ptree ptree;
-
     LoginThread(const QString &username, const QString &password, QObject *parent = Q_NULLPTR);
 
 signals:
-    void done(const X::ErrorCode &ec, const X::xll &token, const ptree &pt);
+    void done(const ErrorCode &ec, const xll &token, const ptree &pt);
 
 private:
     void run() override;
 
-    boost::asio::io_service io_service;
-    boost::asio::ip::tcp::endpoint ep;
-    X::xstring username;
-    X::xstring password;
+private:
+    xstring username;
+    xstring password;
 };
 
 class DialogLogin : public QDialog {
     Q_OBJECT
 
 public:
-    typedef boost::property_tree::ptree ptree;
-
     DialogLogin(UserManager &userManager, QWidget *parent = Q_NULLPTR);
     ~DialogLogin();
     void loadSetting();

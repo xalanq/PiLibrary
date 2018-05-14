@@ -4,7 +4,6 @@
 #include <ctime>
 
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
 
 #include <core/xcore.h>
 #include <core/socketinfo.h>
@@ -50,7 +49,7 @@ int main() {
         cerr << "Login send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
         X::tcp_sync_write(s, 0, X::Login, pt);
-        pt = boost::property_tree::ptree();
+        pt = ptree();
         X::tcp_sync_read(s, token, ac, pt);
 
         cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
@@ -60,7 +59,7 @@ int main() {
         int op;
         for (readme(); std::cin >> op; readme()) {
             token = loginToken;
-            pt = boost::property_tree::ptree();
+            pt = ptree();
             if (op == 1) {
                 // GetBook
                 std::cout << "input bookid: ";
@@ -70,7 +69,7 @@ int main() {
                 cerr << "GetBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::GetBook, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
@@ -96,7 +95,7 @@ int main() {
                 cerr << "GetBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::SetBook, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
@@ -111,7 +110,7 @@ int main() {
                 cerr << "BorrowBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::BorrowBook, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
@@ -125,7 +124,7 @@ int main() {
                 cerr << "BorrowBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::ReturnBook, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
@@ -138,7 +137,7 @@ int main() {
                 cerr << "StarBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::StarBook, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
@@ -151,7 +150,7 @@ int main() {
                 cerr << "UnStarBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::UnStarBook, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
@@ -164,17 +163,17 @@ int main() {
                 cerr << "GetNewBookList send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::GetNewBookList, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
             } else {
                 // logout
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 cerr << "Logout send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::Logout, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';

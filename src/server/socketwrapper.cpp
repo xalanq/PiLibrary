@@ -383,7 +383,7 @@ void SocketWrapper::doGetBook(ptree pt, const xll &token) {
             pt.put<xint>("priority", it->getPriority());
             pt.put<xll>("time", Session::getNowTime());
             _from(doGetBook);
-            auto p = userManager.getSingleBook(pt);
+            auto p = userManager.getBook(pt);
             if (p.empty()) {
                 _from(doGetBook) << "fail to get a book: p is empty\n";
                 ec = X::InvalidBook;
@@ -417,7 +417,7 @@ void SocketWrapper::doSetBook(const ptree &pt, const xll &token) {
                 ec = X::NoPermission;
             } else {
                 _from(doSetBook);
-                ec = userManager.setSingleBook(pt);
+                ec = userManager.setBook(pt);
                 if (!ec)
                     _from(doSetBook) << "succeed to set a book\n";
                 else

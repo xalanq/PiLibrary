@@ -5,21 +5,24 @@
 
 #include <core/xcore.h>
 
-class LoginRecord {
+class StarRecord {
+
 public:
-    typedef X::xint xint;
     typedef X::xll xll;
+    typedef X::xint xint;
     typedef X::xstring xstring;
 
-    xstring getIp() const;
-    void setIp(const xstring &value);
+    virtual ~StarRecord();
+
+    xint getBookid() const;
+    void setBookid(const xint &value);
 
     xll getTime() const;
     void setTime(const xll &value);
 
-    bool operator < (const LoginRecord &b) const;
+    bool operator < (const StarRecord &b) const;
 
 private:
-    xstring ip;
+    xint bookid;
     xll time;
 };

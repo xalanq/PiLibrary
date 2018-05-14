@@ -76,3 +76,11 @@ BookCore::xint BookCore::getPriority() const {
 void BookCore::setPriority(const xint &value) {
     priority = value;
 }
+
+BookCore::xint BookCore::getStarCount() const {
+    return starCount;
+}
+
+void BookCore::setStarCount(const xint &value) {
+    starCount = value;
+}

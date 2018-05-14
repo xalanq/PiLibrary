@@ -12,8 +12,9 @@ ListWidgetBook::ListWidgetBook(QWidget *parent) :
 }
 
 void ListWidgetBook::addBook(const BookCore &book) {
-    QPixmap p;
+    QPixmap p(QSize(114, 160));
     QIcon icon;
+    p.fill(Qt::black);
     icon.addPixmap(p);
     auto item = new QListWidgetItem(icon, QString::fromStdString(book.getTitle()));
     addItem(item);

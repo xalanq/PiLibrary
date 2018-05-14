@@ -2,7 +2,6 @@
 // License: LGPL v3.0
 
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
 
 #include <core/xcore.h>
 #include <core/socketinfo.h>
@@ -31,18 +30,18 @@ int main() {
                 cerr << "Login send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, 0, X::Login, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
 
 
                 // logout
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 cerr << "Logout send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::Logout, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';
@@ -55,7 +54,7 @@ int main() {
                 cerr << "Register send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, 0, X::Register, pt);
-                pt = boost::property_tree::ptree();
+                pt = ptree();
                 X::tcp_sync_read(s, token, ac, pt);
 
                 cerr << "token: " << token << ", action_code: " << X::what(ac) << '\n' << SocketInfo::encodePtree(pt, true) << '\n';

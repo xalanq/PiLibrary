@@ -170,7 +170,7 @@ namespace X {
         return true;
     }
 
-    void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, boost::property_tree::ptree &pt) {
+    void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt) {
         SocketInfo info;
 
         info.setSize(SocketInfo::HEADER_SIZE);
@@ -201,7 +201,7 @@ namespace X {
         info.decodeBody(length, pt);
     }
 
-    void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const boost::property_tree::ptree &pt) {
+    void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const ptree &pt) {
         SocketInfo info;
         auto str = SocketInfo::encodePtree(pt);
         auto size = SocketInfo::HEADER_SIZE + 1 + str.size();

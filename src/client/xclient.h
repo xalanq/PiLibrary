@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <boost/property_tree/ptree.hpp>
-
 #include <core/xcore.h>
 
 namespace X {

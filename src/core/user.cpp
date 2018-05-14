@@ -38,3 +38,15 @@ RecordManager<BrowseRecord>& User::getBrowseRecordManager() {
 void User::clearBrowseRecordManager() {
     browseRecordManager.clear();
 }
+
+void User::addStarRecord(const StarRecord &record) {
+    starRecordManager.add(record);
+}
+
+RecordManager<StarRecord>& User::getStarRecordManager() {
+    return starRecordManager;
+}
+
+void User::clearStarRecordManager() {
+    starRecordManager.clear();
+}

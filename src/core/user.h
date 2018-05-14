@@ -7,6 +7,7 @@
 #include <core/borrowrecord.h>
 #include <core/browserecord.h>
 #include <core/recordmanager.h>
+#include <core/starrecord.h>
 #include <core/xcore.h>
 
 class User : public AbstractUser {
@@ -24,7 +25,12 @@ public:
     RecordManager<BrowseRecord>& getBrowseRecordManager();
     void clearBrowseRecordManager();
 
+    void addStarRecord(const StarRecord &record);
+    RecordManager<StarRecord>& getStarRecordManager();
+    void clearStarRecordManager();
+
 private:
+    RecordManager<StarRecord> starRecordManager;
     RecordManager<BorrowRecord> borrowRecordManager;
     RecordManager<BorrowRecord> keepRecordManager;
     RecordManager<BrowseRecord> browseRecordManager;

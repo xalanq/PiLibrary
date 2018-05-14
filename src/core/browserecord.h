@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <ctime>
-
 #include <core/xcore.h>
 
 class BrowseRecord {
