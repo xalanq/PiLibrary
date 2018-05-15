@@ -1,10 +1,9 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
-#include <cstdlib>
 #include <ctime>
 
-#include <server/session.h>
+#include <server/Session.h>
 
 Session::Session(const xll &token, const xint &userid, const xll &alive, const xint &priority) :
     token(token),

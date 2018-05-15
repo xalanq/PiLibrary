@@ -3,17 +3,13 @@
 
 #pragma once
 
-#include <boost/property_tree/json_parser.hpp>
-
-#include <ctime>
-#include <sstream>
-
-#include <core/xcore.h>
+#include <core/types.h>
 
 class SocketInfo {
 public:
     typedef X::xll xll;
     typedef X::xint xint;
+    typedef X::ptree ptree;
     typedef X::xstring xstring;
     typedef X::ActionCode ActionCode;
 

@@ -4,9 +4,9 @@
 #include <algorithm>
 #include <regex>
 
-#include <core/abstractuser.h>
-#include <core/socketinfo.h>
-#include <server/usermanager.h>
+#include <core/SocketInfo.h>
+#include <core/utils.h>
+#include <server/UserManager.h>
 
 UserManager::UserManager(const xstring &mongo_url, const xstring &mongo_db_name) :
     pool(mongo::uri(mongo_url)),
@@ -137,7 +137,7 @@ UserManager::ErrorCode UserManager::registerUser(const ptree &pt) {
             kvp("nickname", bsoncxx::types::b_utf8(nickname)),
             kvp("password", bsoncxx::types::b_utf8(password)),
             kvp("email", bsoncxx::types::b_utf8(email)),
-            kvp("priority", int(AbstractUser::USER)),
+            kvp("priority", int(X::USER)),
             kvp("loginRecord", make_array()),
             kvp("starRecord", make_array()),
             kvp("borrowRecord", make_array()),
@@ -517,7 +517,7 @@ UserManager::ptree UserManager::getBook(const ptree &pt) {
     return std::move(p);
 }
 
-ptree UserManager::getBookBrief(const ptree &pt) {
+UserManager::ptree UserManager::getBookBrief(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
     auto userid = pt.get<xint>("userid");
     auto priority = pt.get<xint>("priority");
@@ -637,7 +637,7 @@ UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
                 kvp("amount", amount ? *amount : 0),
                 kvp("introduction", bsoncxx::types::b_utf8(introduction ? *introduction : "")),
                 kvp("position", bsoncxx::types::b_utf8(position ? *position : "")),
-                kvp("priority", priority ? *priority : AbstractUser::SUPER_ADMINISTER),
+                kvp("priority", priority ? *priority : int(X::SUPER_ADMINISTER)),
                 kvp("starCount", 0),
                 kvp("starRecord", make_array()),
                 kvp("borrowRecord", make_array()),

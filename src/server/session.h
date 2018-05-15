@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <server/xserver.h>
+#include <core/types.h>
 
 class Session {
 public:

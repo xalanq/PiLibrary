@@ -3,12 +3,19 @@
 
 #include <boost/asio.hpp>
 
-#include <core/xcore.h>
-#include <core/socketinfo.h>
+#include <core/SocketInfo.h>
+#include <core/utils.h>
 
 using boost::asio::ip::tcp;
 boost::asio::io_service io_service;
 tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), 2333);
+
+typedef X::xll xll;
+typedef X::xint xint;
+typedef X::ptree ptree;
+typedef X::xstring xstring;
+typedef X::ActionCode ActionCode;
+typedef X::ErrorCode ErrorCode;
 
 // for login, logout, register
 int main() {
@@ -16,9 +23,9 @@ int main() {
     try {
         for (int op; std::cin >> op; ) {
             tcp::socket s(io_service);
-            X::xll token = 0;
-            boost::property_tree::ptree pt;
-            X::ActionCode ac = X::NoAction;
+            xll token = 0;
+            ptree pt;
+            ActionCode ac = X::NoAction;
 
             cerr << "connect to " << ep.address() << ":" << 2333 << '\n';
             s.connect(ep);

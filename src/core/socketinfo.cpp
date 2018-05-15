@@ -1,6 +1,11 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <ctime>
+#include <sstream>
+
+#include <boost/property_tree/json_parser.hpp>
+
 #include <core/socketinfo.h>
 
 const char SocketInfo::IDENTIFIER = -101;

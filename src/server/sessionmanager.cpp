@@ -1,7 +1,7 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
-#include <server/sessionmanager.h>
+#include <server/SessionManager.h>
 
 SessionManager::SessionManager(const xll &defaultAlive) :
     eng(std::random_device()()),

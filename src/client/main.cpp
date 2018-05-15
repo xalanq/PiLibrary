@@ -7,8 +7,8 @@
 #include <QSettings>
 #include <QTranslator>
 
-#include <client/client.h>
-#include <client/xclient.h>
+#include <client/MainWindow.h>
+#include <client/values.h>
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     QApplication.installTranslator(translatorQt)
     */
 
-    Client w;
+    MainWindow w;
     w.show();
     return a.exec();
 }

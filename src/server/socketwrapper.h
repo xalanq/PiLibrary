@@ -4,21 +4,20 @@
 #pragma once
 
 #include <boost/asio.hpp>
-#include <boost/property_tree/ptree.hpp>
 
-#include <core/socketinfo.h>
-#include <server/sessionmanager.h>
-#include <server/usermanager.h>
-#include <server/xserver.h>
+#include <core/SocketInfo.h>
+#include <core/values.h>
+#include <server/SessionManager.h>
+#include <server/UserManager.h>
 
 // one read and one write as a turn
 class SocketWrapper : public std::enable_shared_from_this<SocketWrapper> {
 public:
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
-    typedef boost::property_tree::ptree ptree;
     typedef X::xll xll;
     typedef X::xint xint;
+    typedef X::ptree ptree;
     typedef X::xstring xstring;
     typedef X::ErrorCode ErrorCode;
     typedef X::ActionCode ActionCode;

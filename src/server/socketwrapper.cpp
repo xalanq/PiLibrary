@@ -1,13 +1,10 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
-#include <ctime>
-#include <exception>
-
 #include <boost/property_tree/json_parser.hpp>
 
-#include <core/abstractuser.h>
-#include <server/socketwrapper.h>
+#include <server/SocketWrapper.h>
+#include <core/utils.h>
 
 #define _from(func) cerr << "(" << #func << ") from " << socket.remote_endpoint().address() << " : " 
 #define _to(func) cerr << "(" << #func << ") send to " << socket.remote_endpoint().address() << " : " 
@@ -73,7 +70,7 @@ void SocketWrapper::readHeader() {
             auto ac = info.decodeHeaderActionCode();
             _from(readHeader) << "token: " << token << ", length: " << length << ", action_code: " << X::what(ac) << '\n';
             auto p = sessionManager.findToken(token);
-            if ((p == nullptr || p->getPriority() < AbstractUser::ADMINISTER) && bytes > SocketInfo::BODY_SIZE) {
+            if ((p == nullptr || p->getPriority() < X::ADMINISTER) && bytes > SocketInfo::BODY_SIZE) {
                 _from(readHeader) << "body size is too big.\n";
                 write(X::UnknownError, X::Error);
             } else
@@ -298,7 +295,7 @@ void SocketWrapper::doReturnBook(ptree pt, const xll &token) {
         } else {
             tk = token;
             auto priority = it->getPriority();
-            if (priority < AbstractUser::ADMINISTER) {
+            if (priority < X::ADMINISTER) {
                 _from(doReturnBook) << "no permission\n";
                 ec = X::NoPermission;
             } else {
@@ -441,10 +438,10 @@ void SocketWrapper::doSetBook(const ptree &pt, const xll &token) {
             ec = X::NotLogin;
         } else {
             tk = token;
-            xint bookPriority = pt.get<xint>("priority", AbstractUser::SUPER_ADMINISTER);
+            xint bookPriority = pt.get<xint>("priority", X::SUPER_ADMINISTER);
             auto priority = it->getPriority();
             _from(doSetBook) << "userid: " << it->getUserid() << ", priority: " << priority << ", bookPriority: " << bookPriority << '\n';
-            if (bookPriority > priority || priority < AbstractUser::ADMINISTER) {
+            if (bookPriority > priority || priority < X::ADMINISTER) {
                 _from(doSetBook) << "no permission\n";
                 ec = X::NoPermission;
             } else {

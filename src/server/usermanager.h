@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <boost/property_tree/ptree.hpp>
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
@@ -19,7 +17,7 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <server/xserver.h>
+#include <core/types.h>
 
 namespace mongo {
     using bsoncxx::builder::stream::array;
@@ -45,9 +43,9 @@ class UserManager {
 public:
     typedef X::xll xll;
     typedef X::xint xint;
+    typedef X::ptree ptree;
     typedef X::xstring xstring;
     typedef X::ErrorCode ErrorCode;
-    typedef boost::property_tree::ptree ptree;
 
     UserManager(const xstring &mongo_url, const xstring &mongo_db_name);
     ~UserManager();

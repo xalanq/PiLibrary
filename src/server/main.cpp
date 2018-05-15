@@ -9,8 +9,8 @@
 
 #include <mongocxx/instance.hpp>
 
-#include <server/server.h>
-#include <server/xserver.h>
+#include <server/Server.h>
+#include <server/values.h>
 
 using namespace std;
 

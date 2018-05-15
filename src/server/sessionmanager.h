@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <ctime>
 #include <memory>
 #include <random>
 #include <set>
@@ -11,15 +10,15 @@
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
-#include <server/session.h>
-#include <server/xserver.h>
+#include <core/types.h>
+#include <server/Session.h>
 
 class SessionManager {
 public:
-    typedef std::shared_ptr<Session> ptr;
     typedef X::xll xll;
     typedef X::xint xint;
     typedef X::xstring xstring;
+    typedef std::shared_ptr<Session> ptr;
 
     SessionManager(const xll &defaultAlive);
     void removeExpired();
