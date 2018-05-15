@@ -8,7 +8,7 @@
 #include <core/book.h>
 #include <client/xclient.h>
 
-class BookManager {
+class BookBriefManager {
 
 public:
     typedef X::xll xll;

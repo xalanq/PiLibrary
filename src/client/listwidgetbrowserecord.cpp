@@ -11,7 +11,7 @@ ListWidgetBrowseRecord::ListWidgetBrowseRecord(QWidget *parent) :
     setUI();
 }
 
-int ListWidgetBrowseRecord::add(const BookCore &book, const BrowseRecord &record) {
+int ListWidgetBrowseRecord::add(const BookBrief &book, const BrowseRecord &record) {
     QPixmap p(QSize(114, 160));
     QIcon icon;
     p.fill(Qt::black);

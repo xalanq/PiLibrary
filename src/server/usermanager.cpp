@@ -485,8 +485,7 @@ UserManager::ptree UserManager::getBook(const ptree &pt) {
             kvp("_id", 0),
             kvp("starRecord", 0),
             kvp("keepRecord", 0),
-            kvp("borrowRecord", 0),
-            kvp("resource", 0)
+            kvp("borrowRecord", 0)
         )
     );
     auto doc = (*client)[db_name]["book"].find_one(
@@ -515,6 +514,44 @@ UserManager::ptree UserManager::getBook(const ptree &pt) {
         );
         SocketInfo::decodePtree(bsoncxx::to_json(*doc, bsoncxx::ExtendedJsonMode::k_legacy), p);
     }
+    return std::move(p);
+}
+
+ptree UserManager::getBookBrief(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto userid = pt.get<xint>("userid");
+    auto priority = pt.get<xint>("priority");
+    auto bookid = pt.get<xint>("bookid", 0);
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    mongocxx::options::find opt;
+    opt.projection(
+        make_document(
+            kvp("_id", 0),
+            kvp("bookid", 1),
+            kvp("title", 1),
+            kvp("author", 1),
+            kvp("ISBN", 1),
+            kvp("publisher", 1),
+            kvp("introduction", 1),
+            kvp("priority", 1),
+            kvp("starCount", 1),
+            kvp("resource", 1)
+        )
+    );
+    auto doc = (*client)[db_name]["book"].find_one(
+        make_document(
+            kvp("bookid", bookid),
+            kvp("priority", make_document(
+                kvp("$lte", priority)
+            ))
+        ),
+        opt
+    );
+    ptree p;
+    if (doc)
+        SocketInfo::decodePtree(bsoncxx::to_json(*doc, bsoncxx::ExtendedJsonMode::k_legacy), p);
     return std::move(p);
 }
 

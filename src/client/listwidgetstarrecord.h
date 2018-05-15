@@ -6,7 +6,7 @@
 #include <QListWidget>
 #include <QWidget>
 
-#include <core/bookcore.h>
+#include <core/bookbrief.h>
 #include <core/starrecord.h>
 
 class ListWidgetStarRecord : public QListWidget {
@@ -14,7 +14,7 @@ class ListWidgetStarRecord : public QListWidget {
 
 public:
     ListWidgetStarRecord(QWidget *parent = Q_NULLPTR);
-    int add(const BookCore &book, const StarRecord &record);
+    int add(const BookBrief &book, const StarRecord &record);
 
 private:
     void setUI();

@@ -11,15 +11,14 @@
 #include <core/borrowrecord.h>
 #include <core/keeprecord.h>
 #include <core/starrecord.h>
-#include <client/bookmanager.h>
-#include <client/threadgetbook.h>
+#include <client/bookbriefmanager.h>
 #include <client/xclient.h>
 
 class GetBrowseRecords : public QObject {
     Q_OBJECT
 
 public:
-    GetBrowseRecords(const X::xll &token, BookManager &bookManager, const X::xint &number, const X::xint &begin, QObject *parent = Q_NULLPTR);
+    GetBrowseRecords(const X::xll &token, BookBriefManager &bookBriefManager, const X::xint &number, const X::xint &begin, QObject *parent = Q_NULLPTR);
     void start();
 
 signals:
@@ -31,7 +30,7 @@ public slots:
 
 private:
     X::xll token;
-    BookManager &bookManager;
+    BookBriefManager &bookBriefManager;
     X::xint number;
     X::xint begin;
     size_t recordNeedSize;
@@ -43,7 +42,7 @@ class GetKeepRecords : public QObject {
     Q_OBJECT
 
 public:
-    GetKeepRecords(const X::xll &token, BookManager &bookManager, const X::xint &number, const X::xint &begin, QObject *parent = Q_NULLPTR);
+    GetKeepRecords(const X::xll &token, BookBriefManager &bookBriefManager, const X::xint &number, const X::xint &begin, QObject *parent = Q_NULLPTR);
     void start();
 
 signals:
@@ -55,7 +54,7 @@ public slots:
 
 private:
     X::xll token;
-    BookManager &bookManager;
+    BookBriefManager &bookBriefManager;
     X::xint number;
     X::xint begin;
     size_t recordNeedSize;
@@ -67,7 +66,7 @@ class GetBorrowRecords : public QObject {
     Q_OBJECT
 
 public:
-    GetBorrowRecords(const X::xll &token, BookManager &bookManager, const X::xint &number, const X::xint &begin, QObject *parent = Q_NULLPTR);
+    GetBorrowRecords(const X::xll &token, BookBriefManager &bookBriefManager, const X::xint &number, const X::xint &begin, QObject *parent = Q_NULLPTR);
     void start();
 
 signals:
@@ -79,7 +78,7 @@ public slots:
 
 private:
     X::xll token;
-    BookManager &bookManager;
+    BookBriefManager &bookBriefManager;
     X::xint number;
     X::xint begin;
     size_t recordNeedSize;
@@ -91,7 +90,7 @@ class GetStarRecords : public QObject {
     Q_OBJECT
 
 public:
-    GetStarRecords(const X::xll &token, BookManager &bookManager, const X::xint &number, const X::xint &begin, QObject *parent = Q_NULLPTR);
+    GetStarRecords(const X::xll &token, BookBriefManager &bookBriefManager, const X::xint &number, const X::xint &begin, QObject *parent = Q_NULLPTR);
     void start();
 
 signals:
@@ -103,7 +102,7 @@ public slots:
 
 private:
     X::xll token;
-    BookManager &bookManager;
+    BookBriefManager &bookBriefManager;
     X::xint number;
     X::xint begin;
     size_t recordNeedSize;

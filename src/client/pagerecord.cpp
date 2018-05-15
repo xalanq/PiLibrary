@@ -10,9 +10,9 @@
 #include <client/threadgetbook.h>
 #include <client/threadgetrecord.h>
 
-PageRecord::PageRecord(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+PageRecord::PageRecord(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent) :
     userManager(userManager),
-    bookManager(bookManager),
+    bookBriefManager(bookBriefManager),
     QWidget(parent) {
 
     tabWidget = new QTabWidget(this);
@@ -26,17 +26,17 @@ PageRecord::PageRecord(UserManager &userManager, BookManager &bookManager, QWidg
 
 void PageRecord::slotGetBrowseRecord(const std::vector<BrowseRecord> &records) {
     for (auto &&record : records)
-        listWidgetBrowseRecord->add(bookManager.get(record.getBookid()), record);
+        listWidgetBrowseRecord->add(bookBriefManager.get(record.getBookid()), record);
 }
 
 void PageRecord::slotGetKeepRecord(const std::vector<KeepRecord> &records) {
     for (auto &&record : records)
-        listWidgetKeepRecord->add(bookManager.get(record.getBookid()), record);
+        listWidgetKeepRecord->add(bookBriefManager.get(record.getBookid()), record);
 }
 
 void PageRecord::slotGetBorrowRecord(const std::vector<BorrowRecord> &records) {
     for (auto &&record : records)
-        listWidgetBorrowRecord->add(bookManager.get(record.getBookid()), record);
+        listWidgetBorrowRecord->add(bookBriefManager.get(record.getBookid()), record);
 }
 
 void PageRecord::slotGetLoginRecord(const X::ErrorCode &ec, const ptree &pt) {
@@ -64,15 +64,15 @@ void PageRecord::setUI() {
 
     setLayout(layout);
 
-    auto obj1 = new GetBrowseRecords(userManager.getToken(), bookManager, 15, 0);
+    auto obj1 = new GetBrowseRecords(userManager.getToken(), bookBriefManager, 15, 0);
     connect(obj1, &GetBrowseRecords::done, this, &PageRecord::slotGetBrowseRecord);
     obj1->start();
 
-    auto obj2 = new GetKeepRecords(userManager.getToken(), bookManager, 15, 0);
+    auto obj2 = new GetKeepRecords(userManager.getToken(), bookBriefManager, 15, 0);
     connect(obj2, &GetKeepRecords::done, this, &PageRecord::slotGetKeepRecord);
     obj2->start();
 
-    auto obj3 = new GetBorrowRecords(userManager.getToken(), bookManager, 15, 0);
+    auto obj3 = new GetBorrowRecords(userManager.getToken(), bookBriefManager, 15, 0);
     connect(obj3, &GetBorrowRecords::done, this, &PageRecord::slotGetBorrowRecord);
     obj3->start();
 

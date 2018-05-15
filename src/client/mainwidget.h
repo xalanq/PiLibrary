@@ -9,7 +9,7 @@
 #include <QStackedWidget>
 #include <QWidget>
 
-#include <client/bookmanager.h>
+#include <client/bookbriefmanager.h>
 #include <client/usermanager.h>
 #include <client/widgethead.h>
 
@@ -17,7 +17,7 @@ class MainWidget : public QWidget {
     Q_OBJECT
 
 public:
-    MainWidget(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+    MainWidget(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent = Q_NULLPTR);
     void loadSetting();
     void saveSetting();
 
@@ -29,7 +29,7 @@ private:
 
 private:
     UserManager &userManager;
-    BookManager &bookManager;
+    BookBriefManager &bookBriefManager;
 
     QSettings setting {};
 

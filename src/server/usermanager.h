@@ -74,6 +74,8 @@ public:
 
     ptree getBook(const ptree &pt);
 
+    ptree getBookBrief(const ptree &pt);
+
     ErrorCode setBook(const ptree &pt);
 
     ptree getRecord(const ptree &pt);

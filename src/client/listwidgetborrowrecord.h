@@ -6,7 +6,7 @@
 #include <QListWidget>
 #include <QWidget>
 
-#include <core/bookcore.h>
+#include <core/bookbrief.h>
 #include <core/borrowrecord.h>
 
 class ListWidgetBorrowRecord : public QListWidget {
@@ -14,7 +14,7 @@ class ListWidgetBorrowRecord : public QListWidget {
 
 public:
     ListWidgetBorrowRecord(QWidget *parent = Q_NULLPTR);
-    void add(const BookCore &book, const BorrowRecord &record);
+    void add(const BookBrief &book, const BorrowRecord &record);
 
 private:
     void setUI();

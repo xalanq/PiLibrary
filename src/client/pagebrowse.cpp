@@ -5,12 +5,12 @@
 
 #include <core/book.h>
 #include <client/pagebrowse.h>
-#include <client/threadgetbook.h>
+#include <client/threadgetbookbrief.h>
 #include <client/threadgetnewbooklist.h>
 
-PageBrowse::PageBrowse(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+PageBrowse::PageBrowse(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent) :
     userManager(userManager),
-    bookManager(bookManager),
+    bookBriefManager(bookBriefManager),
     QWidget(parent) {
 
     listWidgetBook = new ListWidgetBook(this);
@@ -22,22 +22,22 @@ PageBrowse::PageBrowse(UserManager &userManager, BookManager &bookManager, QWidg
 void PageBrowse::slotGetBook(const X::ErrorCode &ec, const ptree &pt) {
     if (ec != X::NoError)
         return;
-    auto &&book = BookManager::parseBook(pt);
-    bookManager.add(book);
-    listWidgetBook->add(bookManager.get(book.getBookid()));
+    auto &&book = BookBriefManager::parseBook(pt);
+    bookBriefManager.add(book);
+    listWidgetBook->add(bookBriefManager.get(book.getBookid()));
 }
 
 void PageBrowse::slotGetNewBookList(const X::ErrorCode &ec, const ptree &pt) {
     auto arr = pt.get_child("bookid");
     for (auto &&child : arr) {
         auto bookid = child.second.get_value<X::xint>();
-        if (!bookManager.has(bookid)) {
-            auto thread = new ThreadGetBook(userManager.getToken(), bookid, this);
-            connect(thread, &ThreadGetBook::done, this, &PageBrowse::slotGetBook);
-            connect(thread, &ThreadGetBook::finished, thread, &QObject::deleteLater);
+        if (!bookBriefManager.has(bookid)) {
+            auto thread = new ThreadGetBookBrief(userManager.getToken(), bookid, this);
+            connect(thread, &ThreadGetBookBrief::done, this, &PageBrowse::slotGetBook);
+            connect(thread, &ThreadGetBookBrief::finished, thread, &QObject::deleteLater);
             thread->start();
         } else {
-            listWidgetBook->add(bookManager.get(bookid));
+            listWidgetBook->add(bookBriefManager.get(bookid));
         }
     }
 }

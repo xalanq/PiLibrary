@@ -121,6 +121,8 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
                 doUnStarBook(std::move(pt), token);
             else if (ac == X::GetBook)
                 doGetBook(std::move(pt), token);
+            else if (ac == X::GetBookBrief)
+                doGetBookBrief(std::move(pt), token);
             else if (ac == X::SetBook)
                 doSetBook(std::move(pt), token);
             else if (ac == X::GetLoginRecord)
@@ -394,6 +396,36 @@ void SocketWrapper::doGetBook(ptree pt, const xll &token) {
         }
     }
     write(ec, X::GetBookFeedback, tk, std::move(tr));
+}
+
+void SocketWrapper::doGetBookBrief(ptree pt, const xll &token) {
+    auto tr = ptree();
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doGetBookBrief) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doGetBookBrief) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("userid", it->getUserid());
+            pt.put<xint>("priority", it->getPriority());
+            _from(doGetBookBrief);
+            auto p = userManager.getBookBrief(pt);
+            if (p.empty()) {
+                _from(doGetBookBrief) << "fail to get a book brief: p is empty\n";
+                ec = X::InvalidBook;
+            } else {
+                _from(doGetBookBrief) << "succeed to get a book brief\n";
+                tr = std::move(p);
+            }
+        }
+    }
+    write(ec, X::GetBookBriefFeedback, tk, std::move(tr));
 }
 
 void SocketWrapper::doSetBook(const ptree &pt, const xll &token) {

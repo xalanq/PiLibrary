@@ -11,7 +11,7 @@ ListWidgetStarRecord::ListWidgetStarRecord(QWidget *parent) :
     setUI();
 }
 
-int ListWidgetStarRecord::add(const BookCore &book, const StarRecord &record) {
+int ListWidgetStarRecord::add(const BookBrief &book, const StarRecord &record) {
     QPixmap p(QSize(114, 160));
     QIcon icon;
     p.fill(Qt::black);

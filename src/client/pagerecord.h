@@ -8,7 +8,7 @@
 #include <QTabWidget>
 #include <QWidget>
 
-#include <client/bookmanager.h>
+#include <client/bookbriefmanager.h>
 #include <client/listwidgetborrowrecord.h>
 #include <client/listwidgetbrowserecord.h>
 #include <client/listwidgetkeeprecord.h>
@@ -20,7 +20,7 @@ class PageRecord : public QWidget {
     Q_OBJECT
 
 public:
-    PageRecord(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+    PageRecord(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent = Q_NULLPTR);
 
 public slots:
     void slotGetBrowseRecord(const std::vector<BrowseRecord> &records);
@@ -33,7 +33,7 @@ private:
 
 private:
     UserManager &userManager;
-    BookManager &bookManager;
+    BookBriefManager &bookBriefManager;
 
     QTabWidget *tabWidget;
     ListWidgetBrowseRecord *listWidgetBrowseRecord;

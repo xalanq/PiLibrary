@@ -6,7 +6,7 @@
 #include <QListWidget>
 #include <QWidget>
 
-#include <core/bookcore.h>
+#include <core/bookbrief.h>
 #include <core/browserecord.h>
 
 class ListWidgetBrowseRecord : public QListWidget {
@@ -14,7 +14,7 @@ class ListWidgetBrowseRecord : public QListWidget {
 
 public:
     ListWidgetBrowseRecord(QWidget *parent = Q_NULLPTR);
-    int add(const BookCore &book, const BrowseRecord &record);
+    int add(const BookBrief &book, const BrowseRecord &record);
 
 private:
     void setUI();

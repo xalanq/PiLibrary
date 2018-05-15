@@ -84,6 +84,8 @@ namespace X {
         UnStarBookFeedback,
         GetBook,
         GetBookFeedback,
+        GetBookBrief,
+        GetBookBriefFeedback,
         SetBook,
         SetBookFeedback,
         GetLoginRecord,

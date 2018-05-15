@@ -6,14 +6,14 @@
 #include <QWidget>
 
 #include <client/listwidgetstarrecord.h>
-#include <client/bookmanager.h>
+#include <client/bookbriefmanager.h>
 #include <client/usermanager.h>
 
 class PageFavorite : public QWidget {
     Q_OBJECT
 
 public:
-    PageFavorite(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+    PageFavorite(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent = Q_NULLPTR);
 
 public slots:
     void slotGetStarRecord(const std::vector<StarRecord> &records);
@@ -23,7 +23,7 @@ private:
 
 private:
     UserManager &userManager;
-    BookManager &bookManager;
+    BookBriefManager &bookBriefManager;
 
     ListWidgetStarRecord *listWidgetStarRecord;
 };

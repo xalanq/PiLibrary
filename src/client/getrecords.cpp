@@ -5,13 +5,14 @@
 
 #include <client/getrecords.h>
 #include <client/threadgetrecord.h>
+#include <client/threadgetbookbrief.h>
 
 // I hate Qt that it can't template with Q_OBJECT
 
 #define WTF(CLASS_NAME, TYPE_NAME, ACTION_CODE, ARRAY_NAME) \
-Get##CLASS_NAME::Get##CLASS_NAME(const X::xll &token, BookManager &bookManager, const X::xint &number, const X::xint &begin, QObject *parent) : \
+Get##CLASS_NAME::Get##CLASS_NAME(const X::xll &token, BookBriefManager &bookBriefManager, const X::xint &number, const X::xint &begin, QObject *parent) : \
     token(token), \
-    bookManager(bookManager), \
+    bookBriefManager(bookBriefManager), \
     number(number), \
     begin(begin), \
     QObject(parent) { \
@@ -32,21 +33,21 @@ void Get##CLASS_NAME::slotBegin(const X::ErrorCode &ec, const ptree &pt) { \
         auto record = ##TYPE_NAME::fromPtree(child.second); \
         recordList.push_back(record); \
         auto bookid = record.getBookid(); \
-        if (bookid && !bookManager.has(bookid)) \
+        if (bookid && !bookBriefManager.has(bookid)) \
             need.insert(bookid); \
     } \
     recordNeedSize = need.size(); \
     recordNeedCount = 0; \
     for (auto &&bookid : need) { \
-        auto thread = new ThreadGetBook(token, bookid, this); \
-        connect(thread, &ThreadGetBook::done, this, &Get##CLASS_NAME::slotEnd); \
-        connect(thread, &ThreadGetBook::finished, thread, &QObject::deleteLater); \
+        auto thread = new ThreadGetBookBrief(token, bookid, this); \
+        connect(thread, &ThreadGetBookBrief::done, this, &Get##CLASS_NAME::slotEnd); \
+        connect(thread, &ThreadGetBookBrief::finished, thread, &QObject::deleteLater); \
         thread->start(); \
     } \
 } \
 void Get##CLASS_NAME::slotEnd(const X::ErrorCode &ec, const ptree &pt) { \
     if (ec == X::NoError) \
-        bookManager.add(BookManager::parseBook(pt)); \
+        bookBriefManager.add(BookBriefManager::parseBook(pt)); \
     ++recordNeedCount; \
     if (recordNeedCount == recordNeedSize) { \
         emit done(recordList); \

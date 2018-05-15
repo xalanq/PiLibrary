@@ -43,6 +43,7 @@ private:
     void doStarBook(ptree pt, const xll &token);
     void doUnStarBook(ptree pt, const xll &token);
     void doGetBook(ptree pt, const xll &token);
+    void doGetBookBrief(ptree pt, const xll &token);
     void doSetBook(const ptree &pt, const xll &token);
     void doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback);
     void doGetNewBookList(ptree pt, const xll &token);

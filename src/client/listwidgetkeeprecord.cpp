@@ -11,7 +11,7 @@ ListWidgetKeepRecord::ListWidgetKeepRecord(QWidget *parent) :
     setUI();
 }
 
-void ListWidgetKeepRecord::add(const BookCore &book, const KeepRecord &record) {
+void ListWidgetKeepRecord::add(const BookBrief &book, const KeepRecord &record) {
     QPixmap p(QSize(114, 160));
     QIcon icon;
     p.fill(Qt::black);

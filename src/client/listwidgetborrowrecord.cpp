@@ -11,7 +11,7 @@ ListWidgetBorrowRecord::ListWidgetBorrowRecord(QWidget *parent) :
     setUI();
 }
 
-void ListWidgetBorrowRecord::add(const BookCore &book, const BorrowRecord &record) {
+void ListWidgetBorrowRecord::add(const BookBrief &book, const BorrowRecord &record) {
     QPixmap p(QSize(114, 160));
     QIcon icon;
     p.fill(Qt::black);

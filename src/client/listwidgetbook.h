@@ -6,14 +6,14 @@
 #include <QListWidget>
 #include <QWidget>
 
-#include <core/bookcore.h>
+#include <core/bookbrief.h>
 
 class ListWidgetBook : public QListWidget {
     Q_OBJECT
 
 public:
     ListWidgetBook(QWidget *parent = Q_NULLPTR);
-    void add(const BookCore &book);
+    void add(const BookBrief &book);
 
 private:
     void setUI();

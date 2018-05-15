@@ -6,7 +6,7 @@
 #include <QListWidget>
 #include <QWidget>
 
-#include <core/bookcore.h>
+#include <core/bookbrief.h>
 #include <core/keeprecord.h>
 
 class ListWidgetKeepRecord : public QListWidget {
@@ -14,7 +14,7 @@ class ListWidgetKeepRecord : public QListWidget {
 
 public:
     ListWidgetKeepRecord(QWidget *parent = Q_NULLPTR);
-    void add(const BookCore &book, const KeepRecord &record);
+    void add(const BookBrief &book, const KeepRecord &record);
 
 private:
     void setUI();

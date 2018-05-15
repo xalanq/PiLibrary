@@ -113,6 +113,10 @@ namespace X {
             return "Get Book";
         case GetBookFeedback:
             return "Get Book Feedback";
+        case GetBookBrief:
+            return "Get Book Brief";
+        case GetBookBriefFeedback:
+            return "Get Book Brief Feedback";
         case SetBook:
             return "Set Book";
         case SetBookFeedback:

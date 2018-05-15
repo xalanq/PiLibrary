@@ -3,9 +3,9 @@
 
 #include <client/pagereturn.h>
 
-PageReturn::PageReturn(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+PageReturn::PageReturn(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent) :
     userManager(userManager),
-    bookManager(bookManager),
+    bookBriefManager(bookBriefManager),
     QWidget(parent) {
 
 }

@@ -15,9 +15,9 @@
 #include <client/pagereturn.h>
 #include <client/pagesetting.h>
 
-MainWidget::MainWidget(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+MainWidget::MainWidget(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent) :
     userManager(userManager),
-    bookManager(bookManager),
+    bookBriefManager(bookBriefManager),
     QWidget(parent) {
 
     widgetHead = new WidgetHead(userManager, this);
@@ -85,11 +85,11 @@ void MainWidget::initListWidget() {
 
 void MainWidget::initPageWidget() {
     QList<QWidget *> items;
-    items.append(new PageBrowse(userManager, bookManager, this));
-    items.append(new PageFavorite(userManager, bookManager, this));
-    items.append(new PageRecord(userManager, bookManager, this));
+    items.append(new PageBrowse(userManager, bookBriefManager, this));
+    items.append(new PageFavorite(userManager, bookBriefManager, this));
+    items.append(new PageRecord(userManager, bookBriefManager, this));
     if (userManager.isAdminister())
-        items.append(new PageReturn(userManager, bookManager, this));
+        items.append(new PageReturn(userManager, bookBriefManager, this));
     items.append(new PageSetting(userManager, this));
     items.append(new PageAbout(this));
 

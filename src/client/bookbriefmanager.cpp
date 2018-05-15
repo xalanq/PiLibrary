@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include <client/bookmanager.h>
+#include <client/bookbriefmanager.h>
 
-Book BookManager::parseBook(const ptree &pt) {
+Book BookBriefManager::parseBook(const ptree &pt) {
     Book book;
     book.setBookid(pt.get<xint>("bookid", 0));
     book.setTitle(pt.get<xstring>("title", ""));
@@ -20,7 +20,7 @@ Book BookManager::parseBook(const ptree &pt) {
     return std::move(book);
 }
 
-bool BookManager::add(const Book &book, bool force) {
+bool BookBriefManager::add(const Book &book, bool force) {
     auto bookid = book.getBookid();
     if (book.getBookid() > 0) {
         auto it = books.find(bookid);
@@ -32,7 +32,7 @@ bool BookManager::add(const Book &book, bool force) {
     return false;
 }
 
-bool BookManager::add(const ptree &pt, bool force) {
+bool BookBriefManager::add(const ptree &pt, bool force) {
     auto bookid = pt.get<xint>("bookid", 0);
     if (bookid > 0) {
         auto it = books.find(bookid);
@@ -44,11 +44,11 @@ bool BookManager::add(const ptree &pt, bool force) {
     return false;
 }
 
-bool BookManager::has(const xint &bookid) const {
+bool BookBriefManager::has(const xint &bookid) const {
     return books.find(bookid) != books.end();
 }
 
-const Book& BookManager::get(const xint &bookid) const {
+const Book& BookBriefManager::get(const xint &bookid) const {
     try {
         return books.at(bookid);
     } catch (std::exception &) {
