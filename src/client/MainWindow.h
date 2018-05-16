@@ -6,7 +6,7 @@
 #include <QSettings>
 #include <QtWidgets/QMainWindow>
 
-#include <client/manager/BookBriefManager.h>
+#include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
 #include <client/widget/MainWidget.h>
 
@@ -25,7 +25,7 @@ private:
 
 private:
     UserManager userManager;
-    BookBriefManager bookBriefManager;
+    BookManager bookManager;
     MainWidget *mainWidget;
     QSettings setting {};
 };

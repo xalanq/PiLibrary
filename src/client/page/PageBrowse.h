@@ -6,7 +6,7 @@
 #include <QWidget>
 
 #include <client/listwidget/ListWidgetBrowseBook.h>
-#include <client/manager/BookBriefManager.h>
+#include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
 #include <core/types.h>
 
@@ -14,7 +14,7 @@ class PageBrowse : public QWidget {
     Q_OBJECT
 
 public:
-    PageBrowse(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent = Q_NULLPTR);
+    PageBrowse(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
 
 public slots:
     void slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt);
@@ -26,7 +26,7 @@ private:
 
 private:
     UserManager &userManager;
-    BookBriefManager &bookBriefManager;
+    BookManager &bookManager;
 
     ListWidgetBrowseBook *listWidgetBrowseBook;
 };

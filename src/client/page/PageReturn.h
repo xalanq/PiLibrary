@@ -5,17 +5,17 @@
 
 #include <QWidget>
 
-#include <client/manager/BookBriefManager.h>
+#include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
 
 class PageReturn : public QWidget {
     Q_OBJECT
 
 public:
-    PageReturn(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent = Q_NULLPTR);
+    PageReturn(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
     ~PageReturn();
 
 private:
     UserManager &userManager;
-    BookBriefManager &bookBriefManager;
+    BookManager &bookManager;
 };

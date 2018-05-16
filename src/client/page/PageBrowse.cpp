@@ -8,9 +8,9 @@
 #include <client/thread/ThreadGetBookBrief.h>
 #include <client/thread/ThreadGetNewBookList.h>
 
-PageBrowse::PageBrowse(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent) :
+PageBrowse::PageBrowse(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     userManager(userManager),
-    bookBriefManager(bookBriefManager),
+    bookManager(bookManager),
     QWidget(parent) {
 
     listWidgetBrowseBook = new ListWidgetBrowseBook(this);
@@ -23,21 +23,21 @@ void PageBrowse::slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt) {
     if (ec != X::NoError)
         return;
     auto &&book = BookBrief::fromPtree(pt);
-    bookBriefManager.add(book);
-    listWidgetBrowseBook->add(bookBriefManager.get(book.getBookid()));
+    bookManager.addBookBrief(book);
+    listWidgetBrowseBook->add(bookManager.getBookBrief(book.getBookid()));
 }
 
 void PageBrowse::slotGetNewBookList(const X::ErrorCode &ec, const X::ptree &pt) {
     auto arr = pt.get_child("bookid");
     for (auto &&child : arr) {
         auto bookid = child.second.get_value<X::xint>();
-        if (!bookBriefManager.has(bookid)) {
+        if (!bookManager.hasBookBrief(bookid)) {
             auto thread = new ThreadGetBookBrief(userManager.getToken(), bookid, this);
             connect(thread, &ThreadGetBookBrief::done, this, &PageBrowse::slotGetBookBrief);
             connect(thread, &ThreadGetBookBrief::finished, thread, &QObject::deleteLater);
             thread->start();
         } else {
-            listWidgetBrowseBook->add(bookBriefManager.get(bookid));
+            listWidgetBrowseBook->add(bookManager.getBookBrief(bookid));
         }
     }
 }

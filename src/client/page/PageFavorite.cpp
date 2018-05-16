@@ -6,9 +6,9 @@
 #include <client/page/PageFavorite.h>
 #include <client/utils/GetRecords.h>
 
-PageFavorite::PageFavorite(UserManager &userManager, BookBriefManager &bookBriefManager, QWidget *parent) :
+PageFavorite::PageFavorite(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     userManager(userManager),
-    bookBriefManager(bookBriefManager),
+    bookManager(bookManager),
     QWidget(parent) {
 
     listWidgetStarRecord = new ListWidgetStarRecord(this);
@@ -18,7 +18,7 @@ PageFavorite::PageFavorite(UserManager &userManager, BookBriefManager &bookBrief
 
 void PageFavorite::slotGetStarRecord(const std::vector<StarRecord> &records) {
     for (auto &&record : records)
-        listWidgetStarRecord->add(bookBriefManager.get(record.getBookid()), record);
+        listWidgetStarRecord->add(bookManager.getBookBrief(record.getBookid()), record);
 }
 
 void PageFavorite::setUI() {
@@ -26,7 +26,7 @@ void PageFavorite::setUI() {
     layout->addWidget(listWidgetStarRecord);
     setLayout(layout);
 
-    auto obj = new GetStarRecords(userManager.getToken(), bookBriefManager, 15, 0);
+    auto obj = new GetStarRecords(userManager.getToken(), bookManager, 15, 0);
     connect(obj, &GetStarRecords::done, this, &PageFavorite::slotGetStarRecord);
     obj->start();
 }

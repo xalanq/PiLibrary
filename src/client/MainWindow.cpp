@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     login();
 
-    mainWidget = new MainWidget(userManager, bookBriefManager, this);
+    mainWidget = new MainWidget(userManager, bookManager, this);
 
     setUI();
     setConnection();

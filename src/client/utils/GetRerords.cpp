@@ -1,6 +1,7 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <algorithm>
 #include <set>
 
 #include <client/thread/ThreadGetRecord.h>
@@ -10,9 +11,9 @@
 // I hate Qt that it can't template with Q_OBJECT
 
 #define WTF(CLASS_NAME, TYPE_NAME, ACTION_CODE, ARRAY_NAME) \
-Get##CLASS_NAME::Get##CLASS_NAME(const X::xll &token, BookBriefManager &bookBriefManager, const X::xint &number, const X::xint &begin, QObject *parent) : \
+Get##CLASS_NAME::Get##CLASS_NAME(const X::xll &token, BookManager &bookManager, const X::xint &number, const X::xint &begin, QObject *parent) : \
     token(token), \
-    bookBriefManager(bookBriefManager), \
+    bookManager(bookManager), \
     number(number), \
     begin(begin), \
     QObject(parent) { \
@@ -33,7 +34,7 @@ void Get##CLASS_NAME::slotBegin(const X::ErrorCode &ec, const X::ptree &pt) { \
         auto record = ##TYPE_NAME::fromPtree(child.second); \
         recordList.push_back(record); \
         auto bookid = record.getBookid(); \
-        if (bookid && !bookBriefManager.has(bookid)) \
+        if (bookid && !bookManager.hasBookBrief(bookid)) \
             need.insert(bookid); \
     } \
     recordNeedSize = need.size(); \
@@ -47,9 +48,10 @@ void Get##CLASS_NAME::slotBegin(const X::ErrorCode &ec, const X::ptree &pt) { \
 } \
 void Get##CLASS_NAME::slotEnd(const X::ErrorCode &ec, const X::ptree &pt) { \
     if (ec == X::NoError) \
-        bookBriefManager.add(BookBrief::fromPtree(pt)); \
+        bookManager.addBookBrief(BookBrief::fromPtree(pt)); \
     ++recordNeedCount; \
     if (recordNeedCount == recordNeedSize) { \
+        std::sort(recordList.rbegin(), recordList.rend()); \
         emit done(recordList); \
         deleteLater(); \
     } \
