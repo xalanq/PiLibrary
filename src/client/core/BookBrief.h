@@ -34,16 +34,22 @@ public:
 
     xint getPriority() const;
     BookBrief& setPriority(const xint &value);
+
+    xint getStarCount() const;
+    BookBrief& setStarCount(const xint &value);
     
     virtual BookBrief& setFromPtree(const ptree &pt);
     static BookBrief fromPtree(const ptree &pt); 
 
+    static const BookBrief& unknown();
+
 private:
-    xint bookid{};
-    xstring title{};
-    xstring author{};
-    xstring ISBN{};
-    xstring publisher{};
-    xstring introduction{};
-    xint priority{};
+    xint bookid {};
+    xstring title {};
+    xstring author {};
+    xstring ISBN {};
+    xstring publisher {};
+    xstring introduction {};
+    xint priority {};
+    xint starCount {};
 };

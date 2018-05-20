@@ -14,9 +14,6 @@ public:
 
     xstring getPosition() const;
     Book& setPosition(const xstring &value);
-
-    xint getStarCount() const;
-    Book& setStarCount(const xint &value);
     
     Book& addResource(const xstring &name, const xstring &path);
     Book& removeResource(const xstring &name);
@@ -24,9 +21,10 @@ public:
     Book& setFromPtree(const ptree &pt);
     static Book fromPtree(const ptree &pt); 
 
+    static const Book& unknown();
+
 private:
-    xint amount{};
-    xstring position{};
-    xint starCount{};
-    std::map<xstring, xstring> resource{};
+    xint amount {};
+    xstring position {};
+    std::map<xstring, xstring> resource {};
 };

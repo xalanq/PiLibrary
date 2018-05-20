@@ -22,15 +22,6 @@ Book& Book::setPosition(const xstring &value) {
     return *this;
 }
 
-Book::xint Book::getStarCount() const {
-    return starCount;
-}
-
-Book& Book::setStarCount(const xint &value) {
-    starCount = value;
-    return *this;
-}
-
 Book& Book::addResource(const xstring &name, const xstring &path) {
     resource[name] = path;
     return *this;
@@ -56,4 +47,14 @@ Book Book::fromPtree(const ptree &pt) {
     Book book;
     book.setFromPtree(pt);
     return std::move(book);
+}
+
+const Book& Book::unknown() {
+    static Book book;
+    static bool init {false};
+    if (!init) {
+        book.setTitle("Unknown");
+        init = true;
+    }
+    return book;
 }

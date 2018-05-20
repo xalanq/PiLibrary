@@ -25,7 +25,6 @@ signals:
     void done(const std::vector<BrowseRecord> records);
 
 public slots:
-    void slotBegin(const X::ErrorCode &ec, const X::ptree &pt);
     void slotEnd(const X::ErrorCode &ec, const X::ptree &pt);
 
 private:
@@ -33,8 +32,6 @@ private:
     BookManager &bookManager;
     X::xint number;
     X::xint begin;
-    size_t recordNeedSize;
-    size_t recordNeedCount;
     std::vector<BrowseRecord> recordList;
 };
 
@@ -49,7 +46,6 @@ signals:
     void done(const std::vector<KeepRecord> records);
 
 public slots:
-    void slotBegin(const X::ErrorCode &ec, const X::ptree &pt);
     void slotEnd(const X::ErrorCode &ec, const X::ptree &pt);
 
 private:
@@ -57,8 +53,6 @@ private:
     BookManager &bookManager;
     X::xint number;
     X::xint begin;
-    size_t recordNeedSize;
-    size_t recordNeedCount;
     std::vector<KeepRecord> recordList;
 };
 
@@ -73,7 +67,6 @@ signals:
     void done(const std::vector<BorrowRecord> records);
 
 public slots:
-    void slotBegin(const X::ErrorCode &ec, const X::ptree &pt);
     void slotEnd(const X::ErrorCode &ec, const X::ptree &pt);
 
 private:
@@ -81,8 +74,6 @@ private:
     BookManager &bookManager;
     X::xint number;
     X::xint begin;
-    size_t recordNeedSize;
-    size_t recordNeedCount;
     std::vector<BorrowRecord> recordList;
 };
 
@@ -97,7 +88,6 @@ signals:
     void done(const std::vector<StarRecord> records);
 
 public slots:
-    void slotBegin(const X::ErrorCode &ec, const X::ptree &pt);
     void slotEnd(const X::ErrorCode &ec, const X::ptree &pt);
 
 private:
@@ -105,7 +95,5 @@ private:
     BookManager &bookManager;
     X::xint number;
     X::xint begin;
-    size_t recordNeedSize;
-    size_t recordNeedCount;
     std::vector<StarRecord> recordList;
 };

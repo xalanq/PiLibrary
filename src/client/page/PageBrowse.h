@@ -17,8 +17,8 @@ public:
     PageBrowse(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
 
 public slots:
-    void slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt);
     void slotGetNewBookList(const X::ErrorCode &ec, const X::ptree &pt);
+    void slotItemClicked(QListWidgetItem *item);
 
 private:
     void setUI();

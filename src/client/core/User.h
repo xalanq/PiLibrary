@@ -33,9 +33,9 @@ public:
     static User fromPtree(const ptree &pt);
 
 private:
-    xint userid{};
-    xstring username{};
-    xstring nickname{};
-    xstring email{};
-    xint priority{};
+    xint userid {};
+    xstring username {};
+    xstring nickname {};
+    xstring email {};
+    xint priority {};
 };

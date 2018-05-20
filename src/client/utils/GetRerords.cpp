@@ -1,9 +1,6 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
-#include <algorithm>
-#include <set>
-
 #include <client/thread/ThreadGetRecord.h>
 #include <client/thread/ThreadGetBookBrief.h>
 #include <client/utils/GetRecords.h>
@@ -20,41 +17,21 @@ Get##CLASS_NAME::Get##CLASS_NAME(const X::xll &token, BookManager &bookManager, 
 } \
 void Get##CLASS_NAME::start() { \
     auto thread = new ThreadGetRecord(token, ##ACTION_CODE, number, begin, this); \
-    connect(thread, &ThreadGetRecord::done, this, &Get##CLASS_NAME::slotBegin); \
+    connect(thread, &ThreadGetRecord::done, this, &Get##CLASS_NAME::slotEnd); \
     connect(thread, &ThreadGetRecord::finished, thread, &QObject::deleteLater); \
     thread->start(); \
 } \
-void Get##CLASS_NAME::slotBegin(const X::ErrorCode &ec, const X::ptree &pt) { \
+void Get##CLASS_NAME::slotEnd(const X::ErrorCode &ec, const X::ptree &pt) { \
     if (ec != X::NoError) \
         return; \
     auto arr = pt.get_child(ARRAY_NAME); \
-    std::set<X::xint> need; \
     recordList.clear(); \
     for (auto &&child : arr) { \
         auto record = ##TYPE_NAME::fromPtree(child.second); \
         recordList.push_back(record); \
-        auto bookid = record.getBookid(); \
-        if (bookid && !bookManager.hasBookBrief(bookid)) \
-            need.insert(bookid); \
     } \
-    recordNeedSize = need.size(); \
-    recordNeedCount = 0; \
-    for (auto &&bookid : need) { \
-        auto thread = new ThreadGetBookBrief(token, bookid, this); \
-        connect(thread, &ThreadGetBookBrief::done, this, &Get##CLASS_NAME::slotEnd); \
-        connect(thread, &ThreadGetBookBrief::finished, thread, &QObject::deleteLater); \
-        thread->start(); \
-    } \
-} \
-void Get##CLASS_NAME::slotEnd(const X::ErrorCode &ec, const X::ptree &pt) { \
-    if (ec == X::NoError) \
-        bookManager.addBookBrief(BookBrief::fromPtree(pt)); \
-    ++recordNeedCount; \
-    if (recordNeedCount == recordNeedSize) { \
-        std::sort(recordList.rbegin(), recordList.rend()); \
-        emit done(recordList); \
-        deleteLater(); \
-    } \
+    emit done(recordList); \
+    deleteLater(); \
 }
 
 WTF(BrowseRecords, BrowseRecord, X::GetBrowseRecord, "browseRecord")

@@ -34,8 +34,8 @@ public:
     bool operator < (const BorrowRecord &t) const;
 
 private:
-    xint bookid{};
-    xll beginTime{};
-    xll endTime{};
-    xll returnTime{};
+    xint bookid {};
+    xll beginTime {};
+    xll endTime {};
+    xll returnTime {};
 };

@@ -10,7 +10,9 @@
 #include <client/dialog/DialogLogin.h>
 
 MainWindow::MainWindow(QWidget *parent) : 
-    QMainWindow(parent) {
+    QMainWindow(parent),
+    userManager(),
+    bookManager(userManager) {
 
     login();
 

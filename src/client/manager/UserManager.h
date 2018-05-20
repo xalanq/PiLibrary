@@ -29,7 +29,7 @@ public:
     void setUser(const ptree &pt);
 
 private:
-    xll token{};
+    xll token {};
     std::shared_ptr<User> user;
 };
 

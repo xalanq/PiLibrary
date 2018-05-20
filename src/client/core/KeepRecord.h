@@ -31,7 +31,7 @@ public:
     bool operator < (const KeepRecord &t) const;
 
 private:
-    xint bookid{};
-    xll beginTime{};
-    xll endTime{};
+    xint bookid {};
+    xll beginTime {};
+    xll endTime {};
 };

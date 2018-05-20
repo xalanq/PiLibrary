@@ -17,9 +17,11 @@ public:
 
 public slots:
     void slotGetStarRecord(const std::vector<StarRecord> &records);
+    void slotItemClicked(QListWidgetItem *item);
 
 private:
     void setUI();
+    void setConnection();
 
 private:
     UserManager &userManager;

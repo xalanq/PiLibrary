@@ -24,6 +24,6 @@ public:
     bool operator < (const LoginRecord &b) const;
 
 private:
-    xstring ip{};
-    xll time{};
+    xstring ip {};
+    xll time {};
 };

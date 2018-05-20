@@ -9,12 +9,28 @@
 #include <client/core/BookBrief.h>
 #include <client/core/KeepRecord.h>
 
+class ListWidgetItemKeepRecord : public QListWidgetItem {
+public:
+    ListWidgetItemKeepRecord(const BookBrief &book, const KeepRecord &record);
+    const BookBrief& getBook() const;
+    const KeepRecord& getRecord() const;
+    void update(const BookBrief &book, const KeepRecord &record);
+
+private:
+    void setUI();
+
+private:
+    BookBrief book;
+    KeepRecord record;
+};
+
 class ListWidgetKeepRecord : public QListWidget {
     Q_OBJECT
 
 public:
     ListWidgetKeepRecord(QWidget *parent = Q_NULLPTR);
-    void add(const BookBrief &book, const KeepRecord &record);
+    void add(const BookBrief &book, const KeepRecord &record, int row = 0);
+    void update(const BookBrief &book, const KeepRecord &record, int row);
 
 private:
     void setUI();

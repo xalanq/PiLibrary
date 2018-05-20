@@ -24,6 +24,6 @@ public:
     bool operator < (const BrowseRecord &a) const;
 
 private:
-    xint bookid{};
-    xll time{};
+    xint bookid {};
+    xll time {};
 };

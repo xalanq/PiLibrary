@@ -24,12 +24,23 @@ public:
 
 public slots:
     void slotGetBrowseRecord(const std::vector<BrowseRecord> &records);
+
     void slotGetKeepRecord(const std::vector<KeepRecord> &records);
+
     void slotGetBorrowRecord(const std::vector<BorrowRecord> &records);
+
     void slotGetLoginRecord(const X::ErrorCode &ec, const X::ptree &pt);
+
+    void slotBrowseRecordItemClicked(QListWidgetItem *item);
+
+    void slotKeepRecordItemClicked(QListWidgetItem *item);
+
+    void slotBorrowRecordItemClicked(QListWidgetItem *item);
 
 private:
     void setUI();
+
+    void setConnection();
 
 private:
     UserManager &userManager;

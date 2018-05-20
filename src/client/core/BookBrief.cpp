@@ -66,6 +66,15 @@ BookBrief& BookBrief::setPriority(const xint &value) {
     return *this;
 }
 
+BookBrief::xint BookBrief::getStarCount() const {
+    return starCount;
+}
+
+BookBrief& BookBrief::setStarCount(const xint &value) {
+    starCount = value;
+    return *this;
+}
+
 BookBrief& BookBrief::setFromPtree(const ptree &pt) {
     setBookid(pt.get<xint>("bookid", 0));
     setTitle(pt.get<xstring>("title", ""));
@@ -74,6 +83,7 @@ BookBrief& BookBrief::setFromPtree(const ptree &pt) {
     setPublisher(pt.get<xstring>("publisher", ""));
     setIntroduction(pt.get<xstring>("introduction", ""));
     setPriority(pt.get<xint>("priority", 0));
+    setStarCount(pt.get<xint>("starCount", 0));
     return *this;
 }
 
@@ -81,4 +91,14 @@ BookBrief BookBrief::fromPtree(const ptree &pt) {
     BookBrief book;
     book.setFromPtree(pt);
     return std::move(book);
+}
+
+const BookBrief& BookBrief::unknown() {
+    static BookBrief book;
+    static bool init {false};
+    if (!init) {
+        book.setTitle("Unknown");
+        init = true;
+    }
+    return book;
 }

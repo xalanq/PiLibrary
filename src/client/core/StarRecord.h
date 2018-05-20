@@ -26,6 +26,6 @@ public:
     bool operator < (const StarRecord &b) const;
 
 private:
-    xint bookid{};
-    xll time{};
+    xint bookid {};
+    xll time {};
 };

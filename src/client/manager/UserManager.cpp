@@ -23,5 +23,5 @@ void UserManager::setToken(const xll &token) {
 
 void UserManager::setUser(const ptree &pt) {
     user = std::make_shared<User>();
-    user->fromPtree(pt);
+    user->setFromPtree(pt);
 }
