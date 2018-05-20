@@ -75,6 +75,15 @@ BookBrief& BookBrief::setStarCount(const xint &value) {
     return *this;
 }
 
+BookBrief::xll BookBrief::getMaxKeepTime() const {
+    return maxKeepTime;
+}
+
+BookBrief& BookBrief::setMaxKeepTime(const xll &value) {
+    maxKeepTime = value;
+    return *this;
+}
+
 BookBrief& BookBrief::setFromPtree(const ptree &pt) {
     setBookid(pt.get<xint>("bookid", 0));
     setTitle(pt.get<xstring>("title", ""));
@@ -83,6 +92,7 @@ BookBrief& BookBrief::setFromPtree(const ptree &pt) {
     setPublisher(pt.get<xstring>("publisher", ""));
     setIntroduction(pt.get<xstring>("introduction", ""));
     setPriority(pt.get<xint>("priority", 0));
+    setMaxKeepTime(pt.get<xll>("maxKeepTime", 0));
     setStarCount(pt.get<xint>("starCount", 0));
     return *this;
 }

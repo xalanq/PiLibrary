@@ -25,12 +25,12 @@ WidgetHead::~WidgetHead() {
 void WidgetHead::slotModify() {
     DialogModify dialog(userManager, this);
     if (dialog.exec() == QDialog::Accepted) {
-        lblNickname->setText(tr("Hello, ") + QString::fromStdString(userManager.getUser()->getNickname()));
+        lblNickname->setText(tr("Hello, ") + QString::fromStdString(userManager.getUser().getNickname()));
     }
 }
 
 void WidgetHead::setUI() {
-    lblNickname->setText(tr("Hello, ") + QString::fromStdString(userManager.getUser()->getNickname()));
+    lblNickname->setText(tr("Hello, ") + QString::fromStdString(userManager.getUser().getNickname()));
     lblNickname->setWordWrap(true);
     btnModify->setText(tr("Modify"));
 

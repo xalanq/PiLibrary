@@ -22,7 +22,7 @@ public:
     void start();
 
 signals:
-    void done(const std::vector<BrowseRecord> records);
+    void done(const std::vector<BrowseRecord> &records);
 
 public slots:
     void slotEnd(const X::ErrorCode &ec, const X::ptree &pt);
@@ -43,7 +43,7 @@ public:
     void start();
 
 signals:
-    void done(const std::vector<KeepRecord> records);
+    void done(const std::vector<KeepRecord> &records);
 
 public slots:
     void slotEnd(const X::ErrorCode &ec, const X::ptree &pt);
@@ -64,7 +64,7 @@ public:
     void start();
 
 signals:
-    void done(const std::vector<BorrowRecord> records);
+    void done(const std::vector<BorrowRecord> &records);
 
 public slots:
     void slotEnd(const X::ErrorCode &ec, const X::ptree &pt);
@@ -85,7 +85,7 @@ public:
     void start();
 
 signals:
-    void done(const std::vector<StarRecord> records);
+    void done(const std::vector<StarRecord> &records);
 
 public slots:
     void slotEnd(const X::ErrorCode &ec, const X::ptree &pt);

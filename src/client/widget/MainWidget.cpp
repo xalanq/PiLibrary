@@ -1,6 +1,7 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <QEvent>
 #include <QFrame>
 #include <QHBoxLayout>
 #include <QList>
@@ -10,7 +11,6 @@
 #include <client/widget/MainWidget.h>
 #include <client/page/PageAbout.h>
 #include <client/page/PageBrowse.h>
-#include <client/page/PageFavorite.h>
 #include <client/page/PageRecord.h>
 #include <client/page/PageReturn.h>
 #include <client/page/PageSetting.h>

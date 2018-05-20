@@ -99,6 +99,7 @@ int main() {
                 pt.put("introduction", "this is a book");
                 pt.put("position", "li wen zheng");
                 pt.put("priority", 1);
+                pt.put("maxKeepTime", 604800);
                 cerr << "GetBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::SetBook, pt);

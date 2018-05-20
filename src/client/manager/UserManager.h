@@ -3,14 +3,9 @@
 
 #pragma once
 
-#include <memory>
+#include <set>
 
 #include <client/core/User.h>
-#include <client/core/BorrowRecord.h>
-#include <client/core/BrowseRecord.h>
-#include <client/core/KeepRecord.h>
-#include <client/core/LoginRecord.h>
-#include <client/core/StarRecord.h>
 #include <core/types.h>
 
 class UserManager {
@@ -25,11 +20,16 @@ public:
     xll getToken() const;
     void setToken(const xll &token);
     
-    std::shared_ptr<User> getUser();
+    User& getUser();
     void setUser(const ptree &pt);
+
+    std::set<xint>& getStarBooks();
+    std::set<xint>& getKeepBooks();
 
 private:
     xll token {};
-    std::shared_ptr<User> user;
+    User user {};
+    std::set<xint> starBooks {};
+    std::set<xint> keepBooks {};
 };
 

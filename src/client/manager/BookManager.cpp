@@ -58,7 +58,6 @@ const Book& BookManager::getBook(const xint &bookid) const {
     }
 }
 
-
 void BookManager::getBook(const xint &bookid, std::function<void(Book &)> f, bool update) {
     if (!update) {
         auto it = mapBook.find(bookid);
@@ -76,8 +75,11 @@ void BookManager::getBook(const xint &bookid, std::function<void(Book &)> f, boo
 
 void BookManager::slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(BookBrief &)> f) {
     popThread();
-    if (ec != X::NoError)
+    if (ec != X::NoError) {
+        auto book = BookBrief::unknown();
+        f(book);
         return;
+    }
     try {
         auto bookid = pt.get<xint>("bookid");
         BookBrief &&book = BookBrief::fromPtree(pt);
@@ -90,8 +92,11 @@ void BookManager::slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt, s
 
 void BookManager::slotGetBook(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(Book &)> f) {
     popThread();
-    if (ec != X::NoError)
+    if (ec != X::NoError) {
+        auto book = Book::unknown();
+        f(book);
         return;
+    }
     try {
         auto bookid = pt.get<xint>("bookid");
         Book &&book = Book::fromPtree(pt);
@@ -113,7 +118,6 @@ void BookManager::_getBookBrief(const xint &bookid, std::function<void(BookBrief
     connect(thread, &ThreadGetBookBrief::finished, thread, &QObject::deleteLater);
     thread->start();
 }
-
 
 void BookManager::_getBook(const xint &bookid, std::function<void(Book &)> f) {
     ++threadCounts;

@@ -4,16 +4,14 @@
 #include <client/manager/UserManager.h>
 
 bool UserManager::isAdminister() const {
-    if (user)
-        return user->getPriority() == X::ADMINISTER;
-    return 0;
+    return user.getPriority() == X::ADMINISTER;
 }
 
 UserManager::xll UserManager::getToken() const {
     return token;
 }
 
-std::shared_ptr<User> UserManager::getUser() {
+User& UserManager::getUser() {
     return user;
 }
 
@@ -22,6 +20,13 @@ void UserManager::setToken(const xll &token) {
 }
 
 void UserManager::setUser(const ptree &pt) {
-    user = std::make_shared<User>();
-    user->setFromPtree(pt);
+    user.setFromPtree(pt);
+}
+
+std::set<UserManager::xint>& UserManager::getStarBooks() {
+    return starBooks;
+}
+
+std::set<UserManager::xint>& UserManager::getKeepBooks() {
+    return keepBooks;
 }

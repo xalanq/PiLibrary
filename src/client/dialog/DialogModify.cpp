@@ -95,8 +95,8 @@ void DialogModify::slotModifyEnd(const X::ErrorCode &ec) {
             tr("Modify"),
             tr("Modify successfully!")
         );
-        userManager.getUser()->setNickname(editNickname->text().toStdString());
-        userManager.getUser()->setEmail(editEmail->text().toStdString());
+        userManager.getUser().setNickname(editNickname->text().toStdString());
+        userManager.getUser().setEmail(editEmail->text().toStdString());
         accept();
     } else {
         if (ec == X::ModifyFailed) {
@@ -132,8 +132,8 @@ void DialogModify::setUI() {
     editPasswordNewConfirm->setPlaceholderText(tr("New Password Confirm"));
     editPasswordNewConfirm->setEchoMode(QLineEdit::Password);
 
-    editNickname->setText(QString::fromStdString(userManager.getUser()->getNickname()));
-    editEmail->setText(QString::fromStdString(userManager.getUser()->getEmail()));
+    editNickname->setText(QString::fromStdString(userManager.getUser().getNickname()));
+    editEmail->setText(QString::fromStdString(userManager.getUser().getEmail()));
 
     labelMessage->hide();
 

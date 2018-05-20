@@ -6,6 +6,7 @@
 #include <QDialog>
 #include <QLabel>
 #include <QPixmap>
+#include <QPushButton>
 
 #include <client/core/Book.h>
 #include <client/manager/BookManager.h>
@@ -20,11 +21,22 @@ public:
     DialogBook(UserManager &userManager, BookManager &bookManager, X::xint bookid, QWidget *parent = Q_NULLPTR);
     void setBook(const Book &book);
 
+public slots:
+    void slotStarBegin();
+    void slotStarEnd(const X::ErrorCode &ec);
+    void slotBorrowBegin();
+    void slotBorrowEnd(const X::ErrorCode &ec);
+
 private:
     void setUI();
     void setConnection();
 
 private:
+    QString strStar;
+    QString strUnStar;
+    QString strBorrow;
+    QString strBorrowed;
+
     UserManager &userManager;
     BookManager &bookManager;
     X::xint bookid;
@@ -32,4 +44,8 @@ private:
     QLabel *lblTitle;
     QLabel *lblAuthor;
     QLabel *lblIntroduction;
+    QLabel *lblMaxKeepTime;
+
+    QPushButton *btnStar;
+    QPushButton *btnBorrow;
 };

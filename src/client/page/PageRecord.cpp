@@ -35,8 +35,10 @@ void PageRecord::slotGetBrowseRecord(const std::vector<BrowseRecord> &records) {
 
 void PageRecord::slotGetKeepRecord(const std::vector<KeepRecord> &records) {
     int tot = records.size();
-    for (int i = 0; i < tot; ++i)
+    for (int i = 0; i < tot; ++i) {
         listWidgetKeepRecord->add(BookBrief::unknown(), records[i]);
+        userManager.getKeepBooks().insert(records[i].getBookid());
+    }
     for (int i = 0; i < tot; ++i)
         bookManager.getBookBrief(records[i].getBookid(), std::bind(&ListWidgetKeepRecord::update, listWidgetKeepRecord, std::placeholders::_1, records[i], tot - 1 - i));
 }
@@ -91,7 +93,7 @@ void PageRecord::setUI() {
     connect(obj1, &GetBrowseRecords::done, this, &PageRecord::slotGetBrowseRecord);
     obj1->start();
 
-    auto obj2 = new GetKeepRecords(userManager.getToken(), bookManager, 15, 0);
+    auto obj2 = new GetKeepRecords(userManager.getToken(), bookManager, 2147483647, 0);
     connect(obj2, &GetKeepRecords::done, this, &PageRecord::slotGetKeepRecord);
     obj2->start();
 

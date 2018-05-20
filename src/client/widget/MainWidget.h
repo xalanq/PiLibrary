@@ -11,6 +11,7 @@
 
 #include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
+#include <client/page/PageFavorite.h>
 #include <client/widget/WidgetHead.h>
 
 class MainWidget : public QWidget {

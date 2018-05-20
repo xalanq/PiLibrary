@@ -14,6 +14,7 @@ class PageFavorite : public QWidget {
 
 public:
     PageFavorite(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+    void update();
 
 public slots:
     void slotGetStarRecord(const std::vector<StarRecord> &records);

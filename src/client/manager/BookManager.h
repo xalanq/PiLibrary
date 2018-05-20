@@ -26,28 +26,22 @@ public:
     BookManager(UserManager &userManager);
 
     bool hasBookBrief(const xint &bookid) const;
-
     bool hasBook(const xint &bookid) const;
 
     const BookBrief& getBookBrief(const xint &bookid) const;
-
     void getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f, bool update = false);
 
     const Book& getBook(const xint &bookid) const;
-
     void getBook(const xint &bookid, std::function<void(Book &)> f, bool update = false);
 
 public slots:
-
     void slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(BookBrief &)> f);
-
     void slotGetBook(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(Book &)> f);
 
 private:
     void _getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f);
-
     void _getBook(const xint &bookid, std::function<void(Book &)> f);
-    
+
     void popThread();
 
 private:

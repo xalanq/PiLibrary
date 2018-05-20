@@ -20,10 +20,18 @@ PageFavorite::PageFavorite(UserManager &userManager, BookManager &bookManager, Q
     setConnection();
 }
 
+void PageFavorite::update() {
+    auto obj = new GetStarRecords(userManager.getToken(), bookManager, 2147483647, 0);
+    connect(obj, &GetStarRecords::done, this, &PageFavorite::slotGetStarRecord);
+    obj->start();
+}
+
 void PageFavorite::slotGetStarRecord(const std::vector<StarRecord> &records) {
     int tot = records.size();
-    for (int i = 0; i < tot; ++i)
+    for (int i = 0; i < tot; ++i) {
         listWidgetStarRecord->add(BookBrief::unknown(), records[i]);
+        userManager.getStarBooks().insert(records[i].getBookid());
+    }
     for (int i = 0; i < tot; ++i)
         bookManager.getBookBrief(records[i].getBookid(), std::bind(&ListWidgetStarRecord::update, listWidgetStarRecord, std::placeholders::_1, records[i], tot - 1 - i));
 }
@@ -39,9 +47,7 @@ void PageFavorite::setUI() {
     layout->addWidget(listWidgetStarRecord);
     setLayout(layout);
 
-    auto obj = new GetStarRecords(userManager.getToken(), bookManager, 15, 0);
-    connect(obj, &GetStarRecords::done, this, &PageFavorite::slotGetStarRecord);
-    obj->start();
+    update();
 }
 
 void PageFavorite::setConnection() {

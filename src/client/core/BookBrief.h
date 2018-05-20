@@ -37,6 +37,9 @@ public:
 
     xint getStarCount() const;
     BookBrief& setStarCount(const xint &value);
+
+    xll getMaxKeepTime() const;
+    BookBrief& setMaxKeepTime(const xll &value);
     
     virtual BookBrief& setFromPtree(const ptree &pt);
     static BookBrief fromPtree(const ptree &pt); 
@@ -51,5 +54,6 @@ private:
     xstring publisher {};
     xstring introduction {};
     xint priority {};
+    xll maxKeepTime {};
     xint starCount {};
 };
