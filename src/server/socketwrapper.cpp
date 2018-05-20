@@ -270,6 +270,7 @@ void SocketWrapper::doBorrowBook(ptree pt, const xll &token) {
             auto priority = it->getPriority();
             pt.put<xint>("userid", userid);
             pt.put<xint>("priority", priority);
+            pt.put<xll>("beginTime", Session::getNowTime());
             _from(doBorrowBook);
             ec = userManager.borrowBook(pt);
             if (ec == X::NoError)

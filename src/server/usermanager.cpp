@@ -201,11 +201,10 @@ UserManager::ErrorCode UserManager::borrowBook(const ptree &pt) {
     auto userid = pt.get<xint>("userid");
     auto priority = pt.get<xint>("priority");
     auto bookid = pt.get<xint>("bookid", 0);
-    auto beginTime = pt.get<xll>("beginTime", 1);
-    auto endTime = pt.get<xll>("endTime", 0);
-
-    if (beginTime >= endTime)
-        return X::InvalidTime;
+    auto t = pt.get<xll>("keepTime", 0);
+    auto beginTime = pt.get<xll>("beginTime", 0);
+    auto keepTime = pt.get<xll>("keepTime", 0);
+    auto endTime = beginTime + keepTime;
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -221,6 +220,7 @@ UserManager::ErrorCode UserManager::borrowBook(const ptree &pt) {
         make_document(
             kvp("_id", 0),
             kvp("amount", 1),
+            kvp("maxKeepTime", 1),
             kvp("count", make_document(
                 kvp("$size", "$keepRecord")
             ))
@@ -231,10 +231,13 @@ UserManager::ErrorCode UserManager::borrowBook(const ptree &pt) {
     if (cur.begin() != cur.end()) {
         auto view = *cur.begin();
         auto amount = xint(view["amount"].get_int32().value);
+        auto maxKeepTime = xll(view["maxKeepTime"].get_int64().value);
         auto count = xint(view["count"].get_int32().value);
-        if (count + 1 > amount)
+        if (count + 1 > amount) {
             ec = X::NoRestBook;
-        else {
+        } else if (keepTime <= 0 || keepTime > maxKeepTime) {
+            ec = X::InvalidTime;
+        } else {
             mongocxx::options::find opt;
             opt.projection(
                 make_document(
@@ -535,6 +538,7 @@ UserManager::ptree UserManager::getBookBrief(const ptree &pt) {
             kvp("ISBN", 1),
             kvp("publisher", 1),
             kvp("introduction", 1),
+            kvp("maxKeepTime", 1),
             kvp("priority", 1),
             kvp("starCount", 1),
             kvp("resource", 1)
@@ -566,6 +570,7 @@ UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
     auto introduction = pt.get_optional<xstring>("introduction");
     auto position = pt.get_optional<xstring>("position");
     auto priority = pt.get_optional<xint>("priority");
+    auto maxKeepTime = pt.get_optional<xll>("maxKeepTime");
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -595,6 +600,8 @@ UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
                 doc << "position" << bsoncxx::types::b_utf8(*position);
             if (priority)
                 doc << "priority" << *priority;
+            if (maxKeepTime)
+                doc << "maxKeepTime" << *maxKeepTime;
             doc << close_document;
             bsoncxx::document::value val = doc << finalize;
             (*client)[db_name]["book"].update_one(
@@ -638,6 +645,7 @@ UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
                 kvp("introduction", bsoncxx::types::b_utf8(introduction ? *introduction : "")),
                 kvp("position", bsoncxx::types::b_utf8(position ? *position : "")),
                 kvp("priority", priority ? *priority : int(X::SUPER_ADMINISTER)),
+                kvp("maxKeepTime", maxKeepTime ? *maxKeepTime : 0),
                 kvp("starCount", 0),
                 kvp("starRecord", make_array()),
                 kvp("borrowRecord", make_array()),

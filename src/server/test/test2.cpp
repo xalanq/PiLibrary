@@ -112,8 +112,7 @@ int main() {
                 int bookid;
                 std::cin >> bookid;
                 pt.put("bookid", bookid);
-                pt.put("beginTime", xll(time(0)));
-                pt.put("endTime", xll(time(0)) + 1000000);
+                pt.put("keepTime", xll(1000000));
                 cerr << "BorrowBook send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, token, X::BorrowBook, pt);
