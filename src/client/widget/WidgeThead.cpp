@@ -1,8 +1,8 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
-#include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 
 #include <client/dialog/DialogModify.h>
 #include <client/widget/WidgetHead.h>
