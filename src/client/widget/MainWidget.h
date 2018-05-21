@@ -11,7 +11,12 @@
 
 #include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
+#include <client/page/PageAbout.h>
+#include <client/page/PageBrowse.h>
 #include <client/page/PageFavorite.h>
+#include <client/page/PageRecord.h>
+#include <client/page/PageReturn.h>
+#include <client/page/PageSetting.h>
 #include <client/widget/WidgetHead.h>
 
 class MainWidget : public QWidget {
@@ -21,6 +26,10 @@ public:
     MainWidget(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
     void loadSetting();
     void saveSetting();
+
+public slots:
+    void setEvents();
+    void refresh();
 
 private:
     void setUI();
@@ -38,4 +47,11 @@ private:
     QListWidget *listWidget;
     QStackedWidget *pageWidget;
     QScrollArea *scrollArea;
+
+    PageAbout *pageAbout;
+    PageBrowse *pageBrowse;
+    PageFavorite *pageFavorite;
+    PageRecord *pageRecord;
+    PageReturn *pageReturn;
+    PageSetting *pageSetting;
 };

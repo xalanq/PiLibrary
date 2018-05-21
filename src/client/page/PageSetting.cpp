@@ -8,6 +8,3 @@ PageSetting::PageSetting(UserManager &userManager, QWidget *parent) :
     QWidget(parent) {
 
 }
-
-PageSetting::~PageSetting() {
-}

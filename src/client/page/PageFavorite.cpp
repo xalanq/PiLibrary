@@ -1,6 +1,7 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <ctime>
 #include <functional>
 
 #include <QVBoxLayout>
@@ -20,34 +21,52 @@ PageFavorite::PageFavorite(UserManager &userManager, BookManager &bookManager, Q
     setConnection();
 }
 
-void PageFavorite::update() {
-    auto obj = new GetStarRecords(userManager.getToken(), bookManager, 2147483647, 0);
-    connect(obj, &GetStarRecords::done, this, &PageFavorite::slotGetStarRecord);
-    obj->start();
+void PageFavorite::updateStar(const X::xint &bookid, bool star) {
+    if (!star) {
+        for (int i = 0; i < listWidgetStarRecord->count(); ++i) {
+            auto item = dynamic_cast<ListWidgetItemStarRecord *> (listWidgetStarRecord->item(i));
+            if (item->getBook().getBookid() == bookid) {
+                listWidgetStarRecord->takeItem(i);
+                break;
+            }
+        }
+    } else {
+        StarRecord record;
+        record.setBookid(bookid);
+        record.setTime(time(0));
+        bookManager.getBookBrief(bookid, std::bind(&ListWidgetStarRecord::add, listWidgetStarRecord, std::placeholders::_1, record, 0));
+    }
 }
 
 void PageFavorite::slotGetStarRecord(const std::vector<StarRecord> &records) {
     int tot = records.size();
     for (int i = 0; i < tot; ++i) {
         listWidgetStarRecord->add(BookBrief::unknown(), records[i]);
-        userManager.getStarBooks().insert(records[i].getBookid());
+        userManager.starBook(records[i].getBookid());
     }
     for (int i = 0; i < tot; ++i)
         bookManager.getBookBrief(records[i].getBookid(), std::bind(&ListWidgetStarRecord::update, listWidgetStarRecord, std::placeholders::_1, records[i], tot - 1 - i));
+    emit signalReady();
 }
 
 void PageFavorite::slotItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemStarRecord *> (item);
-    DialogBook dialog(userManager, bookManager, x->getBook().getBookid());
-    dialog.exec();
+    auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    dialog->show();
+}
+
+void PageFavorite::refresh() {
+    userManager.clearStarBook();
+    listWidgetStarRecord->clear();
+    auto obj = new GetStarRecords(userManager.getToken(), bookManager, 2147483647, 0);
+    connect(obj, &GetStarRecords::done, this, &PageFavorite::slotGetStarRecord);
+    obj->start();
 }
 
 void PageFavorite::setUI() {
     auto layout = new QVBoxLayout;
     layout->addWidget(listWidgetStarRecord);
     setLayout(layout);
-
-    update();
 }
 
 void PageFavorite::setConnection() {

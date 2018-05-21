@@ -21,25 +21,30 @@ class PageRecord : public QWidget {
 
 public:
     PageRecord(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+    void updateBorrow(const X::xint &bookid, const X::xll &keepTime);
+    void updateBrowse(const X::xint &bookid);
+
+signals:
+    void signalReady();
 
 public slots:
     void slotGetBrowseRecord(const std::vector<BrowseRecord> &records);
-
     void slotGetKeepRecord(const std::vector<KeepRecord> &records);
-
     void slotGetBorrowRecord(const std::vector<BorrowRecord> &records);
-
     void slotGetLoginRecord(const X::ErrorCode &ec, const X::ptree &pt);
 
     void slotBrowseRecordItemClicked(QListWidgetItem *item);
-
     void slotKeepRecordItemClicked(QListWidgetItem *item);
-
     void slotBorrowRecordItemClicked(QListWidgetItem *item);
+
+    void refresh();
+    void refreshBrowseRecord();
+    void refreshKeepRecord();
+    void refreshBorrowRecord();
+    void refreshLoginRecord();
 
 private:
     void setUI();
-
     void setConnection();
 
 private:

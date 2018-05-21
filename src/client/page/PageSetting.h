@@ -12,7 +12,9 @@ class PageSetting : public QWidget {
 
 public:
     PageSetting(UserManager &userManager, QWidget *parent = Q_NULLPTR);
-    ~PageSetting();
+
+signals:
+    void signalReady();
 
 private:
     UserManager &userManager;

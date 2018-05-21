@@ -1,6 +1,7 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <ctime>
 #include <memory>
 
 #include <QVBoxLayout>
@@ -25,6 +26,28 @@ PageRecord::PageRecord(UserManager &userManager, BookManager &bookManager, QWidg
     setConnection();
 }
 
+void PageRecord::updateBorrow(const X::xint &bookid, const X::xll &keepTime) {
+    auto beginTime = time(0);
+    auto endTime = beginTime + keepTime;
+
+    KeepRecord record1;
+    record1.setBookid(bookid);
+    record1.setTime(beginTime, endTime);
+    bookManager.getBookBrief(bookid, std::bind(&ListWidgetKeepRecord::add, listWidgetKeepRecord, std::placeholders::_1, record1, 0));
+
+    BorrowRecord record2;
+    record2.setBeginTime(bookid);
+    record2.setTime(beginTime, endTime, 0);
+    bookManager.getBookBrief(bookid, std::bind(&ListWidgetBorrowRecord::add, listWidgetBorrowRecord, std::placeholders::_1, record2, 0));
+}
+
+void PageRecord::updateBrowse(const X::xint &bookid) {
+    BrowseRecord record;
+    record.setBookid(bookid);
+    record.setTime(time(0));
+    bookManager.getBookBrief(bookid, std::bind(&ListWidgetBrowseRecord::add, listWidgetBrowseRecord, std::placeholders::_1, record, 0));
+}
+
 void PageRecord::slotGetBrowseRecord(const std::vector<BrowseRecord> &records) {
     int tot = records.size();
     for (int i = 0; i < tot; ++i)
@@ -37,10 +60,11 @@ void PageRecord::slotGetKeepRecord(const std::vector<KeepRecord> &records) {
     int tot = records.size();
     for (int i = 0; i < tot; ++i) {
         listWidgetKeepRecord->add(BookBrief::unknown(), records[i]);
-        userManager.getKeepBooks().insert(records[i].getBookid());
+        userManager.borrowBook(records[i].getBookid(), records[i].getBeginTime(), records[i].getEndTime());
     }
     for (int i = 0; i < tot; ++i)
         bookManager.getBookBrief(records[i].getBookid(), std::bind(&ListWidgetKeepRecord::update, listWidgetKeepRecord, std::placeholders::_1, records[i], tot - 1 - i));
+    emit signalReady();
 }
 
 void PageRecord::slotGetBorrowRecord(const std::vector<BorrowRecord> &records) {
@@ -62,20 +86,57 @@ void PageRecord::slotGetLoginRecord(const X::ErrorCode &ec, const X::ptree &pt) 
 
 void PageRecord::slotBrowseRecordItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemBrowseRecord *> (item);
-    DialogBook dialog(userManager, bookManager, x->getBook().getBookid());
-    dialog.exec();
+    auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    dialog->show();
 }
 
 void PageRecord::slotKeepRecordItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemKeepRecord *> (item);
-    DialogBook dialog(userManager, bookManager, x->getBook().getBookid());
-    dialog.exec();
+    auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    dialog->show();
 }
 
 void PageRecord::slotBorrowRecordItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemBorrowRecord *> (item);
-    DialogBook dialog(userManager, bookManager, x->getBook().getBookid());
-    dialog.exec();
+    auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    dialog->show();
+}
+
+void PageRecord::refresh() {
+    refreshBrowseRecord();
+    refreshKeepRecord();
+    refreshBorrowRecord();
+    refreshLoginRecord();
+}
+
+void PageRecord::refreshBrowseRecord() {
+    listWidgetBrowseRecord->clear();
+    auto obj = new GetBrowseRecords(userManager.getToken(), bookManager, 15, 0);
+    connect(obj, &GetBrowseRecords::done, this, &PageRecord::slotGetBrowseRecord);
+    obj->start();
+}
+
+void PageRecord::refreshKeepRecord() {
+    userManager.clearBorrowBook();
+    listWidgetKeepRecord->clear();
+    auto obj = new GetKeepRecords(userManager.getToken(), bookManager, 2147483647, 0);
+    connect(obj, &GetKeepRecords::done, this, &PageRecord::slotGetKeepRecord);
+    obj->start();
+}
+
+void PageRecord::refreshBorrowRecord() {
+    listWidgetBorrowRecord->clear();
+    auto obj = new GetBorrowRecords(userManager.getToken(), bookManager, 15, 0);
+    connect(obj, &GetBorrowRecords::done, this, &PageRecord::slotGetBorrowRecord);
+    obj->start();
+}
+
+void PageRecord::refreshLoginRecord() {
+    listWidgetLoginRecord->clear();
+    auto thread= new ThreadGetRecord(userManager.getToken(), X::GetLoginRecord, 15, 0, this);
+    connect(thread, &ThreadGetRecord::done, this, &PageRecord::slotGetLoginRecord);
+    connect(thread, &ThreadGetRecord::finished, thread, &QObject::deleteLater);
+    thread->start();
 }
 
 void PageRecord::setUI() {
@@ -88,23 +149,6 @@ void PageRecord::setUI() {
     layout->addWidget(tabWidget);
 
     setLayout(layout);
-
-    auto obj1 = new GetBrowseRecords(userManager.getToken(), bookManager, 15, 0);
-    connect(obj1, &GetBrowseRecords::done, this, &PageRecord::slotGetBrowseRecord);
-    obj1->start();
-
-    auto obj2 = new GetKeepRecords(userManager.getToken(), bookManager, 2147483647, 0);
-    connect(obj2, &GetKeepRecords::done, this, &PageRecord::slotGetKeepRecord);
-    obj2->start();
-
-    auto obj3 = new GetBorrowRecords(userManager.getToken(), bookManager, 15, 0);
-    connect(obj3, &GetBorrowRecords::done, this, &PageRecord::slotGetBorrowRecord);
-    obj3->start();
-
-    auto thread= new ThreadGetRecord(userManager.getToken(), X::GetLoginRecord, 15, 0, this);
-    connect(thread, &ThreadGetRecord::done, this, &PageRecord::slotGetLoginRecord);
-    connect(thread, &ThreadGetRecord::finished, thread, &QObject::deleteLater);
-    thread->start();
 }
 
 void PageRecord::setConnection() {

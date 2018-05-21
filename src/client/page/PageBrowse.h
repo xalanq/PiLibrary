@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <map>
+
 #include <QWidget>
 
 #include <client/listwidget/ListWidgetBrowseBook.h>
@@ -15,10 +17,16 @@ class PageBrowse : public QWidget {
 
 public:
     PageBrowse(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+    void updateStar(const X::xint &bookid, bool star);
+
+signals:
+    void signalReady();
 
 public slots:
     void slotGetNewBookList(const X::ErrorCode &ec, const X::ptree &pt);
     void slotItemClicked(QListWidgetItem *item);
+
+    void refresh();
 
 private:
     void setUI();
@@ -29,4 +37,6 @@ private:
     BookManager &bookManager;
 
     ListWidgetBrowseBook *listWidgetBrowseBook;
+
+    std::map<X::xint, int> books;
 };

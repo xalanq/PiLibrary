@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 
 #include <client/dialog/DialogBook.h>
+#include <client/dialog/DialogChooseTime.h>
 #include <client/thread/ThreadBorrowBook.h>
 #include <client/thread/ThreadStarBook.h>
 #include <client/thread/ThreadUnStarBook.h>
@@ -38,10 +39,17 @@ DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, X::xi
 }
 
 void DialogBook::setBook(const Book &book) {
+    setWindowTitle(QString::fromStdString(book.getTitle()) + " - " + QString::fromStdString(book.getAuthor()));
     lblTitle->setText(tr("Title: ") + QString::fromStdString(book.getTitle()));
     lblAuthor->setText(tr("Author: ") + QString::fromStdString(book.getAuthor()));
     lblIntroduction->setText(tr("Introduction: ") + QString::fromStdString(book.getIntroduction()));
-    lblMaxKeepTime->setText(tr("Max Keep Time: ") + QString::number((double)book.getMaxKeepTime() / 1000 / 60, 'g', 2) + tr(" hours"));
+
+    auto maxKeepTime = book.getMaxKeepTime();
+    X::xll d = maxKeepTime / 60 / 60 / 24;
+    X::xll h = maxKeepTime / 60 / 60 - d * 24;
+    X::xll m = maxKeepTime / 60 - d * 24 * 60 - h * 60;
+
+    lblMaxKeepTime->setText(tr("Max keep time: ") + QString::number(d) + tr(" d ") + QString::number(h) + tr(" h ") + QString::number(m) + tr(" m "));
 }
 
 void DialogBook::slotStarBegin() {
@@ -68,26 +76,20 @@ void DialogBook::slotStarEnd(const X::ErrorCode &ec) {
         return;
     }
     if (btnStar->text() == strStar) {
-        userManager.getStarBooks().insert(bookid);
+        userManager.starBook(bookid);
         btnStar->setText(strUnStar);
     } else {
         try {
-            userManager.getStarBooks().erase(bookid);
+            userManager.unStarBook(bookid);
         } catch (std::exception &) {}
         btnStar->setText(strStar);
     }
 }
 
 void DialogBook::slotBorrowBegin() {
-    auto ret = QMessageBox::information(
-        this,
-        tr("Borrow"),
-        tr("Ensure you want to borrow this book. \nNote: you can not return this book yourself."),
-        QMessageBox::Ok,
-        QMessageBox::Cancel
-    );
-    if (ret == QMessageBox::Ok) {
-        auto keepTime = bookManager.getBookBrief(bookid).getMaxKeepTime();
+    DialogChooseTime dialog(bookManager.getBookBrief(bookid).getMaxKeepTime(), this);
+    if (dialog.exec() == QDialog::Accepted) {
+        keepTime = dialog.getKeepTime();
         auto thread = new ThreadBorrowBook(userManager.getToken(), bookid, keepTime, this);
         connect(thread, &ThreadBorrowBook::done, this, &DialogBook::slotBorrowEnd);
         connect(thread, &ThreadBorrowBook::finished, thread, &QObject::deleteLater);
@@ -104,19 +106,24 @@ void DialogBook::slotBorrowEnd(const X::ErrorCode &ec) {
         );
         return;
     }
-    userManager.getKeepBooks().insert(bookid);
+    auto beginTime = time(0);
+    auto endTime = beginTime + keepTime;
+    userManager.borrowBook(bookid, beginTime, endTime);
     btnBorrow->setText(strBorrowed);
     btnBorrow->setDisabled(true);
 }
 
 void DialogBook::setUI() {
-    if (userManager.getStarBooks().find(bookid) != userManager.getStarBooks().end())
+    setWindowTitle(tr("Book"));
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+    if (userManager.isStaredBook(bookid))
         btnStar->setText(strUnStar);
     else
         btnStar->setText(strStar);
 
     btnBorrow->setText(strBorrow);
-    if (userManager.getKeepBooks().find(bookid) != userManager.getKeepBooks().end()) {
+    if (userManager.isBorrowedBook(bookid)) {
         btnBorrow->setText(strBorrowed);
         btnBorrow->setDisabled(true);
     }

@@ -11,14 +11,16 @@
 
 class ListWidgetItemBook : public QListWidgetItem {
 public:
-    ListWidgetItemBook(const BookBrief &book);
+    ListWidgetItemBook(const BookBrief &book, bool star);
     const BookBrief& getBook() const;
+    void update(const BookBrief &book, bool star);
 
 private:
     void setUI();
 
 private:
     BookBrief book;
+    bool star;
 };
 
 class ListWidgetBrowseBook : public QListWidget {
@@ -26,7 +28,8 @@ class ListWidgetBrowseBook : public QListWidget {
 
 public:
     ListWidgetBrowseBook(QWidget *parent = Q_NULLPTR);
-    void add(const BookBrief &book);
+    void add(const BookBrief &book, bool star, int row = 0);
+    void update(const BookBrief &book, bool star, int row);
 
 public slots:
 

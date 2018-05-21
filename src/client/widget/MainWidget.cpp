@@ -1,6 +1,8 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <functional>
+
 #include <QEvent>
 #include <QFrame>
 #include <QHBoxLayout>
@@ -9,11 +11,6 @@
 #include <QVBoxLayout>
 
 #include <client/widget/MainWidget.h>
-#include <client/page/PageAbout.h>
-#include <client/page/PageBrowse.h>
-#include <client/page/PageRecord.h>
-#include <client/page/PageReturn.h>
-#include <client/page/PageSetting.h>
 
 MainWidget::MainWidget(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     userManager(userManager),
@@ -27,6 +24,7 @@ MainWidget::MainWidget(UserManager &userManager, BookManager &bookManager, QWidg
 
     setUI();
     setConnection();
+    refresh();
 }
 
 void MainWidget::loadSetting() {
@@ -35,6 +33,22 @@ void MainWidget::loadSetting() {
 
 void MainWidget::saveSetting() {
 
+}
+
+void MainWidget::setEvents() {
+    static int count = 0;
+    if (++count == 3) {
+        userManager.installStarEvent(std::bind(&BookManager::updateStar, &bookManager, std::placeholders::_1, std::placeholders::_2));
+        userManager.installStarEvent(std::bind(&PageBrowse::updateStar, pageBrowse, std::placeholders::_1, std::placeholders::_2));
+        userManager.installStarEvent(std::bind(&PageFavorite::updateStar, pageFavorite, std::placeholders::_1, std::placeholders::_2));
+        userManager.installBorrowEvent(std::bind(&PageRecord::updateBorrow, pageRecord, std::placeholders::_1, std::placeholders::_2));
+        bookManager.installBrowseEvent(std::bind(&PageRecord::updateBrowse, pageRecord, std::placeholders::_1));
+    }
+}
+
+void MainWidget::refresh() {
+    pageFavorite->refresh();
+    pageRecord->refresh();
 }
 
 void MainWidget::setUI() {
@@ -67,6 +81,31 @@ void MainWidget::setConnection() {
         pageWidget,
         &QStackedWidget::setCurrentIndex
     );
+
+    connect(
+        pageBrowse,
+        &PageBrowse::signalReady,
+        this,
+        &MainWidget::setEvents
+    );
+    connect(
+        pageFavorite,
+        &PageFavorite::signalReady,
+        pageBrowse,
+        &PageBrowse::refresh
+    );
+    connect(
+        pageFavorite,
+        &PageFavorite::signalReady,
+        this,
+        &MainWidget::setEvents
+    );
+    connect(
+        pageRecord,
+        &PageRecord::signalReady,
+        this,
+        &MainWidget::setEvents
+    );
 }
 
 void MainWidget::initListWidget() {
@@ -84,16 +123,13 @@ void MainWidget::initListWidget() {
 }
 
 void MainWidget::initPageWidget() {
-    QList<QWidget *> items;
-    items.append(new PageBrowse(userManager, bookManager, this));
-    items.append(new PageFavorite(userManager, bookManager, this));
-    items.append(new PageRecord(userManager, bookManager, this));
+    pageWidget->addWidget(pageBrowse = new PageBrowse(userManager, bookManager, this));
+    pageWidget->addWidget(pageFavorite = new PageFavorite(userManager, bookManager, this));
+    pageWidget->addWidget(pageRecord = new PageRecord(userManager, bookManager, this));
     if (userManager.isAdminister())
-        items.append(new PageReturn(userManager, bookManager, this));
-    items.append(new PageSetting(userManager, this));
-    items.append(new PageAbout(this));
+        pageWidget->addWidget(pageReturn = new PageReturn(userManager, bookManager, this));
+    pageWidget->addWidget(pageSetting = new PageSetting(userManager, this));
+    pageWidget->addWidget(pageAbout = new PageAbout(this));
 
-    for (auto item : items)
-        pageWidget->addWidget(item);
     pageWidget->setCurrentIndex(0);
 }

@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QPushButton>
+#include <QDateTimeEdit>
 
 #include <client/core/Book.h>
 #include <client/manager/BookManager.h>
@@ -40,6 +41,7 @@ private:
     UserManager &userManager;
     BookManager &bookManager;
     X::xint bookid;
+    X::xll keepTime {};
 
     QLabel *lblTitle;
     QLabel *lblAuthor;

@@ -3,7 +3,9 @@
 
 #pragma once
 
+#include <functional>
 #include <set>
+#include <vector>
 
 #include <client/core/User.h>
 #include <core/types.h>
@@ -23,13 +25,27 @@ public:
     User& getUser();
     void setUser(const ptree &pt);
 
-    std::set<xint>& getStarBooks();
-    std::set<xint>& getKeepBooks();
+    void starBook(const xint &bookid);
+    void unStarBook(const xint &bookid);
+    bool isStaredBook(const xint &bookid);
+    void clearStarBook();
+    void installStarEvent(std::function<void(xint &, bool)> f);
 
+    void borrowBook(const xint &bookid, const xll &beginTime, const xll &endTime);
+    bool isBorrowedBook(const xint &bookid);
+    void clearBorrowBook();
+    void installBorrowEvent(std::function<void(xint &, xll &, xll &)> f);
+
+private:
+    void emitStarEvents(const xint &bookid, bool star);
+    void emitBorrowEvents(const xint &bookid, const xll &beginTime, const xll &endTime);
+    
 private:
     xll token {};
     User user {};
     std::set<xint> starBooks {};
-    std::set<xint> keepBooks {};
+    std::set<xint> borrowBooks {};
+    std::vector<std::function<void(xint &, bool)>> starEvents {};
+    std::vector<std::function<void(xint &, xll &, xll &)>> borrowEvents {};
 };
 

@@ -53,6 +53,7 @@ User& User::setFromPtree(const ptree &pt) {
     setUsername(pt.get<xstring>("username", ""));
     setNickname(pt.get<xstring>("nickname", ""));
     setEmail(pt.get<xstring>("email", ""));
+    setPriority(pt.get<xint>("priority", X::USER));
     return *this;
 }
 

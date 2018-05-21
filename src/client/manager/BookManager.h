@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <map>
+#include <vector>
 #include <queue>
 
 #include <QObject>
@@ -34,6 +35,10 @@ public:
     const Book& getBook(const xint &bookid) const;
     void getBook(const xint &bookid, std::function<void(Book &)> f, bool update = false);
 
+    void updateStar(const xint &bookid, bool star);
+
+    void installBrowseEvent(std::function<void(xint &)> f);
+
 public slots:
     void slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(BookBrief &)> f);
     void slotGetBook(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(Book &)> f);
@@ -43,6 +48,8 @@ private:
     void _getBook(const xint &bookid, std::function<void(Book &)> f);
 
     void popThread();
+    
+    void emitBrowseEvents(const xint &bookid);
 
 private:
     UserManager &userManager;
@@ -52,4 +59,5 @@ private:
     std::queue<std::pair<xint, std::function<void(Book &)>>> queueBook {};
     int threadCounts {};
     int threadLimit {};
+    std::vector<std::function<void(xint &)>> browseEvents {};
 };

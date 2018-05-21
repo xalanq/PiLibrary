@@ -13,7 +13,9 @@ class PageReturn : public QWidget {
 
 public:
     PageReturn(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
-    ~PageReturn();
+
+signals:
+    void signalReady();
 
 private:
     UserManager &userManager;

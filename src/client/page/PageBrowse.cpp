@@ -2,6 +2,7 @@
 // License: LGPL v3.0
 
 #include <functional>
+#include <vector>
 
 #include <QVBoxLayout>
 
@@ -22,31 +23,52 @@ PageBrowse::PageBrowse(UserManager &userManager, BookManager &bookManager, QWidg
     setConnection();
 }
 
+void PageBrowse::updateStar(const X::xint &bookid, bool star) {
+    auto it = books.find(bookid);
+    if (it != books.end())
+        bookManager.getBookBrief(bookid, std::bind(&ListWidgetBrowseBook::update, listWidgetBrowseBook, std::placeholders::_1, star, it->second));
+}
+
 void PageBrowse::slotGetNewBookList(const X::ErrorCode &ec, const X::ptree &pt) {
     if (ec != X::NoError)
         return;
     auto arr = pt.get_child("bookid");
+    books.clear();
+    std::vector<X::xint> l;
     for (auto &&child : arr) {
         auto bookid = child.second.get_value<X::xint>();
-        bookManager.getBookBrief(bookid, std::bind(&ListWidgetBrowseBook::add, listWidgetBrowseBook, std::placeholders::_1));
+        l.push_back(bookid);
     }
+    int tot = l.size();
+    for (int i = 0; i < tot; ++i)
+        listWidgetBrowseBook->add(BookBrief::unknown(), 0);
+    for (int i = 0; i < tot; ++i) {
+        auto bookid = l[i];
+        auto pos = tot - 1 - i;
+        bookManager.getBookBrief(bookid, std::bind(&ListWidgetBrowseBook::update, listWidgetBrowseBook, std::placeholders::_1, userManager.isStaredBook(bookid), pos));
+        books[bookid] = pos;
+    }
+    emit signalReady();
 }
 
 void PageBrowse::slotItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemBook *> (item);
-    DialogBook dialog(userManager, bookManager, x->getBook().getBookid());
-    dialog.exec();
+    auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    dialog->show();
+}
+
+void PageBrowse::refresh() {
+    listWidgetBrowseBook->clear();
+    auto thread = new ThreadGetNewBookList(userManager.getToken(), 15, this);
+    connect(thread, &ThreadGetNewBookList::done, this, &PageBrowse::slotGetNewBookList);
+    connect(thread, &ThreadGetNewBookList::finished, thread, &QObject::deleteLater);
+    thread->start();
 }
 
 void PageBrowse::setUI() {
     auto layout = new QVBoxLayout;
     layout->addWidget(listWidgetBrowseBook);
     setLayout(layout);
-    
-    auto thread = new ThreadGetNewBookList(userManager.getToken(), 15, this);
-    connect(thread, &ThreadGetNewBookList::done, this, &PageBrowse::slotGetNewBookList);
-    connect(thread, &ThreadGetNewBookList::finished, thread, &QObject::deleteLater);
-    thread->start();
 }
 
 void PageBrowse::setConnection() {

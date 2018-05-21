@@ -10,5 +10,3 @@ PageReturn::PageReturn(UserManager &userManager, BookManager &bookManager, QWidg
 
 }
 
-PageReturn::~PageReturn() {
-}

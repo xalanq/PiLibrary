@@ -63,6 +63,7 @@ void BookManager::getBook(const xint &bookid, std::function<void(Book &)> f, boo
         auto it = mapBook.find(bookid);
         if (it != mapBook.end()) {
             f(it->second);
+            emitBrowseEvents(bookid);
             return;
         }
     }
@@ -71,6 +72,21 @@ void BookManager::getBook(const xint &bookid, std::function<void(Book &)> f, boo
     } else {
         _getBook(bookid, f);
     }
+}
+
+void BookManager::updateStar(const xint &bookid, bool star) {
+    auto it1 = mapBook.find(bookid);
+    if (it1 != mapBook.end()) {
+        it1->second.setStarCount(it1->second.getStarCount() + (star ? 1 : -1));
+    }
+    auto it2 = mapBookBrief.find(bookid);
+    if (it2 != mapBookBrief.end()) {
+        it2->second.setStarCount(it2->second.getStarCount() + (star ? 1 : -1));
+    }
+}
+
+void BookManager::installBrowseEvent(std::function<void(xint &)> f) {
+    browseEvents.push_back(f);
 }
 
 void BookManager::slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(BookBrief &)> f) {
@@ -102,6 +118,7 @@ void BookManager::slotGetBook(const X::ErrorCode &ec, const X::ptree &pt, std::f
         Book &&book = Book::fromPtree(pt);
         mapBook[bookid] = book;
         f(book);
+        emitBrowseEvents(bookid);
     } catch (std::exception &) {
         ;
     }
@@ -144,4 +161,9 @@ void BookManager::popThread() {
             queueBookBrief.pop();
         }
     }
+}
+
+void BookManager::emitBrowseEvents(const xint &bookid) {
+    for (auto f : browseEvents)
+        f(xint(bookid));
 }
