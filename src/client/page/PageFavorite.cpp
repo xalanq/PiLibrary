@@ -39,7 +39,7 @@ void PageFavorite::updateStar(const X::xint &bookid, bool star) {
 }
 
 void PageFavorite::slotGetStarRecord(const std::vector<StarRecord> &records) {
-    int tot = records.size();
+    int tot = int(records.size());
     for (int i = 0; i < tot; ++i) {
         listWidgetStarRecord->add(BookBrief::unknown(), records[i]);
         userManager.starBook(records[i].getBookid());

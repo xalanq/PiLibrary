@@ -18,10 +18,6 @@ const BookBrief& ListWidgetItemBorrowRecord::getBook() const {
     return book;
 }
 
-const BorrowRecord& ListWidgetItemBorrowRecord::getRecord() const {
-    return record;
-}
-
 void ListWidgetItemBorrowRecord::update(const BookBrief &book, const BorrowRecord &record) {
     this->book = book;
     this->record = record;
@@ -30,18 +26,26 @@ void ListWidgetItemBorrowRecord::update(const BookBrief &book, const BorrowRecor
 
 void ListWidgetItemBorrowRecord::setUI() {
     QPixmap p(QSize(114, 160));
+    if (book.getCover().getSize())
+        p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
+    else
+        p.fill(Qt::black);
+
     QIcon icon;
-    p.fill(Qt::black);
     icon.addPixmap(p);
     setIcon(icon);
+
+    auto beginTime = record.getBeginTime();
+    auto endTime = record.getEndTime();
+    auto returnTime = record.getReturnTime();
     setText(QObject::tr("Title: ") +
             QString::fromStdString(book.getTitle()) +
             QObject::tr("\nbeginTime: ") +
-            QString::fromStdString(X::time_to_str(record.getBeginTime())) +
+            QString::fromStdString(X::time_to_str(beginTime)) +
             QObject::tr("\nendTime: ") +
-            QString::fromStdString(X::time_to_str(record.getEndTime())) +
+            QString::fromStdString(X::time_to_str(endTime)) +
             QObject::tr("\nreturnTime: ") +
-            QString::fromStdString(X::time_to_str(record.getReturnTime())));
+            (returnTime ? QString::fromStdString(X::time_to_str(returnTime)) : QObject::tr("not returned yet")));
 }
 
 ListWidgetBorrowRecord::ListWidgetBorrowRecord(QWidget *parent) :
@@ -56,7 +60,8 @@ void ListWidgetBorrowRecord::add(const BookBrief &book, const BorrowRecord &reco
 
 void ListWidgetBorrowRecord::update(const BookBrief &book, const BorrowRecord &record, int row) {
     auto it = dynamic_cast<ListWidgetItemBorrowRecord *> (item(row));
-    it->update(book, record);
+    if (it)
+        it->update(book, record);
 }
 
 void ListWidgetBorrowRecord::setUI() {

@@ -488,7 +488,8 @@ UserManager::ptree UserManager::getBook(const ptree &pt) {
             kvp("_id", 0),
             kvp("starRecord", 0),
             kvp("keepRecord", 0),
-            kvp("borrowRecord", 0)
+            kvp("borrowRecord", 0),
+            kvp("resource", 0)
         )
     );
     auto doc = (*client)[db_name]["book"].find_one(
@@ -540,8 +541,7 @@ UserManager::ptree UserManager::getBookBrief(const ptree &pt) {
             kvp("introduction", 1),
             kvp("maxKeepTime", 1),
             kvp("priority", 1),
-            kvp("starCount", 1),
-            kvp("resource", 1)
+            kvp("starCount", 1)
         )
     );
     auto doc = (*client)[db_name]["book"].find_one(
@@ -561,6 +561,7 @@ UserManager::ptree UserManager::getBookBrief(const ptree &pt) {
 
 UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
+    auto userPriority = pt.get<xint>("userPriority");
     auto bookid = pt.get<xint>("bookid", 0);
     auto title = pt.get_optional<xstring>("title");
     auto author = pt.get_optional<xstring>("author");
@@ -578,7 +579,10 @@ UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
     if (bookid) {
         auto info = (*client)[db_name]["book"].find_one(
             make_document(
-                kvp("bookid", bookid)
+                kvp("bookid", bookid),
+                kvp("priority", make_document(
+                    kvp("$lte", userPriority)
+                ))
             )
         );
         if (info && (title || author || ISBN || publisher || amount || introduction || position || priority)) {
@@ -644,7 +648,7 @@ UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
                 kvp("amount", amount ? *amount : 0),
                 kvp("introduction", bsoncxx::types::b_utf8(introduction ? *introduction : "")),
                 kvp("position", bsoncxx::types::b_utf8(position ? *position : "")),
-                kvp("priority", priority ? *priority : int(X::SUPER_ADMINISTER)),
+                kvp("priority", priority ? *priority : int(X::ADMINISTER)),
                 kvp("maxKeepTime", maxKeepTime ? *maxKeepTime : 0),
                 kvp("starCount", 0),
                 kvp("starRecord", make_array()),
@@ -731,6 +735,67 @@ UserManager::ptree UserManager::getNewBookList(const ptree &pt) {
     }
     p.add_child("bookid", child);
     return std::move(p);
+}
+
+UserManager::xstring UserManager::getResource(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto priority = pt.get<xint>("priority");
+    auto resourceName = pt.get<xstring>("resourceName");
+    auto bookid = pt.get<xint>("bookid", 0);
+    xstring path = "";
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    mongocxx::options::find opt;
+    opt.projection(
+        make_document(
+            kvp("_id", 0),
+            kvp("resource.$", 1)
+        )
+    );
+    auto doc = (*client)[db_name]["book"].find_one(
+        make_document(
+            kvp("bookid", bookid),
+            kvp("priority", make_document(
+                kvp("$lte", priority)
+            )),
+            kvp("resource.name", resourceName)
+        ),
+        opt
+    );
+
+    if (doc)
+        path = xstring(doc->view()["resource"].get_array().value.begin()->get_document().value["path"].get_utf8().value);
+
+    return path;
+}
+
+UserManager::ErrorCode UserManager::setResource(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto priority = pt.get<xint>("priority");
+    auto resourceName = pt.get<xstring>("resourceName");
+    auto resourcePath = pt.get<xstring>("resourcePath");
+    auto bookid = pt.get<xint>("bookid", 0);
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    auto res = (*client)[db_name]["book"].update_one(
+        make_document(
+            kvp("bookid", bookid),
+            kvp("priority", make_document(
+                kvp("$lte", priority)
+            )),
+            kvp("resource.name", resourceName)
+        ),
+        make_document(
+            kvp("$set", make_document(
+                kvp("resource.$.path", resourcePath)
+            ))
+        )
+    );
+    if (res->modified_count() == 1)
+        return X::NoError;
+    return X::InvalidResource;
 }
 
 // need: userid, ip, time, ensure the user is exist

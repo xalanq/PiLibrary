@@ -13,7 +13,6 @@ class ListWidgetItemBrowseRecord : public QListWidgetItem {
 public:
     ListWidgetItemBrowseRecord(const BookBrief &book, const BrowseRecord &record);
     const BookBrief& getBook() const;
-    const BrowseRecord& getRecord() const;
     void update(const BookBrief &book, const BrowseRecord &record);
 
 private:

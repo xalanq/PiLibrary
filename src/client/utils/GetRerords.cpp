@@ -2,7 +2,6 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadGetRecord.h>
-#include <client/thread/ThreadGetBookBrief.h>
 #include <client/utils/GetRecords.h>
 
 // I hate Qt that it can't template with Q_OBJECT

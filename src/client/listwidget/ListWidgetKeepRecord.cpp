@@ -17,10 +17,6 @@ const BookBrief& ListWidgetItemKeepRecord::getBook() const {
     return book;
 }
 
-const KeepRecord& ListWidgetItemKeepRecord::getRecord() const {
-    return record;
-}
-
 void ListWidgetItemKeepRecord::update(const BookBrief &book, const KeepRecord &record) {
     this->book = book;
     this->record = record;
@@ -29,10 +25,15 @@ void ListWidgetItemKeepRecord::update(const BookBrief &book, const KeepRecord &r
 
 void ListWidgetItemKeepRecord::setUI() {
     QPixmap p(QSize(114, 160));
+    if (book.getCover().getSize())
+        p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
+    else
+        p.fill(Qt::black);
+
     QIcon icon;
-    p.fill(Qt::black);
     icon.addPixmap(p);
     setIcon(icon);
+
     setText(QObject::tr("Title: ") +
             QString::fromStdString(book.getTitle()) +
             QObject::tr("\nbeginTime: ") +
@@ -53,7 +54,8 @@ void ListWidgetKeepRecord::add(const BookBrief &book, const KeepRecord &record, 
 
 void ListWidgetKeepRecord::update(const BookBrief &book, const KeepRecord &record, int row) {
     auto it = dynamic_cast<ListWidgetItemKeepRecord *> (item(row));
-    it->update(book, record);
+    if (it)
+        it->update(book, record);
 }
 
 void ListWidgetKeepRecord::setUI() {

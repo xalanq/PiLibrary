@@ -59,7 +59,8 @@ namespace X {
 
         NoPermission,
         
-        InvalidResource
+        InvalidResource,
+        NoSuchResource
     };
 
     enum ActionCode {
@@ -99,9 +100,9 @@ namespace X {
         GetKeepRecordFeedback,
         GetNewBookList,
         GetNewBookListFeedback,
-        GetResource,
-        GetResourceFeedback,
-        SetResource,
-        SetResourceFeedback
+        GetBookCover,
+        GetBookCoverFeedback,
+        SetBookCover,
+        SetBookCoverFeedback
     };
 }

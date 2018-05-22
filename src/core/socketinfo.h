@@ -36,15 +36,18 @@ public:
     void encodeHeaderToken(const xll &token);
     void encodeHeaderLength(const xint &length);
     void encodeHeaderActionCode(const ActionCode &ac);
-    void encodeBody(const xstring &str);
-    void encode(const xll &token, const xint &bodyLength, const ActionCode &ac, const xstring &str);
-    void encode(const xll &token, const xint &bodyLength, const ActionCode &ac, const ptree &pt);
+    void encodeBody(const char *data, const size_t &length);
+    void encodeFile(const xint &mainLength, const char *data, const size_t &length);
+    void encodeMain(const xll &token, const xint &bodyLength, const ActionCode &ac, const char *data, const size_t &length);
+    void encodeMain(const xll &token, const xint &bodyLength, const ActionCode &ac, const xstring &str);
+    void encodeMain(const xll &token, const xint &bodyLength, const ActionCode &ac, const ptree &pt);
 
     static xstring encodePtree(const ptree &pt, bool pretty = false);
     static void decodePtree(const xstring &str, ptree &pt);
 
     const char *getBuffer() const;
     char *getBuffer();
+    void setBuffer(char *buffer);
 
 private:
     char *buffer;

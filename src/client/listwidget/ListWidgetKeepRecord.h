@@ -13,7 +13,6 @@ class ListWidgetItemKeepRecord : public QListWidgetItem {
 public:
     ListWidgetItemKeepRecord(const BookBrief &book, const KeepRecord &record);
     const BookBrief& getBook() const;
-    const KeepRecord& getRecord() const;
     void update(const BookBrief &book, const KeepRecord &record);
 
 private:

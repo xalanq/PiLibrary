@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <client/core/Resource.h>
 #include <core/types.h>
 
 class BookBrief {
@@ -40,6 +41,9 @@ public:
 
     xll getMaxKeepTime() const;
     BookBrief& setMaxKeepTime(const xll &value);
+
+    Resource getCover() const;
+    BookBrief& setCover(const Resource &cover);
     
     virtual BookBrief& setFromPtree(const ptree &pt);
     static BookBrief fromPtree(const ptree &pt); 
@@ -56,4 +60,5 @@ private:
     xint priority {};
     xll maxKeepTime {};
     xint starCount {};
+    Resource cover {};
 };

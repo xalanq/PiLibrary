@@ -74,6 +74,9 @@ public:
 
     ptree getNewBookList(const ptree &pt);
 
+    xstring getResource(const ptree &pt);
+    ErrorCode setResource(const ptree &pt);
+
     // not open for user, so ensure the userid exists in the below methods
     void recordLogin(const ptree &pt);
 

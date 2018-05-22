@@ -4,6 +4,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <server/SocketWrapper.h>
+#include <core/resource.h>
 #include <core/utils.h>
 
 #define _from(func) cerr << "(" << #func << ") from " << socket.remote_endpoint().address() << " : " 
@@ -79,7 +80,7 @@ void SocketWrapper::readHeader() {
     );
 }
 
-void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
+void SocketWrapper::readBody(const xll &token, const xint &length, const ActionCode &ac) {
     info.setSize(length);
     auto self(shared_from_this());
     boost::asio::async_read(
@@ -134,20 +135,33 @@ void SocketWrapper::readBody(xll token, xint length, ActionCode ac) {
                 doGetRecord(std::move(pt), token, "keepRecord", X::GetKeepRecordFeedback);
             else if (ac == X::GetNewBookList)
                 doGetNewBookList(std::move(pt), token);
+            else if (ac == X::GetBookCover)
+                doGetBookCover(std::move(pt), token);
+            else if (ac == X::SetBookCover)
+                doSetBookCover(std::move(pt), token);
             else
                 write(X::UnknownError, X::Error);
         }
     );
 }
 
-void SocketWrapper::write(const ErrorCode &ec, const ActionCode &ac, const xll &token, ptree pt) {
+void SocketWrapper::write(const ErrorCode &ec, const ActionCode &ac, const xll &token, ptree pt, const char *data, const size_t &dataSize) {
     pt.put("error_code", ec);
+    if (dataSize)
+        pt.put("fileSize", dataSize);
+
     auto self(shared_from_this());
     xstring str = SocketInfo::encodePtree(pt);
-    auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
+    auto bodySize = int(str.size());
+    auto mainSize = SocketInfo::HEADER_SIZE + 1 + bodySize;
+    auto size = mainSize + dataSize;
+
     info.setSize(size);
-    info.encode(token, static_cast<xint>(str.size()), ac, str);
-    _to(write) << "sending feedback, size = " << size << '\n';
+    info.encodeMain(token, bodySize, ac, str);
+    if (dataSize)
+        info.encodeFile(mainSize, data, dataSize);
+
+    _to(write) << "sending data, size = " << size << '\n';
 
     boost::asio::async_write(
         socket,
@@ -160,6 +174,44 @@ void SocketWrapper::write(const ErrorCode &ec, const ActionCode &ac, const xll &
             }
             _to(write) << "succeed to send\n";
             read();
+        }
+    );
+}
+
+void SocketWrapper::saveFile(const ErrorCode &ec, const ActionCode &ac, const xll &token, const ptree &pt) {
+    if (ec != X::NoError) {
+        write(ec, ac, token);
+        return;
+    }
+    size_t size = pt.get<size_t>("fileSize", 0);
+    if (!size) {
+        write(X::InvalidResource, ac, token);
+        return;
+    }
+
+    auto self(shared_from_this());
+
+    info.setSize(size);
+
+    boost::asio::async_read(
+        socket,
+        boost::asio::buffer(info.getBuffer(), size),
+        boost::asio::transfer_exactly(size),
+        [this, self, ac, token, pt, size](const error_code &ec, size_t bytes) {
+            if (ec) {
+                _from(saveFile) << system_error(ec).what() << '\n';
+                stop();
+                return;
+            }
+            auto e = X::NoError;
+            auto path = pt.get<xstring>("resourcePath");
+            if (R::add(path, info.getBuffer(), size) && userManager.setResource(pt)) {
+                _from(saveFile) << "succeed to save file to " + path << '\n';
+            } else {
+                _from(saveFile) << "failed to save file to " + path << '\n';
+                e = X::InvalidResource;
+            }
+            write(e, ac, token, {});
         }
     );
 }
@@ -426,7 +478,7 @@ void SocketWrapper::doGetBookBrief(ptree pt, const xll &token) {
     write(ec, X::GetBookBriefFeedback, tk, std::move(tr));
 }
 
-void SocketWrapper::doSetBook(const ptree &pt, const xll &token) {
+void SocketWrapper::doSetBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
@@ -441,6 +493,7 @@ void SocketWrapper::doSetBook(const ptree &pt, const xll &token) {
             tk = token;
             xint bookPriority = pt.get<xint>("priority", X::SUPER_ADMINISTER);
             auto priority = it->getPriority();
+            pt.put<xint>("userPriority", priority);
             _from(doSetBook) << "userid: " << it->getUserid() << ", priority: " << priority << ", bookPriority: " << bookPriority << '\n';
             if (bookPriority > priority || priority < X::ADMINISTER) {
                 _from(doSetBook) << "no permission\n";
@@ -503,3 +556,61 @@ void SocketWrapper::doGetNewBookList(ptree pt, const xll &token) {
     write(ec, X::GetNewBookListFeedback, tk, std::move(tr));
 }
 
+void SocketWrapper::doGetBookCover(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    char *data = 0;
+    size_t dataSize = 0;
+    if (token == 0) {
+        _from(doGetBookCover) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doGetBookCover) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("priority", it->getPriority());
+            pt.put("resourceName", "bookCover");
+            _from(doGetBookCover);
+            auto path = userManager.getResource(pt);
+            data = R::get(path, dataSize);
+            if (!dataSize) {
+                _from(doGetBookCover) << "failed to get the book cover\n";
+                ec = X::NoSuchResource;
+            } else
+                _from(doGetBookCover) << "succeed to get the book cover\n";
+        }
+    }
+    write(ec, X::GetBookCoverFeedback, tk, {}, data, dataSize);
+}
+
+void SocketWrapper::doSetBookCover(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doSetBookCover) << "token = 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doSetBookCover) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            auto priority = it->getPriority();
+            if (priority < X::ADMINISTER) {
+                _from(doSetBookCover) << "no permission\n";
+                ec = X::NoPermission;
+            } else {
+                auto bookid = pt.get("bookid", 0);
+                auto path = "book/" + std::to_string(bookid) + "/cover.png";
+                pt.put("priority", priority);
+                pt.put("resourceName", "bookCover");
+                pt.put("resourcePath", path);
+            }
+        }
+    }
+    saveFile(ec, X::SetBookCoverFeedback, tk, pt);
+}

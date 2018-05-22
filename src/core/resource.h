@@ -10,6 +10,7 @@ namespace R {
     typedef X::xint xint;
     typedef X::xstring xstring;
 
-    void remove(const xstring &path);
-    void add(const xstring &path, const char *data);
+    extern size_t fileSize(const xstring &path);
+    extern bool add(const xstring &path, const char *data, const size_t &size);
+    extern char* get(const xstring &path, size_t &size);
 }

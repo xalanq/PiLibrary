@@ -17,10 +17,6 @@ const BookBrief& ListWidgetItemBrowseRecord::getBook() const {
     return book;
 }
 
-const BrowseRecord& ListWidgetItemBrowseRecord::getRecord() const {
-    return record;
-}
-
 void ListWidgetItemBrowseRecord::update(const BookBrief &book, const BrowseRecord &record) {
     this->book = book;
     this->record = record;
@@ -29,10 +25,15 @@ void ListWidgetItemBrowseRecord::update(const BookBrief &book, const BrowseRecor
 
 void ListWidgetItemBrowseRecord::setUI() {
     QPixmap p(QSize(114, 160));
+    if (book.getCover().getSize())
+        p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
+    else
+        p.fill(Qt::black);
+
     QIcon icon;
-    p.fill(Qt::black);
     icon.addPixmap(p);
     setIcon(icon);
+
     setText(QObject::tr("Title: ") +
             QString::fromStdString(book.getTitle()) +
             QObject::tr("\nTime: ") +
@@ -51,7 +52,8 @@ void ListWidgetBrowseRecord::add(const BookBrief &book, const BrowseRecord &reco
 
 void ListWidgetBrowseRecord::update(const BookBrief &book, const BrowseRecord &record, int row) {
     auto it = dynamic_cast<ListWidgetItemBrowseRecord *> (item(row));
-    it->update(book, record);
+    if (it)
+        it->update(book, record);
 }
 
 void ListWidgetBrowseRecord::setUI() {

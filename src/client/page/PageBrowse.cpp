@@ -9,7 +9,6 @@
 #include <client/core/Book.h>
 #include <client/dialog/DialogBook.h>
 #include <client/page/PageBrowse.h>
-#include <client/thread/ThreadGetBookBrief.h>
 #include <client/thread/ThreadGetNewBookList.h>
 
 PageBrowse::PageBrowse(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
@@ -39,7 +38,7 @@ void PageBrowse::slotGetNewBookList(const X::ErrorCode &ec, const X::ptree &pt) 
         auto bookid = child.second.get_value<X::xint>();
         l.push_back(bookid);
     }
-    int tot = l.size();
+    int tot = int(l.size());
     for (int i = 0; i < tot; ++i)
         listWidgetBrowseBook->add(BookBrief::unknown(), 0);
     for (int i = 0; i < tot; ++i) {

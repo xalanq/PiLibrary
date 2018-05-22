@@ -62,6 +62,8 @@ namespace X {
             return "No Permission";
         case InvalidResource:
             return "Invalid Resource";
+        case NoSuchResource:
+            return "No Such Resource";
         default:
             return "No Such Error";
         }
@@ -141,14 +143,14 @@ namespace X {
             return "Get New Book List";
         case GetNewBookListFeedback:
             return "Get New Book List Feedback";
-        case GetResource:
-            return "Get Resource";
-        case GetResourceFeedback:
-            return "Get Resource Feedback";
-        case SetResource:
-            return "Set Resource";
-        case SetResourceFeedback:
-            return "Set Resource Feedback";
+        case GetBookCover:
+            return "Get Book Cover";
+        case GetBookCoverFeedback:
+            return "Get Book Cover Feedback";
+        case SetBookCover:
+            return "Set Book Cover";
+        case SetBookCoverFeedback:
+            return "Set Book Cover Feedback";
         default:
             return "No Such Action";
         }
@@ -217,13 +219,33 @@ namespace X {
         info.decodeBody(length, pt);
     }
 
+    char* tcp_sync_read_with_file(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt, size_t &size) {
+        tcp_sync_read(socket, token, ac, pt);
+        char *buffer = nullptr;
+        size = pt.get<size_t>("fileSize", 0);
+        if (size) {
+            SocketInfo info;
+            info.setSize(size);
+
+            boost::asio::read(
+                socket,
+                boost::asio::buffer(info.getBuffer(), size),
+                boost::asio::transfer_exactly(size)
+            );
+            
+            buffer = info.getBuffer();
+            info.setBuffer(nullptr);
+        }
+        return buffer;
+    }
+
     void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const ptree &pt) {
         SocketInfo info;
         auto str = SocketInfo::encodePtree(pt);
         auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
 
         info.setSize(size);
-        info.encode(token, static_cast<xint> (str.size()), ac, str);
+        info.encodeMain(token, static_cast<xint> (str.size()), ac, str);
 
         boost::asio::write(
             socket,

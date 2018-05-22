@@ -21,19 +21,6 @@ Book& Book::setPosition(const xstring &value) {
     position = value;
     return *this;
 }
-
-Book& Book::addResource(const xstring &name, const xstring &path) {
-    resource[name] = path;
-    return *this;
-}
-
-Book& Book::removeResource(const xstring &name) {
-    auto it = resource.find(name);
-    if (it != resource.end()) {
-        R::remove(it->second);
-    }
-    return *this;
-}
     
 Book& Book::setFromPtree(const ptree &pt) {
     BookBrief::setFromPtree(pt);

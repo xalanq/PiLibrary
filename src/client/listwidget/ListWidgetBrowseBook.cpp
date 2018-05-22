@@ -26,7 +26,10 @@ void ListWidgetItemBook::update(const BookBrief &book, bool star) {
 
 void ListWidgetItemBook::setUI() {
     QPixmap p(QSize(114, 160));
-    p.fill(Qt::black);
+    if (book.getCover().getSize())
+        p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
+    else
+        p.fill(Qt::black);
 
     QString str = QString::fromWCharArray(L"❤ ");
     X::xint cnt = book.getStarCount();
@@ -68,7 +71,8 @@ void ListWidgetBrowseBook::add(const BookBrief &book, bool star, int row) {
 
 void ListWidgetBrowseBook::update(const BookBrief &book, bool star, int row) {
     auto it = dynamic_cast<ListWidgetItemBook *> (item(row));
-    it->update(book, star);
+    if (it)
+        it->update(book, star);
 }
 
 void ListWidgetBrowseBook::setUI() {

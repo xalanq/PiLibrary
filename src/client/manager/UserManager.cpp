@@ -4,7 +4,7 @@
 #include <client/manager/UserManager.h>
 
 bool UserManager::isAdminister() const {
-    return user.getPriority() == X::ADMINISTER;
+    return user.getPriority() >= X::ADMINISTER;
 }
 
 UserManager::xll UserManager::getToken() const {

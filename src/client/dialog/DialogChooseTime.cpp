@@ -68,11 +68,9 @@ void DialogChooseTime::setUI() {
     X::xll m = maxKeepTime / 60 - d * 24 * 60 - h * 60;
 
     lblBeginTime->setText(tr("Begin: ") + QString::fromStdString(X::time_to_str(beginTime)));
-    lblEndTime->setText(tr("End: ") + QString::fromStdString(X::time_to_str(beginTime + maxKeepTime)));
     lblMaxKeepTime->setText(tr("Max keep time: ") + QString::number(d) + tr(" d ") + QString::number(h) + tr(" h ") + QString::number(m) + tr(" m "));
     lblWarning->setText(tr("Ensure you want to borrow this book. \nNote: you can not return this book yourself."));
     lblError->setText(tr("<font color='red'>Warning: Invalid Time</font>"));
-    lblError->hide();
     lblDay->setText("d");
     lblHour->setText("h");
     lblMinute->setText("m");
@@ -83,6 +81,7 @@ void DialogChooseTime::setUI() {
     spinDay->setValue(d);
     spinHour->setValue(h);
     spinMinute->setValue(m);
+    slotChanged(0);
 
     btns->addButton(QDialogButtonBox::Ok)->setText(tr("&Borrow"));
     btns->addButton(QDialogButtonBox::Cancel)->setText(tr("&Cancel"));

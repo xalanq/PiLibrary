@@ -23,29 +23,31 @@ public:
     typedef X::xint xint;
     typedef X::ptree ptree;
     typedef X::xstring xstring;
+    typedef X::ErrorCode ErrorCode;
+    typedef X::ActionCode ActionCode;
 
     BookManager(UserManager &userManager);
 
-    bool hasBookBrief(const xint &bookid) const;
     bool hasBook(const xint &bookid) const;
-
-    const BookBrief& getBookBrief(const xint &bookid) const;
-    void getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f, bool update = false);
+    bool hasBookBrief(const xint &bookid) const;
 
     const Book& getBook(const xint &bookid) const;
     void getBook(const xint &bookid, std::function<void(Book &)> f, bool update = false);
+
+    const BookBrief& getBookBrief(const xint &bookid) const;
+    void getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f, bool update = false);
 
     void updateStar(const xint &bookid, bool star);
 
     void installBrowseEvent(std::function<void(xint &)> f);
 
 public slots:
-    void slotGetBookBrief(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(BookBrief &)> f);
-    void slotGetBook(const X::ErrorCode &ec, const X::ptree &pt, std::function<void(Book &)> f);
+    void slotGetBook(const ErrorCode &ec, const ptree &pt, const xint &bookid, const Resource &cover);
+    void slotGetBookBrief(const ErrorCode &ec, const ptree &pt, const xint &bookid, const Resource &cover);
 
 private:
-    void _getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f);
-    void _getBook(const xint &bookid, std::function<void(Book &)> f);
+    void _getBook(const xint &bookid);
+    void _getBookBrief(const xint &bookid);
 
     void popThread();
     
@@ -55,8 +57,10 @@ private:
     UserManager &userManager;
     std::map<xint, Book> mapBook;
     std::map<xint, BookBrief> mapBookBrief;
-    std::queue<std::pair<xint, std::function<void(BookBrief &)>>> queueBookBrief {};
-    std::queue<std::pair<xint, std::function<void(Book &)>>> queueBook {};
+    std::queue<xint> queueBook;
+    std::queue<xint> queueBookBrief;
+    std::map<xint, std::vector<std::function<void(Book &)>>> mapBookFunction;
+    std::map<xint, std::vector<std::function<void(BookBrief &)>>> mapBookBriefFunction;
     int threadCounts {};
     int threadLimit {};
     std::vector<std::function<void(xint &)>> browseEvents {};

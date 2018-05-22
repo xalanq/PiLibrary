@@ -29,9 +29,11 @@ public:
 private:
     void read();
     void readHeader();
-    void readBody(xll token, xint length, ActionCode ac);
+    void readBody(const xll &token, const xint &length, const ActionCode &ac);
 
-    void write(const ErrorCode &ec, const ActionCode &ac = X::NoAction, const xll &token = 0, ptree pt = ptree());
+    void write(const ErrorCode &ec, const ActionCode &ac = X::NoAction, const xll &token = 0, ptree pt = ptree(), const char *data = 0, const size_t &dataSize = 0);
+
+    void saveFile(const ErrorCode &ec, const ActionCode &ac, const xll &token, const ptree &pt);
 
     void doLogin(const ptree &pt, const xll &token);
     void doRegister(const ptree &pt, const xll &token);
@@ -46,11 +48,14 @@ private:
     
     void doGetBook(ptree pt, const xll &token);
     void doGetBookBrief(ptree pt, const xll &token);
-    void doSetBook(const ptree &pt, const xll &token);
+    void doSetBook(ptree pt, const xll &token);
     
     void doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback);
     
     void doGetNewBookList(ptree pt, const xll &token);
+
+    void doGetBookCover(ptree pt, const xll &token);
+    void doSetBookCover(ptree pt, const xll &token);
 
     boost::asio::ip::tcp::socket socket;
     SocketInfo info;

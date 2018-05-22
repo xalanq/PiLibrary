@@ -15,9 +15,6 @@ public:
     xstring getPosition() const;
     Book& setPosition(const xstring &value);
     
-    Book& addResource(const xstring &name, const xstring &path);
-    Book& removeResource(const xstring &name);
-    
     Book& setFromPtree(const ptree &pt);
     static Book fromPtree(const ptree &pt); 
 
@@ -26,5 +23,4 @@ public:
 private:
     xint amount {};
     xstring position {};
-    std::map<xstring, xstring> resource {};
 };

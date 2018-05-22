@@ -13,7 +13,6 @@ class ListWidgetItemStarRecord : public QListWidgetItem {
 public:
     ListWidgetItemStarRecord(const BookBrief &book, const StarRecord &record);
     const BookBrief& getBook() const;
-    const StarRecord& getRecord() const;
     void update(const BookBrief &book, const StarRecord &record);
 
 private:

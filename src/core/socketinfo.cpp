@@ -68,20 +68,28 @@ void SocketInfo::encodeHeaderActionCode(const ActionCode &ac) {
     memcpy(buffer + 1 + sizeof(xll) + sizeof(xint), (const void *)(&ac), sizeof(ActionCode));
 }
 
-void SocketInfo::encodeBody(const xstring &str) {
-    memcpy(buffer + 1 + sizeof(xll) + sizeof(xint) + sizeof(ActionCode), str.c_str(), str.size());
+void SocketInfo::encodeBody(const char *data, const size_t &length) {
+    memcpy(buffer + 1 + sizeof(xll) + sizeof(xint) + sizeof(ActionCode), data, length);
 }
 
-void SocketInfo::encode(const xll &token, const xint &bodyLength, const ActionCode &ac, const xstring &str) {
+void SocketInfo::encodeFile(const xint &mainLength, const char *data, const size_t &length) {
+    memcpy(buffer + mainLength, data, length);
+}
+
+void SocketInfo::encodeMain(const xll &token, const xint &bodyLength, const ActionCode &ac, const char *data, const size_t &length) {
     encodeIndentifier();
     encodeHeaderToken(token);
     encodeHeaderLength(bodyLength);
     encodeHeaderActionCode(ac);
-    encodeBody(str);
+    encodeBody(data, length);
 }
 
-void SocketInfo::encode(const xll &token, const xint &bodyLength, const ActionCode &ac, const ptree &pt) {
-    encode(token, bodyLength, ac, encodePtree(pt));
+void SocketInfo::encodeMain(const xll &token, const xint &bodyLength, const ActionCode &ac, const xstring &str) {
+    encodeMain(token, bodyLength, ac, str.c_str(), str.size());
+}
+
+void SocketInfo::encodeMain(const xll &token, const xint &bodyLength, const ActionCode &ac, const ptree &pt) {
+    encodeMain(token, bodyLength, ac, encodePtree(pt));
 }
 
 SocketInfo::xstring SocketInfo::encodePtree(const ptree &pt, bool pretty) {
@@ -104,3 +112,6 @@ char *SocketInfo::getBuffer() {
     return buffer;
 }
 
+void SocketInfo::setBuffer(char *buffer) {
+    this->buffer = buffer;
+}

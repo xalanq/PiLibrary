@@ -49,7 +49,7 @@ void PageRecord::updateBrowse(const X::xint &bookid) {
 }
 
 void PageRecord::slotGetBrowseRecord(const std::vector<BrowseRecord> &records) {
-    int tot = records.size();
+    int tot = int(records.size());
     for (int i = 0; i < tot; ++i)
         listWidgetBrowseRecord->add(BookBrief::unknown(), records[i]);
     for (int i = 0; i < tot; ++i)
@@ -57,7 +57,7 @@ void PageRecord::slotGetBrowseRecord(const std::vector<BrowseRecord> &records) {
 }
 
 void PageRecord::slotGetKeepRecord(const std::vector<KeepRecord> &records) {
-    int tot = records.size();
+    int tot = int(records.size());
     for (int i = 0; i < tot; ++i) {
         listWidgetKeepRecord->add(BookBrief::unknown(), records[i]);
         userManager.borrowBook(records[i].getBookid(), records[i].getBeginTime(), records[i].getEndTime());
@@ -68,7 +68,7 @@ void PageRecord::slotGetKeepRecord(const std::vector<KeepRecord> &records) {
 }
 
 void PageRecord::slotGetBorrowRecord(const std::vector<BorrowRecord> &records) {
-    int tot = records.size();
+    int tot = int(records.size());
     for (int i = 0; i < tot; ++i)
         listWidgetBorrowRecord->add(BookBrief::unknown(), records[i]);
     for (int i = 0; i < tot; ++i)

@@ -84,6 +84,15 @@ BookBrief& BookBrief::setMaxKeepTime(const xll &value) {
     return *this;
 }
 
+Resource BookBrief::getCover() const {
+    return cover;
+}
+
+BookBrief& BookBrief::setCover(const Resource &cover) {
+    this->cover = cover;
+    return *this;
+}
+
 BookBrief& BookBrief::setFromPtree(const ptree &pt) {
     setBookid(pt.get<xint>("bookid", 0));
     setTitle(pt.get<xstring>("title", ""));

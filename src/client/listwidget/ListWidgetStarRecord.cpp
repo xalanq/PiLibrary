@@ -17,10 +17,6 @@ const BookBrief& ListWidgetItemStarRecord::getBook() const {
     return book;
 }
 
-const StarRecord& ListWidgetItemStarRecord::getRecord() const {
-    return record;
-}
-
 void ListWidgetItemStarRecord::update(const BookBrief &book, const StarRecord &record) {
     this->book = book;
     this->record = record;
@@ -29,10 +25,15 @@ void ListWidgetItemStarRecord::update(const BookBrief &book, const StarRecord &r
 
 void ListWidgetItemStarRecord::setUI() {
     QPixmap p(QSize(114, 160));
+    if (book.getCover().getSize())
+        p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
+    else
+        p.fill(Qt::black);
+
     QIcon icon;
-    p.fill(Qt::black);
     icon.addPixmap(p);
     setIcon(icon);
+
     setText(QObject::tr("Title: ") +
             QString::fromStdString(book.getTitle()) +
             QObject::tr("\nTime: ") +
@@ -51,7 +52,8 @@ void ListWidgetStarRecord::add(const BookBrief &book, const StarRecord &record, 
 
 void ListWidgetStarRecord::update(const BookBrief &book, const StarRecord &record, int row) {
     auto it = dynamic_cast<ListWidgetItemStarRecord *> (item(row));
-    it->update(book, record);
+    if (it)
+        it->update(book, record);
 }
 
 void ListWidgetStarRecord::setUI() {

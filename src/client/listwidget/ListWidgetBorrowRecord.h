@@ -13,7 +13,6 @@ class ListWidgetItemBorrowRecord : public QListWidgetItem {
 public:
     ListWidgetItemBorrowRecord(const BookBrief &book, const BorrowRecord &record);
     const BookBrief& getBook() const;
-    const BorrowRecord& getRecord() const;
     void update(const BookBrief &book, const BorrowRecord &record);
 
 private:
