@@ -60,6 +60,8 @@ namespace X {
             return "No Such Star";
         case NoPermission:
             return "No Permission";
+        case InvalidResource:
+            return "Invalid Resource";
         default:
             return "No Such Error";
         }
@@ -139,6 +141,14 @@ namespace X {
             return "Get New Book List";
         case GetNewBookListFeedback:
             return "Get New Book List Feedback";
+        case GetResource:
+            return "Get Resource";
+        case GetResourceFeedback:
+            return "Get Resource Feedback";
+        case SetResource:
+            return "Set Resource";
+        case SetResourceFeedback:
+            return "Set Resource Feedback";
         default:
             return "No Such Action";
         }

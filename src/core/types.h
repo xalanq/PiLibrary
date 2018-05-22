@@ -57,7 +57,9 @@ namespace X {
         AlreadyStar,
         NoSuchStar,
 
-        NoPermission
+        NoPermission,
+        
+        InvalidResource
     };
 
     enum ActionCode {
@@ -96,6 +98,10 @@ namespace X {
         GetKeepRecord,
         GetKeepRecordFeedback,
         GetNewBookList,
-        GetNewBookListFeedback
+        GetNewBookListFeedback,
+        GetResource,
+        GetResourceFeedback,
+        SetResource,
+        SetResourceFeedback
     };
 }

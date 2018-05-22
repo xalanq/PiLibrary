@@ -33,7 +33,7 @@ int main() {
             if (op == 1) {
                 // login
                 pt.put("username", "xalanq" + std::to_string(rand() % 10));
-                pt.put("password", "hash(123456)");
+                pt.put("password", "e472685f5f963edaaae04708972d6442e4b397e3");
                 cerr << "Login send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
                 X::tcp_sync_write(s, 0, X::Login, pt);
@@ -56,7 +56,7 @@ int main() {
                 // register
                 pt.put("username", "xalanq" + std::to_string(rand() % 10));
                 pt.put("nickname", "Alan Clarke");
-                pt.put("password", "hash(123456)");
+                pt.put("password", "e472685f5f963edaaae04708972d6442e4b397e3");
                 pt.put("email", "xalanq@gmail.com");
                 cerr << "Register send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 

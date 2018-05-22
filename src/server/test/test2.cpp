@@ -52,7 +52,7 @@ int main() {
         std::cout << "Login ID: ";
         std::cin >> id;
         pt.put("username", "xalanq" + std::to_string(id));
-        pt.put("password", "hash(123456)");
+        pt.put("password", "e472685f5f963edaaae04708972d6442e4b397e3");
         cerr << "Login send\n" << "token: " << token << "\n" << SocketInfo::encodePtree(pt, true) << '\n';
 
         X::tcp_sync_write(s, 0, X::Login, pt);
