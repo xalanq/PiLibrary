@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <client/core/Resource.h>
+#include <core/Resource.h>
 #include <core/types.h>
 
 class BookBrief {

@@ -108,9 +108,9 @@ void BookManager::slotGetBook(const ErrorCode &ec, const ptree &pt, const xint &
         try {
             auto &&book = Book::fromPtree(pt);
             book.setCover(cover);
-            mapBook[bookid] = book;
+            auto &b = mapBook[bookid] = book;
             for (auto f : v)
-                f(book);
+                f(b);
             v.clear();
             emitBrowseEvents(bookid);
         } catch (std::exception &) { }
@@ -129,9 +129,9 @@ void BookManager::slotGetBookBrief(const ErrorCode &ec, const ptree &pt, const x
         try {
             auto &&book = BookBrief::fromPtree(pt);
             book.setCover(cover);
-            mapBookBrief[bookid] = book;
+            auto &b = mapBookBrief[bookid] = book;
             for (auto f : v)
-                f(book);
+                f(b);
             v.clear();
         } catch (std::exception &) { }
     }

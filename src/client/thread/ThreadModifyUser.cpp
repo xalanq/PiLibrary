@@ -1,10 +1,10 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
-#include <client/thread/ThreadModify.h>
+#include <client/thread/ThreadModifyUser.h>
 #include <core/utils.h>
 
-ThreadModify::ThreadModify(const xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent) :
+ThreadModifyUser::ThreadModifyUser(const xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent) :
     token(token),
     nickname(nickname.toStdString()),
     email(email.toStdString()),
@@ -14,7 +14,7 @@ ThreadModify::ThreadModify(const xll &token, const QString &nickname, const QStr
 
 }
 
-void ThreadModify::run() {
+void ThreadModifyUser::run() {
     xll token = this->token;
     ptree pt;
     ActionCode ac = X::NoAction;
@@ -36,9 +36,6 @@ void ThreadModify::run() {
     } catch (std::exception &) {
         ec = X::ModifyFailed;
     }
-
-    if (ac != X::ModifyFeedback)
-        ec = X::ModifyFailed;
 
     emit done(ec);
 }

@@ -9,12 +9,12 @@
 #include <QSettings>
 #include <QVBoxLayout>
 
-#include <client/dialog/DialogModify.h>
-#include <client/thread/ThreadModify.h>
+#include <client/dialog/DialogModifyUser.h>
+#include <client/thread/ThreadModifyUser.h>
 #include <client/values.h>
 #include <core/utils.h>
 
-DialogModify::DialogModify(UserManager &userManager, QWidget *parent) : 
+DialogModifyUser::DialogModifyUser(UserManager &userManager, QWidget *parent) : 
     userManager(userManager),
     QDialog(parent) {
 
@@ -32,7 +32,7 @@ DialogModify::DialogModify(UserManager &userManager, QWidget *parent) :
     setConnection();
 }
 
-void DialogModify::slotModifyBegin() {
+void DialogModifyUser::slotModifyBegin() {
     labelMessage->hide();
 
     auto &&nickname = editNickname->text();
@@ -75,7 +75,7 @@ void DialogModify::slotModifyBegin() {
     labelMessage->show();
     labelMessage->setText("Modifying...");
 
-    auto thread = new ThreadModify(
+    auto thread = new ThreadModifyUser(
         userManager.getToken(),
         nickname,
         email,
@@ -83,12 +83,12 @@ void DialogModify::slotModifyBegin() {
         passwordNew.size() > 0 ? QCryptographicHash::hash(QString::fromStdString(X::saltBegin + passwordNew.toStdString() + X::saltEnd).toLocal8Bit(), QCryptographicHash::Sha1).toHex() : QString(),
         this
     );
-    connect(thread, &ThreadModify::done, this, &DialogModify::slotModifyEnd);
-    connect(thread, &ThreadModify::finished, thread, &QObject::deleteLater);
+    connect(thread, &ThreadModifyUser::done, this, &DialogModifyUser::slotModifyEnd);
+    connect(thread, &ThreadModifyUser::finished, thread, &QObject::deleteLater);
     thread->start();
 }
 
-void DialogModify::slotModifyEnd(const X::ErrorCode &ec) {
+void DialogModifyUser::slotModifyEnd(const X::ErrorCode &ec) {
     if (ec == X::NoError) {
         QMessageBox::information(
             this,
@@ -119,7 +119,7 @@ void DialogModify::slotModifyEnd(const X::ErrorCode &ec) {
     }
 }
 
-void DialogModify::setUI() {
+void DialogModifyUser::setUI() {
     setWindowTitle(tr("Modify"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -152,18 +152,18 @@ void DialogModify::setUI() {
     setLayout(layout);
 }
 
-void DialogModify::setConnection() {
+void DialogModifyUser::setConnection() {
     connect(
         btns->button(QDialogButtonBox::Cancel),
         &QPushButton::clicked,
         this,
-        &DialogModify::close
+        &DialogModifyUser::close
     );
 
     connect(
         btns->button(QDialogButtonBox::Ok),
         &QPushButton::clicked,
         this,
-        &DialogModify::slotModifyBegin
+        &DialogModifyUser::slotModifyBegin
     );
 }

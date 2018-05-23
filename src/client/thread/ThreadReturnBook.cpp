@@ -29,9 +29,5 @@ void ThreadReturnBook::run() {
         ec = X::UnknownError;
     }
 
-    if (ac != X::ReturnBookFeedback) {
-        ec = X::UnknownError;
-    }
-
     emit done(ec);
 }

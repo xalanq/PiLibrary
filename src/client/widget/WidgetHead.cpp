@@ -4,7 +4,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include <client/dialog/DialogModify.h>
+#include <client/dialog/DialogModifyUser.h>
 #include <client/widget/WidgetHead.h>
 
 WidgetHead::WidgetHead(UserManager &userManager, QWidget *parent) : 
@@ -23,7 +23,7 @@ WidgetHead::~WidgetHead() {
 }
 
 void WidgetHead::slotModify() {
-    DialogModify dialog(userManager, this);
+    DialogModifyUser dialog(userManager, this);
     if (dialog.exec() == QDialog::Accepted) {
         lblNickname->setText(tr("Hello, ") + QString::fromStdString(userManager.getUser().getNickname()));
     }

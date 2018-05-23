@@ -34,8 +34,5 @@ void ThreadSignUp::run() {
         ec = X::RegisterFailed;
     }
 
-    if (ac != X::RegisterFeedback)
-        ec = X::RegisterFailed;
-
     emit done(ec);
 }

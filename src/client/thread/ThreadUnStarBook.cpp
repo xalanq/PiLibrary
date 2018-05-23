@@ -29,9 +29,5 @@ void ThreadUnStarBook::run() {
         ec = X::UnknownError;
     }
 
-    if (ac != X::UnStarBookFeedback) {
-        ec = X::UnknownError;
-    }
-
     emit done(ec);
 }

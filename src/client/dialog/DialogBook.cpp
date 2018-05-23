@@ -10,20 +10,20 @@
 
 #include <client/dialog/DialogBook.h>
 #include <client/dialog/DialogChooseTime.h>
+#include <client/dialog/DialogModifyBook.h>
 #include <client/thread/ThreadBorrowBook.h>
 #include <client/thread/ThreadStarBook.h>
 #include <client/thread/ThreadUnStarBook.h>
 #include <core/utils.h>
 
-DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, X::xint bookid, QWidget *parent) :
+DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, const X::xint &bookid, QWidget *parent) :
     userManager(userManager),
     bookManager(bookManager),
-    bookid(bookid),
     QDialog(parent) {
 
-    strStar = tr("Star");
-    strUnStar = tr("Unstar");
-    strBorrow = tr("Borrow");
+    strStar = tr("&Star");
+    strUnStar = tr("Un&star");
+    strBorrow = tr("&Borrow");
     strBorrowed = tr("Borrowed");
 
     lblTitle = new QLabel(this);
@@ -33,13 +33,18 @@ DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, X::xi
 
     btnStar = new QPushButton(this);
     btnBorrow = new QPushButton(this);
+    btnModify = new QPushButton(this);
 
     setUI();
-    setConnection();
+
+    bookManager.getBook(bookid, std::bind(&DialogBook::setBook, this, std::placeholders::_1));
 }
 
 void DialogBook::setBook(const Book &book) {
+    bookPtr = &book;
+
     setWindowTitle(QString::fromStdString(book.getTitle()) + " - " + QString::fromStdString(book.getAuthor()));
+
     lblTitle->setText(tr("Title: ") + QString::fromStdString(book.getTitle()));
     lblAuthor->setText(tr("Author: ") + QString::fromStdString(book.getAuthor()));
     lblIntroduction->setText(tr("Introduction: ") + QString::fromStdString(book.getIntroduction()));
@@ -50,16 +55,51 @@ void DialogBook::setBook(const Book &book) {
     X::xll m = maxKeepTime / 60 - d * 24 * 60 - h * 60;
 
     lblMaxKeepTime->setText(tr("Max keep time: ") + QString::number(d) + tr(" d ") + QString::number(h) + tr(" h ") + QString::number(m) + tr(" m "));
+
+    auto bookid = book.getBookid();
+    if (bookid > 0) {
+        btnStar->setDisabled(false);
+        btnBorrow->setDisabled(false);
+
+        btnStar->setText(strStar);
+        if (userManager.isStaredBook(bookid))
+            btnStar->setText(strUnStar);
+
+        btnBorrow->setText(strBorrow);
+        if (userManager.isBorrowedBook(bookid)) {
+            btnBorrow->setText(strBorrowed);
+            btnBorrow->setDisabled(true);
+        }
+
+        if (userManager.getUser().getPriority() >= std::max(X::xint(X::ADMINISTER), book.getPriority())) {
+            btnModify->setDisabled(false);
+            btnModify->show();
+        }
+        connect(btnStar,
+                &QPushButton::clicked,
+                this,
+                &DialogBook::slotStarBegin);
+        connect(btnBorrow,
+                &QPushButton::clicked,
+                this,
+                &DialogBook::slotBorrowBegin);
+        if (btnModify->isEnabled()) {
+            connect(btnModify,
+                    &QPushButton::clicked,
+                    this,
+                    &DialogBook::slotModify);
+        }
+    }
 }
 
 void DialogBook::slotStarBegin() {
     if (btnStar->text() == strStar) {
-        auto thread = new ThreadStarBook(userManager.getToken(), bookid, this);
+        auto thread = new ThreadStarBook(userManager.getToken(), bookPtr->getBookid(), this);
         connect(thread, &ThreadStarBook::done, this, &DialogBook::slotStarEnd);
         connect(thread, &ThreadStarBook::finished, thread, &QObject::deleteLater);
         thread->start();
     } else {
-        auto thread = new ThreadUnStarBook(userManager.getToken(), bookid, this);
+        auto thread = new ThreadUnStarBook(userManager.getToken(), bookPtr->getBookid(), this);
         connect(thread, &ThreadUnStarBook::done, this, &DialogBook::slotStarEnd);
         connect(thread, &ThreadUnStarBook::finished, thread, &QObject::deleteLater);
         thread->start();
@@ -76,17 +116,18 @@ void DialogBook::slotStarEnd(const X::ErrorCode &ec) {
         return;
     }
     if (btnStar->text() == strStar) {
-        userManager.starBook(bookid);
+        userManager.starBook(bookPtr->getBookid());
         btnStar->setText(strUnStar);
     } else {
         try {
-            userManager.unStarBook(bookid);
+            userManager.unStarBook(bookPtr->getBookid());
         } catch (std::exception &) {}
         btnStar->setText(strStar);
     }
 }
 
 void DialogBook::slotBorrowBegin() {
+    auto bookid = bookPtr->getBookid();
     DialogChooseTime dialog(bookManager.getBookBrief(bookid).getMaxKeepTime(), this);
     if (dialog.exec() == QDialog::Accepted) {
         keepTime = dialog.getKeepTime();
@@ -108,25 +149,27 @@ void DialogBook::slotBorrowEnd(const X::ErrorCode &ec) {
     }
     auto beginTime = time(0);
     auto endTime = beginTime + keepTime;
-    userManager.borrowBook(bookid, beginTime, endTime);
+    userManager.borrowBook(bookPtr->getBookid(), beginTime, endTime);
     btnBorrow->setText(strBorrowed);
     btnBorrow->setDisabled(true);
+}
+
+void DialogBook::slotModify() {
+    DialogModifyBook dialog(userManager, *bookPtr, this);
+    dialog.exec();
 }
 
 void DialogBook::setUI() {
     setWindowTitle(tr("Book"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-    if (userManager.isStaredBook(bookid))
-        btnStar->setText(strUnStar);
-    else
-        btnStar->setText(strStar);
-
     btnBorrow->setText(strBorrow);
-    if (userManager.isBorrowedBook(bookid)) {
-        btnBorrow->setText(strBorrowed);
-        btnBorrow->setDisabled(true);
-    }
+    btnBorrow->setDisabled(true);
+    btnStar->setText(strStar);
+    btnStar->setDisabled(true);
+    btnModify->setText(tr("&Modify"));
+    btnModify->setDisabled(true);
+    btnModify->hide();
 
     auto layoutRight = new QVBoxLayout;
     layoutRight->addWidget(lblTitle);
@@ -138,25 +181,11 @@ void DialogBook::setUI() {
 
     layoutButton->addWidget(btnStar);
     layoutButton->addWidget(btnBorrow);
+    layoutButton->addWidget(btnModify);
 
     auto layout = new QVBoxLayout;
     layout->addLayout(layoutRight);
     layout->addLayout(layoutButton);
 
     setLayout(layout);
-
-    bookManager.getBook(bookid, std::bind(&DialogBook::setBook, this, std::placeholders::_1));
 }
-
-void DialogBook::setConnection() {
-    connect(btnStar,
-            &QPushButton::clicked,
-            this,
-            &DialogBook::slotStarBegin);
-    connect(btnBorrow,
-            &QPushButton::clicked,
-            this,
-            &DialogBook::slotBorrowBegin);
-
-}
-

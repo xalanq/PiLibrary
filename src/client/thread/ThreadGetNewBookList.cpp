@@ -30,10 +30,5 @@ void ThreadGetNewBookList::run() {
         pt = ptree();
     }
 
-    if (ac != X::GetNewBookListFeedback) {
-        ec = X::InvalidBook;
-        pt = ptree();
-    }
-
     emit done(ec, pt);
 }

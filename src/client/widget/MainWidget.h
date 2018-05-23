@@ -12,6 +12,7 @@
 #include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
 #include <client/page/PageAbout.h>
+#include <client/page/PageAddBook.h>
 #include <client/page/PageBrowse.h>
 #include <client/page/PageFavorite.h>
 #include <client/page/PageRecord.h>
@@ -49,6 +50,7 @@ private:
     QScrollArea *scrollArea;
 
     PageAbout *pageAbout;
+    PageAddBook *pageAddBook;
     PageBrowse *pageBrowse;
     PageFavorite *pageFavorite;
     PageRecord *pageRecord;

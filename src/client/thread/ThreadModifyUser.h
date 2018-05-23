@@ -7,11 +7,11 @@
 
 #include <client/thread/ThreadNetwork.h>
 
-class ThreadModify : public ThreadNetwork {
+class ThreadModifyUser : public ThreadNetwork {
     Q_OBJECT
 
 public:
-    ThreadModify(const xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent = Q_NULLPTR);
+    ThreadModifyUser(const xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent = Q_NULLPTR);
 
 signals:
     void done(const ErrorCode &ec);

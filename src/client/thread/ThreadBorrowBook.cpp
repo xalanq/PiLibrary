@@ -31,9 +31,5 @@ void ThreadBorrowBook::run() {
         ec = X::UnknownError;
     }
 
-    if (ac != X::BorrowBookFeedback) {
-        ec = X::UnknownError;
-    }
-
     emit done(ec);
 }

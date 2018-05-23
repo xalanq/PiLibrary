@@ -26,13 +26,8 @@ void ThreadLogin::run() {
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
         ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &) {
-        ec = X::LoginFailed;
-        token = 0;
-        pt = ptree();
-    }
-
-    if (ac != X::LoginFeedback) {
+    } catch (std::exception &e) {
+        auto str = e.what();
         ec = X::LoginFailed;
         token = 0;
         pt = ptree();

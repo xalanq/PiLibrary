@@ -4,7 +4,6 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <server/SocketWrapper.h>
-#include <core/resource.h>
 #include <core/utils.h>
 
 #define _from(func) cerr << "(" << #func << ") from " << socket.remote_endpoint().address() << " : " 
@@ -29,8 +28,8 @@ void SocketWrapper::stop() {
 }
 
 void SocketWrapper::read() {
-    info.setSize(SocketInfo::HEADER_SIZE);
     auto self(shared_from_this());
+    info.setSize(SocketInfo::HEADER_SIZE);
     boost::asio::async_read(
         socket,
         boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
@@ -54,8 +53,9 @@ void SocketWrapper::read() {
 }
 
 void SocketWrapper::readHeader() {
-    info.setSize(SocketInfo::HEADER_SIZE);
     auto self(shared_from_this());
+
+    info.setSize(SocketInfo::HEADER_SIZE);
     boost::asio::async_read(
         socket,
         boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
@@ -81,8 +81,9 @@ void SocketWrapper::readHeader() {
 }
 
 void SocketWrapper::readBody(const xll &token, const xint &length, const ActionCode &ac) {
-    info.setSize(length);
     auto self(shared_from_this());
+
+    info.setSize(length);
     boost::asio::async_read(
         socket,
         boost::asio::buffer(info.getBuffer(), length),
@@ -145,21 +146,23 @@ void SocketWrapper::readBody(const xll &token, const xint &length, const ActionC
     );
 }
 
-void SocketWrapper::write(const ErrorCode &ec, const ActionCode &ac, const xll &token, ptree pt, const char *data, const size_t &dataSize) {
-    pt.put("error_code", ec);
-    if (dataSize)
-        pt.put("fileSize", dataSize);
-
+void SocketWrapper::write(const ErrorCode &ec, const ActionCode &ac, const xll &token, ptree pt, const Resource &file) {
     auto self(shared_from_this());
+
+    auto fileSize = file.getSize();
+    pt.put("error_code", ec);
+    if (fileSize)
+        pt.put("fileSize", fileSize);
+
     xstring str = SocketInfo::encodePtree(pt);
-    auto bodySize = int(str.size());
+    auto bodySize = xint(str.size());
     auto mainSize = SocketInfo::HEADER_SIZE + 1 + bodySize;
-    auto size = mainSize + dataSize;
+    auto size = mainSize + fileSize;
 
     info.setSize(size);
     info.encodeMain(token, bodySize, ac, str);
-    if (dataSize)
-        info.encodeFile(mainSize, data, dataSize);
+    if (fileSize)
+        info.encodeFile(mainSize, file.getData(), fileSize);
 
     _to(write) << "sending data, size = " << size << '\n';
 
@@ -205,7 +208,7 @@ void SocketWrapper::saveFile(const ErrorCode &ec, const ActionCode &ac, const xl
             }
             auto e = X::NoError;
             auto path = pt.get<xstring>("resourcePath");
-            if (R::add(path, info.getBuffer(), size) && userManager.setResource(pt)) {
+            if (Resource::add(path, Resource(info.getBuffer(), size)) && userManager.setResource(pt)) {
                 _from(saveFile) << "succeed to save file to " + path << '\n';
             } else {
                 _from(saveFile) << "failed to save file to " + path << '\n';
@@ -559,8 +562,7 @@ void SocketWrapper::doGetNewBookList(ptree pt, const xll &token) {
 void SocketWrapper::doGetBookCover(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
-    char *data = 0;
-    size_t dataSize = 0;
+    Resource file;
     if (token == 0) {
         _from(doGetBookCover) << "token == 0\n";
         ec = X::NotLogin;
@@ -575,15 +577,16 @@ void SocketWrapper::doGetBookCover(ptree pt, const xll &token) {
             pt.put("resourceName", "bookCover");
             _from(doGetBookCover);
             auto path = userManager.getResource(pt);
-            data = R::get(path, dataSize);
-            if (!dataSize) {
+            file = Resource::get(path);
+            if (!file.getSize()) {
                 _from(doGetBookCover) << "failed to get the book cover\n";
                 ec = X::NoSuchResource;
             } else
                 _from(doGetBookCover) << "succeed to get the book cover\n";
         }
     }
-    write(ec, X::GetBookCoverFeedback, tk, {}, data, dataSize);
+    write(ec, X::GetBookCoverFeedback, tk, {}, file);
+    file.clean();
 }
 
 void SocketWrapper::doSetBookCover(ptree pt, const xll &token) {

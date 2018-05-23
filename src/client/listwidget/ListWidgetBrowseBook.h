@@ -31,8 +31,6 @@ public:
     void add(const BookBrief &book, bool star, int row = 0);
     void update(const BookBrief &book, bool star, int row);
 
-public slots:
-
 private:
     void setUI();
 };

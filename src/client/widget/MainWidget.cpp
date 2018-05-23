@@ -41,7 +41,7 @@ void MainWidget::setEvents() {
         userManager.installStarEvent(std::bind(&BookManager::updateStar, &bookManager, std::placeholders::_1, std::placeholders::_2));
         userManager.installStarEvent(std::bind(&PageBrowse::updateStar, pageBrowse, std::placeholders::_1, std::placeholders::_2));
         userManager.installStarEvent(std::bind(&PageFavorite::updateStar, pageFavorite, std::placeholders::_1, std::placeholders::_2));
-        userManager.installBorrowEvent(std::bind(&PageRecord::updateBorrow, pageRecord, std::placeholders::_1, std::placeholders::_2));
+        userManager.installBorrowEvent(std::bind(&PageRecord::updateBorrow, pageRecord, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         bookManager.installBrowseEvent(std::bind(&PageRecord::updateBrowse, pageRecord, std::placeholders::_1));
     }
 }
@@ -114,6 +114,8 @@ void MainWidget::initListWidget() {
     items.append(tr("Favorite"));
     items.append(tr("Record"));
     if (userManager.isAdminister())
+        items.append(tr("Add Book"));
+    if (userManager.isAdminister())
         items.append(tr("Return"));
     items.append(tr("Setting"));
     items.append(tr("About"));
@@ -126,6 +128,8 @@ void MainWidget::initPageWidget() {
     pageWidget->addWidget(pageBrowse = new PageBrowse(userManager, bookManager, this));
     pageWidget->addWidget(pageFavorite = new PageFavorite(userManager, bookManager, this));
     pageWidget->addWidget(pageRecord = new PageRecord(userManager, bookManager, this));
+    if (userManager.isAdminister())
+        pageWidget->addWidget(pageAddBook = new PageAddBook(userManager, this));
     if (userManager.isAdminister())
         pageWidget->addWidget(pageReturn = new PageReturn(userManager, bookManager, this));
     pageWidget->addWidget(pageSetting = new PageSetting(userManager, this));

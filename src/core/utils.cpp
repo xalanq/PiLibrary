@@ -183,7 +183,7 @@ namespace X {
     }
 
     xstring time_to_str(const xll &time) {
-        X::xstring str = asctime(localtime(&time));
+        xstring str = asctime(localtime(&time));
         str.pop_back();
         return str;
     }
@@ -219,10 +219,11 @@ namespace X {
         info.decodeBody(length, pt);
     }
 
-    char* tcp_sync_read_with_file(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt, size_t &size) {
+    Resource tcp_sync_read_with_file(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt) {
         tcp_sync_read(socket, token, ac, pt);
-        char *buffer = nullptr;
-        size = pt.get<size_t>("fileSize", 0);
+        Resource file;
+        auto size = pt.get<size_t>("fileSize", 0);
+        
         if (size) {
             SocketInfo info;
             info.setSize(size);
@@ -233,23 +234,45 @@ namespace X {
                 boost::asio::transfer_exactly(size)
             );
             
-            buffer = info.getBuffer();
+            file.setData(info.getBuffer()).setSize(size);
             info.setBuffer(nullptr);
         }
-        return buffer;
+        return file;
     }
 
     void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const ptree &pt) {
         SocketInfo info;
         auto str = SocketInfo::encodePtree(pt);
-        auto size = SocketInfo::HEADER_SIZE + 1 + str.size();
+        auto bodySize = xint(str.size());
+        auto mainSize = SocketInfo::HEADER_SIZE + 1 + bodySize;
 
-        info.setSize(size);
-        info.encodeMain(token, static_cast<xint> (str.size()), ac, str);
+        info.setSize(mainSize);
+        info.encodeMain(token, bodySize, ac, str);
 
         boost::asio::write(
             socket,
-            boost::asio::buffer(info.getBuffer(), size)
+            boost::asio::buffer(info.getBuffer(), mainSize)
         );
     }
+
+    void tcp_sync_write_with_file(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const ptree &pt, const Resource &file) {
+        auto fileSize = file.getSize();
+        if (fileSize) {
+            SocketInfo info;
+            auto str = SocketInfo::encodePtree(pt);
+            auto bodySize = xint(str.size());
+            auto mainSize = SocketInfo::HEADER_SIZE + 1 + bodySize;
+            auto size = mainSize + fileSize;
+
+            info.setSize(size);
+            info.encodeMain(token, bodySize, ac, str);
+            info.encodeFile(mainSize, file.getData(), fileSize);
+
+            boost::asio::write(
+                socket,
+                boost::asio::buffer(info.getBuffer(), size)
+            );
+        }
+    }
+
 }

@@ -26,10 +26,7 @@ PageRecord::PageRecord(UserManager &userManager, BookManager &bookManager, QWidg
     setConnection();
 }
 
-void PageRecord::updateBorrow(const X::xint &bookid, const X::xll &keepTime) {
-    auto beginTime = time(0);
-    auto endTime = beginTime + keepTime;
-
+void PageRecord::updateBorrow(const X::xint &bookid, const X::xll &beginTime, const X::xll &endTime) {
     KeepRecord record1;
     record1.setBookid(bookid);
     record1.setTime(beginTime, endTime);

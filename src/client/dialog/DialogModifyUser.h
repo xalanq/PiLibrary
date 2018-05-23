@@ -9,14 +9,14 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include <client/manager/usermanager.h>
+#include <client/manager/UserManager.h>
 #include <core/types.h>
 
-class DialogModify : public QDialog {
+class DialogModifyUser : public QDialog {
     Q_OBJECT
 
 public:
-    DialogModify(UserManager &userManager, QWidget *parent);
+    DialogModifyUser(UserManager &userManager, QWidget *parent);
 
 public slots:
     void slotModifyBegin();

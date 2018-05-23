@@ -6,6 +6,7 @@
 #include <boost/asio.hpp>
 
 #include <core/SocketInfo.h>
+#include <core/Resource.h>
 #include <core/values.h>
 #include <server/SessionManager.h>
 #include <server/UserManager.h>
@@ -31,7 +32,7 @@ private:
     void readHeader();
     void readBody(const xll &token, const xint &length, const ActionCode &ac);
 
-    void write(const ErrorCode &ec, const ActionCode &ac = X::NoAction, const xll &token = 0, ptree pt = ptree(), const char *data = 0, const size_t &dataSize = 0);
+    void write(const ErrorCode &ec, const ActionCode &ac = X::NoAction, const xll &token = 0, ptree pt = ptree(), const Resource &file = Resource());
 
     void saveFile(const ErrorCode &ec, const ActionCode &ac, const xll &token, const ptree &pt);
 

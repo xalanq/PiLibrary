@@ -9,6 +9,7 @@ ThreadGetBook::ThreadGetBook(const xll &token, const xint &bookid, bool brief, Q
     bookid(bookid),
     brief(brief),
     ThreadNetwork(parent) {
+        
     qRegisterMetaType<Resource>("Resource");
 }
 
@@ -33,12 +34,7 @@ void ThreadGetBook::run() {
             ActionCode a;
             X::tcp_sync_write(socket, token, X::GetBookCover, p);
             p = ptree();
-            char *buffer = nullptr;
-            size_t size = 0;
-            buffer = X::tcp_sync_read_with_file(socket, token, a, p, size);
-            if (size && a == X::GetBookCoverFeedback)
-                cover.setData(buffer)
-                     .setSize(size);
+            cover = X::tcp_sync_read_with_file(socket, token, a, p);
         }
         socket.close();
     } catch (std::exception &e) {
@@ -46,14 +42,6 @@ void ThreadGetBook::run() {
         ec = X::InvalidBook;
         pt = ptree();
         cover.clean();
-        cover = Resource();
-    }
-
-    if (ac != (brief ? X::GetBookBriefFeedback : X::GetBookFeedback)) {
-        ec = X::InvalidBook;
-        pt = ptree();
-        cover.clean();
-        cover = Resource();
     }
 
     emit done(ec, pt, cover);

@@ -21,7 +21,7 @@ class PageRecord : public QWidget {
 
 public:
     PageRecord(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
-    void updateBorrow(const X::xint &bookid, const X::xll &keepTime);
+    void updateBorrow(const X::xint &bookid, const X::xll &beginTime, const X::xll &endTime);
     void updateBrowse(const X::xint &bookid);
 
 signals:

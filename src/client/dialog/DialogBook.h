@@ -19,7 +19,7 @@ class DialogBook : public QDialog {
     Q_OBJECT
 
 public:
-    DialogBook(UserManager &userManager, BookManager &bookManager, X::xint bookid, QWidget *parent = Q_NULLPTR);
+    DialogBook(UserManager &userManager, BookManager &bookManager, const X::xint &bookid, QWidget *parent = Q_NULLPTR);
     void setBook(const Book &book);
 
 public slots:
@@ -27,10 +27,10 @@ public slots:
     void slotStarEnd(const X::ErrorCode &ec);
     void slotBorrowBegin();
     void slotBorrowEnd(const X::ErrorCode &ec);
+    void slotModify();
 
 private:
     void setUI();
-    void setConnection();
 
 private:
     QString strStar;
@@ -40,7 +40,7 @@ private:
 
     UserManager &userManager;
     BookManager &bookManager;
-    X::xint bookid;
+    Book const * bookPtr;
     X::xll keepTime {};
 
     QLabel *lblTitle;
@@ -50,4 +50,5 @@ private:
 
     QPushButton *btnStar;
     QPushButton *btnBorrow;
+    QPushButton *btnModify;
 };

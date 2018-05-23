@@ -2,7 +2,6 @@
 // License: LGPL v3.0
 
 #include <client/core/Book.h>
-#include <core/resource.h>
 
 Book::xint Book::getAmount() const {
     return amount;

@@ -5,6 +5,7 @@
 
 #include <boost/asio.hpp>
 
+#include <core/Resource.h>
 #include <core/types.h>
 
 namespace X {
@@ -19,6 +20,7 @@ namespace X {
     extern xstring time_to_str(const xll &time);
 
     extern void tcp_sync_read(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt);
-    extern char* tcp_sync_read_with_file(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt, size_t &size);
+    extern Resource tcp_sync_read_with_file(boost::asio::ip::tcp::socket &socket, xll &token, ActionCode &ac, ptree &pt);
     extern void tcp_sync_write(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const ptree &pt);
+    extern void tcp_sync_write_with_file(boost::asio::ip::tcp::socket &socket, const xll &token, const ActionCode &ac, const ptree &pt, const Resource &file);
 }
