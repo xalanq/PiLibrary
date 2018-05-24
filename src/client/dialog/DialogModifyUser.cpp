@@ -18,6 +18,9 @@ DialogModifyUser::DialogModifyUser(UserManager &userManager, QWidget *parent) :
     userManager(userManager),
     QDialog(parent) {
 
+    lblUserid = new QLabel(this);
+    lblPriority = new QLabel(this);
+
     editNickname = new QLineEdit(this);
     editEmail = new QLineEdit(this);
     editPasswordOld = new QLineEdit(this);
@@ -123,6 +126,17 @@ void DialogModifyUser::setUI() {
     setWindowTitle(tr("Modify"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
+    lblUserid->setText(tr("Userid: ") + QString::number(userManager.getUser().getUserid()));
+    auto priority = userManager.getUser().getPriority();
+    QString priorityStr;
+    if (priority == X::USER)
+        priorityStr = tr("User");
+    else if (priority == X::ADMINISTER)
+        priorityStr = tr("Administer");
+    else if (priority == X::SUPER_ADMINISTER)
+        priorityStr = tr("Super Administer");
+    lblPriority->setText(tr("Priority: ") + priorityStr);
+
     editNickname->setPlaceholderText(tr("Nickname"));
     editEmail->setPlaceholderText(tr("Email"));
     editPasswordOld->setPlaceholderText(tr("Old Password"));
@@ -141,6 +155,9 @@ void DialogModifyUser::setUI() {
     btns->addButton(QDialogButtonBox::Cancel)->setText(tr("&Cancel"));
 
     QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(lblUserid);
+    layout->addWidget(lblPriority);
+
     layout->addWidget(editNickname);
     layout->addWidget(editEmail);
     layout->addWidget(editPasswordOld);

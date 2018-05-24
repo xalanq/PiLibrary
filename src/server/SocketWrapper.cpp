@@ -240,7 +240,6 @@ void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
             auto userid = p.get<xint>("userid", 0);
             auto priority = p.get<xint>("priority", 0);
             auto loginTime = Session::getNowTime();
-            _from(doLogin) << "token: " << tk << ", userid: " << userid << ", loginTime: " << loginTime << '\n';
             if (sessionManager.add(tk, userid, loginTime + sessionManager.getDefaultAlive(), priority, true)) {
                 _from(doLogin) << "succeed to login\n";
                 tr = std::move(p);
@@ -248,6 +247,7 @@ void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
                 t.put<xint>("userid", userid);
                 t.put<xstring>("ip", socket.remote_endpoint().address().to_string());
                 t.put<xll>("time", loginTime);
+                _from(doLogin);
                 userManager.recordLogin(t);
             } else {
                 _from(doLogin) << "fail to login\n";

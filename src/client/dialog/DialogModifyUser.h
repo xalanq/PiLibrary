@@ -29,6 +29,9 @@ private:
 private:
     UserManager &userManager;
 
+    QLabel *lblUserid;
+    QLabel *lblPriority;
+
     QLineEdit *editNickname;
     QLineEdit *editEmail;
     QLineEdit *editPasswordOld;
