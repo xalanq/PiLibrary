@@ -56,7 +56,7 @@ void PageFavorite::slotItemClicked(QListWidgetItem *item) {
 }
 
 void PageFavorite::refresh() {
-    userManager.clearStarBook();
+    userManager.clearStar();
     listWidgetStarRecord->clear();
     auto obj = new GetStarRecords(userManager.getToken(), bookManager, 2147483647, 0);
     connect(obj, &GetStarRecords::done, this, &PageFavorite::slotGetStarRecord);

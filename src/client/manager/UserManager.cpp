@@ -37,8 +37,9 @@ bool UserManager::isStaredBook(const xint &bookid) {
     return starBooks.find(bookid) != starBooks.end();
 }
 
-void UserManager::clearStarBook() {
+void UserManager::clearStar() {
     starBooks.clear();
+    starEvents.clear();
 }
 
 void UserManager::installStarEvent(std::function<void(xint &, bool)> f) {
@@ -60,6 +61,13 @@ void UserManager::clearBorrowBook() {
 
 void UserManager::installBorrowEvent(std::function<void(xint &, xll &, xll &)> f) {
     borrowEvents.push_back(f);
+}
+
+void UserManager::refresh() {
+    starBooks.clear();
+    starEvents.clear();
+    borrowBooks.clear();
+    borrowEvents.clear();
 }
 
 void UserManager::emitStarEvents(const xint &bookid, bool star) {

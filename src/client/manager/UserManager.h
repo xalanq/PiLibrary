@@ -28,13 +28,15 @@ public:
     void starBook(const xint &bookid);
     void unStarBook(const xint &bookid);
     bool isStaredBook(const xint &bookid);
-    void clearStarBook();
+    void clearStar();
     void installStarEvent(std::function<void(xint &, bool)> f);
 
     void borrowBook(const xint &bookid, const xll &beginTime, const xll &endTime);
     bool isBorrowedBook(const xint &bookid);
     void clearBorrowBook();
     void installBorrowEvent(std::function<void(xint &, xll &, xll &)> f);
+
+    void refresh();
 
 private:
     void emitStarEvents(const xint &bookid, bool star);

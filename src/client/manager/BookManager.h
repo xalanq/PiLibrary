@@ -32,18 +32,26 @@ public:
     bool hasBookBrief(const xint &bookid) const;
 
     const Book& getBook(const xint &bookid) const;
-    void getBook(const xint &bookid, std::function<void(Book &)> f, bool update = false);
+    void getBook(const xint &bookid, std::function<void(Book &)> f);
 
     const BookBrief& getBookBrief(const xint &bookid) const;
-    void getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f, bool update = false);
+    void getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f);
 
     void updateStar(const xint &bookid, bool star);
 
+    void addBook(const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f);
+
+    void updateBook(const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f);
+
     void installBrowseEvent(std::function<void(xint &)> f);
+
+    void refresh();
 
 public slots:
     void slotGetBook(const ErrorCode &ec, const ptree &pt, const xint &bookid, const Resource &cover);
     void slotGetBookBrief(const ErrorCode &ec, const ptree &pt, const xint &bookid, const Resource &cover);
+    void slotAddBook(const ErrorCode &ec, std::function<void(ErrorCode &)> f);
+    void slotUpdateBook(const ErrorCode &ec, const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f);
 
 private:
     void _getBook(const xint &bookid);
@@ -57,10 +65,10 @@ private:
     UserManager &userManager;
     std::map<xint, Book> mapBook;
     std::map<xint, BookBrief> mapBookBrief;
-    std::queue<xint> queueBook;
-    std::queue<xint> queueBookBrief;
-    std::map<xint, std::vector<std::function<void(Book &)>>> mapBookFunction;
-    std::map<xint, std::vector<std::function<void(BookBrief &)>>> mapBookBriefFunction;
+    std::queue<xint> queueGetBook;
+    std::queue<xint> queueGetBookBrief;
+    std::map<xint, std::vector<std::function<void(Book &)>>> mapGetBookFunction;
+    std::map<xint, std::vector<std::function<void(BookBrief &)>>> mapGetBookBriefFunction;
     int threadCounts {};
     int threadLimit {};
     std::vector<std::function<void(xint &)>> browseEvents {};

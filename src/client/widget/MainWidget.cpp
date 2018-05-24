@@ -36,8 +36,7 @@ void MainWidget::saveSetting() {
 }
 
 void MainWidget::setEvents() {
-    static int count = 0;
-    if (++count == 3) {
+    if (++eventCount == 3) {
         userManager.installStarEvent(std::bind(&BookManager::updateStar, &bookManager, std::placeholders::_1, std::placeholders::_2));
         userManager.installStarEvent(std::bind(&PageBrowse::updateStar, pageBrowse, std::placeholders::_1, std::placeholders::_2));
         userManager.installStarEvent(std::bind(&PageFavorite::updateStar, pageFavorite, std::placeholders::_1, std::placeholders::_2));
@@ -46,7 +45,12 @@ void MainWidget::setEvents() {
     }
 }
 
-void MainWidget::refresh() {
+void MainWidget::refresh(bool force) {
+    if (force) {
+        userManager.refresh();
+        bookManager.refresh();
+    }
+    eventCount = 0;
     pageFavorite->refresh();
     pageRecord->refresh();
 }
@@ -83,16 +87,16 @@ void MainWidget::setConnection() {
     );
 
     connect(
-        pageBrowse,
-        &PageBrowse::signalReady,
-        this,
-        &MainWidget::setEvents
-    );
-    connect(
         pageFavorite,
         &PageFavorite::signalReady,
         pageBrowse,
         &PageBrowse::refresh
+    );
+    connect(
+        pageBrowse,
+        &PageBrowse::signalReady,
+        this,
+        &MainWidget::setEvents
     );
     connect(
         pageFavorite,
@@ -106,6 +110,9 @@ void MainWidget::setConnection() {
         this,
         &MainWidget::setEvents
     );
+
+    connect(pageSetting, &PageSetting::signalRefresh, this, std::bind(&MainWidget::refresh, this, true));
+    connect(pageBrowse, &PageBrowse::signalModify, this, std::bind(&MainWidget::refresh, this, false));
 }
 
 void MainWidget::initListWidget() {
@@ -129,7 +136,7 @@ void MainWidget::initPageWidget() {
     pageWidget->addWidget(pageFavorite = new PageFavorite(userManager, bookManager, this));
     pageWidget->addWidget(pageRecord = new PageRecord(userManager, bookManager, this));
     if (userManager.isAdminister())
-        pageWidget->addWidget(pageAddBook = new PageAddBook(userManager, this));
+        pageWidget->addWidget(pageAddBook = new PageAddBook(userManager, bookManager, this));
     if (userManager.isAdminister())
         pageWidget->addWidget(pageReturn = new PageReturn(userManager, bookManager, this));
     pageWidget->addWidget(pageSetting = new PageSetting(userManager, this));

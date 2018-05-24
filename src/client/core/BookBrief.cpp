@@ -112,6 +112,38 @@ BookBrief BookBrief::fromPtree(const ptree &pt) {
     return std::move(book);
 }
 
+BookBrief& BookBrief::updateFromPtree(const ptree &pt) {
+    auto bookid = pt.get_optional<xint>("bookid");
+    auto title = pt.get_optional<xstring>("title");
+    auto author = pt.get_optional<xstring>("author");
+    auto ISBN = pt.get_optional<xstring>("ISBN");
+    auto publisher = pt.get_optional<xstring>("publisher");
+    auto introduction = pt.get_optional<xstring>("introduction");
+    auto priority = pt.get_optional<xint>("priority");
+    auto maxKeepTime = pt.get_optional<xll>("maxKeepTime");
+    auto starCount = pt.get_optional<xint>("starCount");
+
+    if (bookid)
+        setBookid(*bookid);
+    if (title)
+        setTitle(*title);
+    if (author)
+        setAuthor(*author);
+    if (ISBN)
+        setISBN(*ISBN);
+    if (publisher)
+        setPublisher(*publisher);
+    if (introduction)
+        setIntroduction(*introduction);
+    if (priority)
+        setPriority(*priority);
+    if (maxKeepTime)
+        setMaxKeepTime(*maxKeepTime);
+    if (starCount)
+        setStarCount(*starCount);
+    return *this;
+}
+
 const BookBrief& BookBrief::unknown() {
     static BookBrief book;
     static bool init {false};

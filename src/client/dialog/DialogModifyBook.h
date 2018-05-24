@@ -12,10 +12,18 @@ class WidgetModifyBook : public WidgetSetBook {
     Q_OBJECT
 
 public:
-    WidgetModifyBook(UserManager &userManager, const Book &book, QWidget *parent = Q_NULLPTR);
+    WidgetModifyBook(UserManager &userManager, BookManager &bookManager, const Book &book, QWidget *parent = Q_NULLPTR);
+
+signals:
+    void signalModify();
+   
+public slots:
+    void slotModify();
+    void slotModifyEnd(const X::ErrorCode &ec);
 
 private:
     void setUI();
+    void setConnection();
 
 private:
     const Book &book;
@@ -25,15 +33,15 @@ class DialogModifyBook : public QDialog {
     Q_OBJECT
 
 public:
-    DialogModifyBook(UserManager &userManager, const Book &book, QWidget *parent = Q_NULLPTR);
+    DialogModifyBook(UserManager &userManager, BookManager &bookManager, const Book &book, QWidget *parent = Q_NULLPTR);
+
+signals:
+    void signalModify();
 
 private:
     void setUI();
     void setConnection();
 
 private:
-    UserManager &userManager;
-    const Book &book;
-
     WidgetModifyBook *w;
 };

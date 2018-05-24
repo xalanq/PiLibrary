@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <sys/stat.h>
 
+#include <boost/filesystem.hpp>
+
 #include <core/resource.h>
 
 Resource::Resource(char *data, const size_t &size) :
@@ -72,6 +74,9 @@ size_t Resource::fileSize(const xstring &path) {
 }
 
 bool Resource::add(const xstring &path, const Resource &file) {
+    boost::filesystem::path p(path);
+    if (!boost::filesystem::create_directories(p.parent_path()))
+        return false;
     FILE *fio = fopen(path.c_str(), "wb");
     if (fio == NULL)
         return false;

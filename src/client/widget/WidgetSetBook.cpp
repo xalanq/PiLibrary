@@ -1,20 +1,22 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <QDir>
 #include <QFrame>
 
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QIntValidator>
-#include <QMessageBox>
+#include <QSettings>
 #include <QVBoxLayout>
 
-#include <client/thread/ThreadSetBook.h>
 #include <client/widget/WidgetSetBook.h>
 #include <client/values.h>
-#include <core/utils.h>
+#include <core/Resource.h>
 
-WidgetSetBook::WidgetSetBook(UserManager &userManager, QWidget *parent) :
+WidgetSetBook::WidgetSetBook(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     userManager(userManager),
+    bookManager(bookManager),
     QWidget(parent) {
 
     lblCover = new QLabel(this);
@@ -55,7 +57,7 @@ WidgetSetBook::WidgetSetBook(UserManager &userManager, QWidget *parent) :
     setConnection();
 }
 
-void WidgetSetBook::slotAdd() {
+void WidgetSetBook::getData() {
     lblMessage->hide();
     auto keepTime = 0;
     (keepTime *= 0) += spinDay->value();
@@ -76,7 +78,7 @@ void WidgetSetBook::slotAdd() {
         return;
     }
 
-    X::ptree pt;
+    pt.clear();
     pt.put("bookid", bookid);
     if (editTitle->isModified())
         pt.put("title", editTitle->text().toStdString());
@@ -95,20 +97,27 @@ void WidgetSetBook::slotAdd() {
         pt.put("position", editPosition->text().toStdString());
     if (keepTime != beforeKeepTime)
         pt.put("maxKeepTime", keepTime);
+}
 
-    auto thread = new ThreadSetBook(userManager.getToken(), pt, cover, this);
-    connect(thread, &ThreadSetBook::done, this, 
-            [this](const X::ErrorCode &ec) {
-                if (ec == X::NoError) {
-                    QMessageBox::information(this, tr("Result"), tr("Successfully!"));
-                } else {
-                    lblMessage->setText(QString::fromStdString(X::what(ec)));
-                    lblMessage->show();
-                }
-            }
-    );
-    connect(thread, &ThreadSetBook::finished, thread, &QObject::deleteLater);
-    thread->start();
+void WidgetSetBook::slotUpload() {
+    QSettings setting;
+    setting.beginGroup("FileDialog");
+    QString defaultPath;
+    static bool first = true;
+    if (first) {
+        defaultPath = setting.value("defaultPath", QDir::homePath()).toString();
+        first = false;
+    }
+    auto path = QFileDialog::getOpenFileName(this, tr("Upload a book cover"), defaultPath, "Images (*.png *.jpg)");
+    if (!path.isNull())
+        setting.setValue("defaultPath", QFileInfo(path).absolutePath());
+    setting.endGroup();
+    cover = Resource::get(path.toStdString());
+    if (cover.getSize()) {
+        QPixmap p(QSize(114, 160));
+        p.loadFromData((uchar *)cover.getData(), cover.getSize());
+        lblCover->setPixmap(p.scaled(QSize(114, 160)));
+    }
 }
 
 void WidgetSetBook::setUI() {
@@ -118,6 +127,8 @@ void WidgetSetBook::setUI() {
     lblCover->setAlignment(Qt::AlignCenter);
     lblCover->setContentsMargins(0, 0, 0, 0);
     lblCover->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    lblCover->setStyleSheet("border: 1px solid black");
+    lblCover->setFixedSize(QSize(114, 160));
     lblCover->setText(tr("Cover"));
 
     btnUploadCover->setText(tr("&Upload"));
@@ -252,9 +263,8 @@ void WidgetSetBook::setUI() {
     layout->addWidget(lblMessage);
 
     setLayout(layout);
-
 }
 
 void WidgetSetBook::setConnection() {
-    connect(btnAdd, &QPushButton::clicked, this, &WidgetSetBook::slotAdd);
+    connect(btnUploadCover, &QPushButton::clicked, this, &WidgetSetBook::slotUpload);
 }

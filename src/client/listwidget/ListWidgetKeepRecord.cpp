@@ -31,7 +31,7 @@ void ListWidgetItemKeepRecord::setUI() {
         p.fill(Qt::black);
 
     QIcon icon;
-    icon.addPixmap(p);
+    icon.addPixmap(p.scaled(QSize(114, 160)));
     setIcon(icon);
 
     setText(QObject::tr("Title: ") +

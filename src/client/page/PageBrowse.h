@@ -21,6 +21,7 @@ public:
 
 signals:
     void signalReady();
+    void signalModify();
 
 public slots:
     void slotGetNewBookList(const X::ErrorCode &ec, const X::ptree &pt);
