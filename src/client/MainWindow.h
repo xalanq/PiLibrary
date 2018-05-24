@@ -15,8 +15,13 @@ class MainWindow : public QMainWindow {
 
 public:
     MainWindow(QWidget *parent = Q_NULLPTR);
+    ~MainWindow();
+    void go();
     void loadSetting();
     void saveSetting();
+
+public slots:
+    void logout();
 
 private:
     void setUI();
@@ -24,8 +29,7 @@ private:
     void login();
 
 private:
-    UserManager userManager;
-    BookManager bookManager;
+    UserManager *userManager;
+    BookManager *bookManager;
     MainWidget *mainWidget;
-    QSettings setting {};
 };

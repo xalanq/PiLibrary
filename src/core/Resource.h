@@ -29,6 +29,7 @@ public:
     static size_t fileSize(const xstring &path);
     static bool add(const xstring &path, const Resource &file);
     static Resource get(const xstring &path);
+    static Resource copy(const Resource &file);
     
 private:
     char *data {};

@@ -98,3 +98,9 @@ Resource Resource::get(const xstring &path) {
     fclose(fio);
     return file;
 }
+
+Resource Resource::copy(const Resource &file) {
+    char *s = new char[file.size];
+    memcpy(s, file.data, file.size);
+    return Resource(s, file.size);
+}

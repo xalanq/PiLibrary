@@ -250,7 +250,10 @@ void WidgetSetBook::setUI() {
 
     auto layout = new QVBoxLayout;
 
-    layout->addLayout(layoutUp);
+    auto w = new QWidget(this);
+    w->setLayout(layoutUp);
+    w->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    layout->addWidget(w);
 
     lblIntroduction->setText(tr("I&ntroduction: "));
     lblIntroduction->setBuddy(editIntroduction);

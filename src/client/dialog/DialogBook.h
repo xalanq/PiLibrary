@@ -47,9 +47,12 @@ private:
     Book const * bookPtr;
     X::xll keepTime {};
 
+    QLabel *lblCover;
     QLabel *lblTitle;
     QLabel *lblAuthor;
     QLabel *lblIntroduction;
+    QLabel *lblPosition;
+    QLabel *lblAmount;
     QLabel *lblMaxKeepTime;
 
     QPushButton *btnStar;

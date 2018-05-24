@@ -20,6 +20,8 @@ public:
 
     Book& updateFromPtree(const ptree &pt);
 
+    Book& cleanCover();
+
     static const Book& unknown();
 
 private:

@@ -45,6 +45,11 @@ Book& Book::updateFromPtree(const ptree &pt) {
     return *this;
 }
 
+Book& Book::cleanCover() {
+    BookBrief::cleanCover();
+    return *this;
+}
+
 const Book& Book::unknown() {
     static Book book;
     static bool init {false};

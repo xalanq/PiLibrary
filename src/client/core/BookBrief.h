@@ -44,6 +44,8 @@ public:
 
     Resource getCover() const;
     BookBrief& setCover(const Resource &cover);
+
+    virtual BookBrief& cleanCover();
     
     virtual BookBrief& setFromPtree(const ptree &pt);
     static BookBrief fromPtree(const ptree &pt); 

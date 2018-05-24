@@ -93,6 +93,11 @@ BookBrief& BookBrief::setCover(const Resource &cover) {
     return *this;
 }
 
+BookBrief& BookBrief::cleanCover() {
+    cover.clean();
+    return *this;
+}
+
 BookBrief& BookBrief::setFromPtree(const ptree &pt) {
     setBookid(pt.get<xint>("bookid", 0));
     setTitle(pt.get<xstring>("title", ""));

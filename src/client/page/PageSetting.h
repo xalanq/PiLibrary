@@ -16,6 +16,12 @@ public:
 
 signals:
     void signalRefresh();
+    void signalModifyUser();
+    void signalLogout();
+
+public slots:
+    void slotModify();
+    void slotLogout();
 
 private:
     void setUI();
@@ -25,4 +31,6 @@ private:
     UserManager &userManager;
     
     QPushButton *btnRefresh;
+    QPushButton *btnModify;
+    QPushButton *btnLogout;
 };

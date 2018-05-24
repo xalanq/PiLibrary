@@ -28,6 +28,9 @@ public:
     void loadSetting();
     void saveSetting();
 
+signals:
+    void signalLogout();
+
 public slots:
     void setEvents();
     void refresh(bool force = true);

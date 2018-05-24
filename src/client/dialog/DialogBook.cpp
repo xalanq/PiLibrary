@@ -26,9 +26,12 @@ DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, const
     strBorrow = tr("&Borrow");
     strBorrowed = tr("Borrowed");
 
+    lblCover = new QLabel(this);
     lblTitle = new QLabel(this);
     lblAuthor = new QLabel(this);
     lblIntroduction = new QLabel(this);
+    lblPosition = new QLabel(this);
+    lblAmount = new QLabel(this);
     lblMaxKeepTime = new QLabel(this);
 
     btnStar = new QPushButton(this);
@@ -46,16 +49,28 @@ void DialogBook::setBook(const Book &book) {
 
     setWindowTitle(QString::fromStdString(book.getTitle()) + " - " + QString::fromStdString(book.getAuthor()));
 
-    lblTitle->setText(tr("Title: ") + QString::fromStdString(book.getTitle()));
-    lblAuthor->setText(tr("Author: ") + QString::fromStdString(book.getAuthor()));
-    lblIntroduction->setText(tr("Introduction: ") + QString::fromStdString(book.getIntroduction()));
+    auto cover = book.getCover();
+    QPixmap p(QSize(172, 237));
+    if (cover.getSize())
+        p.loadFromData((uchar *)cover.getData(), cover.getSize());
+    else
+        p.fill(Qt::black);
+    lblCover->setPixmap(p.scaled(QSize(172, 237)));
+
+    lblTitle->setText(QString::fromStdString(book.getTitle()));
+    lblAuthor->setText(QString::fromStdString(book.getAuthor()));
+    lblIntroduction->setText(QString::fromStdString(book.getIntroduction()));
+    lblPosition->setText(QString::fromStdString(book.getPosition()));
+    lblAmount->setText(tr("Amount: ") + QString::number(book.getAmount()));
 
     auto maxKeepTime = book.getMaxKeepTime();
     X::xll d = maxKeepTime / 60 / 60 / 24;
     X::xll h = maxKeepTime / 60 / 60 - d * 24;
     X::xll m = maxKeepTime / 60 - d * 24 * 60 - h * 60;
-
-    lblMaxKeepTime->setText(tr("Max keep time: ") + QString::number(d) + tr(" d ") + QString::number(h) + tr(" h ") + QString::number(m) + tr(" m "));
+    lblMaxKeepTime->setText(tr("MaxKeepTime: ") + 
+                            QString::number(d) + tr("d ") + 
+                            QString::number(h) + tr("h ") + 
+                            QString::number(m) + tr("m "));
 
     auto bookid = book.getBookid();
     if (bookid > 0) {
@@ -162,20 +177,33 @@ void DialogBook::setUI() {
     btnModify->setDisabled(true);
     btnModify->hide();
 
-    auto layoutRight = new QVBoxLayout;
-    layoutRight->addWidget(lblTitle);
-    layoutRight->addWidget(lblAuthor);
-    layoutRight->addWidget(lblIntroduction);
-    layoutRight->addWidget(lblMaxKeepTime);
+    auto layoutInfo = new QVBoxLayout;
+    layoutInfo->addWidget(lblTitle);
+    layoutInfo->addWidget(lblAuthor);
+    layoutInfo->addWidget(lblPosition);
+    layoutInfo->addWidget(lblPosition);
+    layoutInfo->addWidget(lblAmount);
+    layoutInfo->addWidget(lblMaxKeepTime);
+
+    auto layoutUp = new QHBoxLayout;
+    layoutUp->addWidget(lblCover);
+    layoutUp->addLayout(layoutInfo);
+    layoutUp->addStretch();
+
+    auto w = new QWidget(this);
+    w->setLayout(layoutUp);
+    w->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     auto layoutButton = new QHBoxLayout;
-
     layoutButton->addWidget(btnStar);
     layoutButton->addWidget(btnBorrow);
     layoutButton->addWidget(btnModify);
 
     auto layout = new QVBoxLayout;
-    layout->addLayout(layoutRight);
+    layout->addWidget(w);
+    layout->addWidget(lblIntroduction);
+    lblIntroduction->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    lblIntroduction->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     layout->addLayout(layoutButton);
 
     setLayout(layout);

@@ -57,7 +57,6 @@ void ListWidgetStarRecord::update(const BookBrief &book, const StarRecord &recor
 }
 
 void ListWidgetStarRecord::setUI() {
-    setViewMode(QListView::IconMode);
     setMovement(QListView::Static);
     setIconSize(QSize(114, 160));
     setUniformItemSizes(true);
