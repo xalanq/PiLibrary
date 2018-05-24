@@ -11,7 +11,7 @@
 #include <QSettings>
 #include <QStringList>
 #include <QVBoxLayout>
-
+#include <QPalette>
 #include <client/dialog/DialogLogin.h>
 #include <client/dialog/DialogSignUp.h>
 #include <client/thread/ThreadLogin.h>
@@ -27,8 +27,9 @@ DialogLogin::DialogLogin(UserManager &userManager, QWidget *parent) :
 
     labelMessage = new QLabel(this);
 
-    btnSignUp = new QPushButton(this);
-    btns = new QDialogButtonBox(this);
+    
+	btnLogin = new QPushButton(this);
+	btnSignUp = new QPushButton(this);
 
     setUI();
     setConnection();
@@ -120,46 +121,51 @@ void DialogLogin::slotRegister() {
 
 void DialogLogin::setUI() {
     setWindowTitle(QString::fromStdString(X::APP_NAME));
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
+	setWindowOpacity(0.9);
+	setAutoFillBackground(true);
+	
+	setStyleSheet("background-color:rgb(255,250,250)");
+	
+
+	labelMessage->setGeometry(50,180,400,30);
     labelMessage->hide();
-
+		
     cbboxUsername->setEditable(true);
     cbboxUsername->lineEdit()->setPlaceholderText(tr("Username"));
+	cbboxUsername->setGeometry(50, 60, 200, 40);
+	
 
     editPassword->setEchoMode(QLineEdit::Password);
     editPassword->setPlaceholderText(tr("Password"));
+	editPassword->setGeometry(50, 120, 200, 40);
 
+    btnLogin->setText(tr("&Log in"));
     btnSignUp->setText(tr("&Sign up"));
-    btns->addButton(QDialogButtonBox::Ok)->setText(tr("&Log in"));
-    btns->addButton(btnSignUp, QDialogButtonBox::ActionRole);
-    btns->setCenterButtons(true);
-
-    QVBoxLayout *layout = new QVBoxLayout;
-
-    layout->addWidget(cbboxUsername);
-    layout->addWidget(editPassword);
-    layout->addWidget(labelMessage);
-    layout->addWidget(btns);
-    layout->setSizeConstraint(QLayout::SetFixedSize);
-
-    setLayout(layout);
-    adjustSize();
+	
+	btnLogin->setGeometry(75, 210, 150, 50);
+	btnSignUp->setGeometry(75, 280, 150, 35);
+	
+   
+	setFixedSize(300, 350);
+   
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
 }
 
 void DialogLogin::setConnection() {
+    
     connect(
-        btnSignUp,
-        &QPushButton::clicked,
-        this,
-        &DialogLogin::slotRegister
-    );
-
-    connect(
-        btns->button(QDialogButtonBox::Ok),
+        btnLogin,
         &QPushButton::clicked,
         this,
         &DialogLogin::slotLoginBegin
     );
+	
+	connect(
+		btnSignUp,
+		&QPushButton::clicked,
+		this,
+		&DialogLogin::slotRegister
+	);
 }
