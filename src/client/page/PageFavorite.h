@@ -18,6 +18,7 @@ public:
 
 signals:
     void signalReady();
+    void signalModify();
 
 public slots:
     void slotGetStarRecord(const std::vector<StarRecord> &records);

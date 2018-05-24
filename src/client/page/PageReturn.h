@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QWidget>
 
 #include <client/manager/BookManager.h>
@@ -17,7 +20,22 @@ public:
 signals:
     void signalReady();
 
+public slots:
+    void slotReturn();
+
+private:
+    void setUI();
+    void setConnection();
+
 private:
     UserManager &userManager;
     BookManager &bookManager;
+
+    QLabel *lblUserid;
+    QLabel *lblBookid;
+
+    QLineEdit *editUserid;
+    QLineEdit *editBookid;
+
+    QPushButton *btnReturn;
 };

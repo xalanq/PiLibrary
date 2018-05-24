@@ -4,8 +4,9 @@
 #include <client/thread/ThreadReturnBook.h>
 #include <core/utils.h>
 
-ThreadReturnBook::ThreadReturnBook(const xll &token, const xint &bookid, QObject *parent) :
+ThreadReturnBook::ThreadReturnBook(const xll &token, const xint &userid, const xint &bookid, QObject *parent) :
     token(token),
+    userid(userid),
     bookid(bookid),
     ThreadNetwork(parent) {
 }
@@ -16,6 +17,7 @@ void ThreadReturnBook::run() {
     ActionCode ac = X::NoAction;
     ErrorCode ec = X::NoError;
 
+    pt.put("userid", this->userid);
     pt.put("bookid", this->bookid);
 
     try {

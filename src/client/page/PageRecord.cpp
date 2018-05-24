@@ -84,18 +84,21 @@ void PageRecord::slotGetLoginRecord(const X::ErrorCode &ec, const X::ptree &pt) 
 void PageRecord::slotBrowseRecordItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemBrowseRecord *> (item);
     auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    connect(dialog, SIGNAL(signalModify()), this, SIGNAL(signalModify()));
     dialog->show();
 }
 
 void PageRecord::slotKeepRecordItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemKeepRecord *> (item);
     auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    connect(dialog, SIGNAL(signalModify()), this, SIGNAL(signalModify()));
     dialog->show();
 }
 
 void PageRecord::slotBorrowRecordItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemBorrowRecord *> (item);
     auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    connect(dialog, SIGNAL(signalModify()), this, SIGNAL(signalModify()));
     dialog->show();
 }
 

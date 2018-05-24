@@ -52,6 +52,7 @@ void PageFavorite::slotGetStarRecord(const std::vector<StarRecord> &records) {
 void PageFavorite::slotItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemStarRecord *> (item);
     auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    connect(dialog, SIGNAL(signalModify()), this, SIGNAL(signalModify()));
     dialog->show();
 }
 

@@ -26,6 +26,7 @@ public:
 
 signals:
     void signalReady();
+    void signalModify();
 
 public slots:
     void slotGetBrowseRecord(const std::vector<BrowseRecord> &records);

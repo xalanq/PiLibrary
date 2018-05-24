@@ -204,6 +204,7 @@ void DialogBook::setUI() {
     layout->addWidget(lblIntroduction);
     lblIntroduction->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     lblIntroduction->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    lblIntroduction->setWordWrap(true);
     layout->addLayout(layoutButton);
 
     setLayout(layout);

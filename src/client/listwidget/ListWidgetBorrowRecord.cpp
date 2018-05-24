@@ -38,7 +38,9 @@ void ListWidgetItemBorrowRecord::setUI() {
     auto beginTime = record.getBeginTime();
     auto endTime = record.getEndTime();
     auto returnTime = record.getReturnTime();
-    setText(QObject::tr("Title: ") +
+    setText(QObject::tr("Bookid: ") + 
+            QString::number(book.getBookid()) +
+            QObject::tr("\nTitle: ") +
             QString::fromStdString(book.getTitle()) +
             QObject::tr("\nbeginTime: ") +
             QString::fromStdString(X::time_to_str(beginTime)) +

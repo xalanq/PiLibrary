@@ -9,7 +9,7 @@ class ThreadReturnBook : public ThreadNetwork {
     Q_OBJECT
 
 public:
-    ThreadReturnBook(const xll &token, const xint &bookid, QObject *parent = Q_NULLPTR);
+    ThreadReturnBook(const xll &token, const xint &userid, const xint &bookid, QObject *parent = Q_NULLPTR);
 
 signals:
     void done(const ErrorCode &ec);
@@ -19,5 +19,6 @@ private:
 
 private:
     xll token;
+    xint userid;
     xint bookid;
 };

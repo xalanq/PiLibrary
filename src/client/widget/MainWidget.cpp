@@ -112,6 +112,8 @@ void MainWidget::setConnection() {
     );
 
     connect(pageBrowse, &PageBrowse::signalModify, this, std::bind(&MainWidget::refresh, this, false));
+    connect(pageFavorite, &PageFavorite::signalModify, this, std::bind(&MainWidget::refresh, this, false));
+    connect(pageRecord, &PageRecord::signalModify, this, std::bind(&MainWidget::refresh, this, false));
     connect(pageSetting, &PageSetting::signalRefresh, this, std::bind(&MainWidget::refresh, this, true));
     connect(pageSetting, &PageSetting::signalModifyUser, widgetHead, &WidgetHead::slotModify);
     connect(pageSetting, SIGNAL(signalLogout()), this, SIGNAL(signalLogout()));
