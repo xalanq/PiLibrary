@@ -123,12 +123,9 @@ void DialogLogin::setUI() {
     setWindowTitle(QString::fromStdString(X::APP_NAME));
 	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-	setWindowOpacity(0.9);
+	setWindowOpacity(1);
 	setAutoFillBackground(true);
 	
-	setStyleSheet("background-color:rgb(255,250,250)");
-	
-
 	labelMessage->setGeometry(50,180,400,30);
     labelMessage->hide();
 		
@@ -136,7 +133,6 @@ void DialogLogin::setUI() {
     cbboxUsername->lineEdit()->setPlaceholderText(tr("Username"));
 	cbboxUsername->setGeometry(50, 60, 200, 40);
 	
-
     editPassword->setEchoMode(QLineEdit::Password);
     editPassword->setPlaceholderText(tr("Password"));
 	editPassword->setGeometry(50, 120, 200, 40);
@@ -146,7 +142,6 @@ void DialogLogin::setUI() {
 	
 	btnLogin->setGeometry(75, 210, 150, 50);
 	btnSignUp->setGeometry(75, 280, 150, 35);
-	
    
 	setFixedSize(300, 350);
    
@@ -154,7 +149,6 @@ void DialogLogin::setUI() {
 }
 
 void DialogLogin::setConnection() {
-    
     connect(
         btnLogin,
         &QPushButton::clicked,

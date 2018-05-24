@@ -75,8 +75,7 @@ size_t Resource::fileSize(const xstring &path) {
 
 bool Resource::add(const xstring &path, const Resource &file) {
     boost::filesystem::path p(path);
-    if (!boost::filesystem::create_directories(p.parent_path()))
-        return false;
+    boost::filesystem::create_directories(p.parent_path());
     FILE *fio = fopen(path.c_str(), "wb");
     if (fio == NULL)
         return false;
