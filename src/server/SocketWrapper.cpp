@@ -589,7 +589,6 @@ void SocketWrapper::doGetBookCover(ptree pt, const xll &token) {
         }
     }
     write(ec, X::GetBookCoverFeedback, tk, {}, file);
-    file.clean();
 }
 
 void SocketWrapper::doSetBookCover(ptree pt, const xll &token) {

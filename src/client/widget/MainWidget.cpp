@@ -51,11 +51,15 @@ void MainWidget::setEvents() {
 void MainWidget::refresh(bool force) {
     dialogRefresh->show();
     setDisabled(true);
+    eventCount = 0;
+
+    userManager.clearBorrowEvent();
+    userManager.clearStarEvent();
+    bookManager.clearBrowseEvent();
     if (force) {
         userManager.refresh();
         bookManager.refresh();
     }
-    eventCount = 0;
     pageFavorite->refresh();
     pageRecord->refresh();
 }

@@ -46,6 +46,10 @@ void UserManager::installStarEvent(std::function<void(xint &, bool)> f) {
     starEvents.push_back(f);
 }
 
+void UserManager::clearStarEvent() {
+    starEvents.clear();
+}
+
 void UserManager::borrowBook(const xint &bookid, const xll &beginTime, const xll &endTime) {
     borrowBooks.insert(bookid);
     emitBorrowEvents(bookid, beginTime, endTime);
@@ -61,6 +65,10 @@ void UserManager::clearBorrowBook() {
 
 void UserManager::installBorrowEvent(std::function<void(xint &, xll &, xll &)> f) {
     borrowEvents.push_back(f);
+}
+
+void UserManager::clearBorrowEvent() {
+    borrowEvents.clear();
 }
 
 void UserManager::refresh() {

@@ -107,6 +107,10 @@ void BookManager::installBrowseEvent(std::function<void(xint &)> f) {
     browseEvents.push_back(f);
 }
 
+void BookManager::clearBrowseEvent() {
+    browseEvents.clear();
+}
+
 void BookManager::refresh() {
     threadCounts = 0;
 
@@ -165,8 +169,12 @@ void BookManager::slotAddBook(const ErrorCode &ec, std::function<void(ErrorCode 
 void BookManager::slotUpdateBook(const ErrorCode &ec, const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f) {
     if (ec == X::NoError) {
         auto bookid = pt.get<xint>("bookid");
-        mapBook[bookid].updateFromPtree(pt).cleanCover().setCover(cover);
-        mapBookBrief[bookid].updateFromPtree(pt).cleanCover().setCover(Resource::copy(cover));
+        auto &a = mapBook[bookid].updateFromPtree(pt);
+        auto &b = mapBookBrief[bookid].updateFromPtree(pt);
+        if (cover.getSize()) {
+            a.cleanCover().setCover(cover);
+            b.cleanCover().setCover(Resource::copy(cover));
+        }
     }
     f(ErrorCode(ec));
 }

@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <map>
+
 #include <core/types.h>
 
 class Resource {
@@ -25,6 +27,8 @@ public:
     Resource& setSize(const size_t &size);
     
     void clean();
+
+    static std::map<xstring, Resource> resourceTemp;
 
     static size_t fileSize(const xstring &path);
     static bool add(const xstring &path, const Resource &file);
