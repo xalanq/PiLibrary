@@ -36,6 +36,7 @@ DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, const
     btnModify = new QPushButton(this);
 
     setUI();
+    setConnection();
 
     bookManager.getBook(bookid, std::bind(&DialogBook::setBook, this, std::placeholders::_1));
 }
@@ -74,20 +75,6 @@ void DialogBook::setBook(const Book &book) {
         if (userManager.getUser().getPriority() >= std::max(X::xint(X::ADMINISTER), book.getPriority())) {
             btnModify->setDisabled(false);
             btnModify->show();
-        }
-        connect(btnStar,
-                &QPushButton::clicked,
-                this,
-                &DialogBook::slotStarBegin);
-        connect(btnBorrow,
-                &QPushButton::clicked,
-                this,
-                &DialogBook::slotBorrowBegin);
-        if (btnModify->isEnabled()) {
-            connect(btnModify,
-                    &QPushButton::clicked,
-                    this,
-                    &DialogBook::slotModify);
         }
     }
 }
@@ -155,7 +142,11 @@ void DialogBook::slotBorrowEnd(const X::ErrorCode &ec) {
 }
 
 void DialogBook::slotModify() {
-    DialogModifyBook dialog(userManager, *bookPtr, this);
+    DialogModifyBook dialog(userManager, bookManager, *bookPtr, this);
+    connect(&dialog, &DialogModifyBook::signalModify, this, [this] {
+        bookManager.getBook(bookPtr->getBookid(), std::bind(&DialogBook::setBook, this, std::placeholders::_1));
+        emit signalModify();
+    });
     dialog.exec();
 }
 
@@ -188,4 +179,19 @@ void DialogBook::setUI() {
     layout->addLayout(layoutButton);
 
     setLayout(layout);
+}
+
+void DialogBook::setConnection() {
+    connect(btnStar,
+            &QPushButton::clicked,
+            this,
+            &DialogBook::slotStarBegin);
+    connect(btnBorrow,
+            &QPushButton::clicked,
+            this,
+            &DialogBook::slotBorrowBegin);
+    connect(btnModify,
+            &QPushButton::clicked,
+            this,
+            &DialogBook::slotModify);
 }

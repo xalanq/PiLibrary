@@ -48,6 +48,8 @@ public:
     virtual BookBrief& setFromPtree(const ptree &pt);
     static BookBrief fromPtree(const ptree &pt); 
 
+    BookBrief& updateFromPtree(const ptree &pt);
+
     static const BookBrief& unknown();
 
 private:

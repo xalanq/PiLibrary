@@ -6,8 +6,8 @@
 #include <QSettings>
 
 #include <client/thread/ThreadGetBook.h>
+#include <client/thread/ThreadSetBook.h>
 #include <client/manager/BookManager.h>
-
 
 BookManager::BookManager(UserManager &userManager) :
     userManager(userManager) {
@@ -34,21 +34,19 @@ const Book& BookManager::getBook(const xint &bookid) const {
     }
 }
 
-void BookManager::getBook(const xint &bookid, std::function<void(Book &)> f, bool update) {
-    auto &v = mapBookFunction[bookid];
+void BookManager::getBook(const xint &bookid, std::function<void(Book &)> f) {
+    auto &v = mapGetBookFunction[bookid];
     if (v.size() != 0) {
         v.push_back(f);
     } else {
-        if (!update) {
-            auto it = mapBook.find(bookid);
-            if (it != mapBook.end()) {
-                f(it->second);
-                return;
-            }
+        auto it = mapBook.find(bookid);
+        if (it != mapBook.end()) {
+            f(it->second);
+            return;
         }
         v.push_back(f);
         if (threadCounts >= threadLimit)
-            queueBook.push(bookid);
+            queueGetBook.push(bookid);
         else
             _getBook(bookid);
     }
@@ -62,21 +60,19 @@ const BookBrief& BookManager::getBookBrief(const xint &bookid) const {
     }
 }
 
-void BookManager::getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f, bool update) {
-    auto &v = mapBookBriefFunction[bookid];
+void BookManager::getBookBrief(const xint &bookid, std::function<void(BookBrief &)> f) {
+    auto &v = mapGetBookBriefFunction[bookid];
     if (v.size() != 0) {
         v.push_back(f);
     } else {
-        if (!update) {
-            auto it = mapBookBrief.find(bookid);
-            if (it != mapBookBrief.end()) {
-                f(it->second);
-                return;
-            }
+        auto it = mapBookBrief.find(bookid);
+        if (it != mapBookBrief.end()) {
+            f(it->second);
+            return;
         } 
         v.push_back(f);
         if (threadCounts >= threadLimit)
-            queueBook.push(bookid);
+            queueGetBook.push(bookid);
         else
             _getBookBrief(bookid);
     }
@@ -93,49 +89,82 @@ void BookManager::updateStar(const xint &bookid, bool star) {
     }
 }
 
+void BookManager::addBook(const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f) {
+    auto thread = new ThreadSetBook(userManager.getToken(), pt, cover, this);
+    connect(thread, &ThreadSetBook::done, this, std::bind(&BookManager::slotAddBook, this, std::placeholders::_1, f));
+    connect(thread, &ThreadSetBook::finished, thread, &QObject::deleteLater);
+    thread->start();
+}
+
+void BookManager::updateBook(const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f) {
+    auto thread = new ThreadSetBook(userManager.getToken(), pt, cover, this);
+    connect(thread, &ThreadSetBook::done, this, std::bind(&BookManager::slotUpdateBook, this, std::placeholders::_1, pt, cover, f));
+    connect(thread, &ThreadSetBook::finished, thread, &QObject::deleteLater);
+    thread->start();
+}
+
 void BookManager::installBrowseEvent(std::function<void(xint &)> f) {
     browseEvents.push_back(f);
 }
 
+void BookManager::refresh() {
+    threadCounts = 0;
+
+    mapBook.clear();
+    for (; queueGetBook.size(); queueGetBook.pop());
+    mapGetBookFunction.clear();
+
+    mapBookBrief.clear();
+    for (; queueGetBookBrief.size(); queueGetBookBrief.pop());
+    mapGetBookBriefFunction.clear();
+}
+
 void BookManager::slotGetBook(const ErrorCode &ec, const ptree &pt, const xint &bookid, const Resource &cover) {
-    auto &v = mapBookFunction[bookid];
+    auto &v = mapGetBookFunction[bookid];
     if (ec != X::NoError) {
         auto book = Book::unknown();
         for (auto f : v)
             f(book);
         v.clear();
     } else {
-        try {
-            auto &&book = Book::fromPtree(pt);
-            book.setCover(cover);
-            auto &b = mapBook[bookid] = book;
-            for (auto f : v)
-                f(b);
-            v.clear();
-            emitBrowseEvents(bookid);
-        } catch (std::exception &) { }
+        auto &book = mapBook[bookid] = Book::fromPtree(pt);
+        book.setCover(cover);
+        for (auto f : v)
+            f(book);
+        v.clear();
+        emitBrowseEvents(bookid);
     }
     popThread();
 }
 
 void BookManager::slotGetBookBrief(const ErrorCode &ec, const ptree &pt, const xint &bookid, const Resource &cover) {
-    auto &v = mapBookBriefFunction[bookid];
+    auto &v = mapGetBookBriefFunction[bookid];
     if (ec != X::NoError) {
         auto book = BookBrief::unknown();
         for (auto f : v)
             f(book);
         v.clear();
     } else {
-        try {
-            auto &&book = BookBrief::fromPtree(pt);
-            book.setCover(cover);
-            auto &b = mapBookBrief[bookid] = book;
-            for (auto f : v)
-                f(b);
-            v.clear();
-        } catch (std::exception &) { }
+        auto &book = mapBookBrief[bookid] = BookBrief::fromPtree(pt);
+        book.setCover(cover);
+        for (auto f : v)
+            f(book);
+        v.clear();
     }
     popThread();
+}
+
+void BookManager::slotAddBook(const ErrorCode &ec, std::function<void(ErrorCode &)> f) {
+    f(ErrorCode(ec));
+}
+
+void BookManager::slotUpdateBook(const ErrorCode &ec, const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f) {
+    if (ec == X::NoError) {
+        auto bookid = pt.get<xint>("bookid");
+        mapBook[bookid].updateFromPtree(pt).setCover(cover);
+        mapBookBrief[bookid].updateFromPtree(pt).setCover(cover);
+    }
+    f(ErrorCode(ec));
 }
 
 void BookManager::_getBook(const xint &bookid) {
@@ -165,12 +194,12 @@ void BookManager::_getBookBrief(const xint &bookid) {
 void BookManager::popThread() {
     --threadCounts;
     if (threadCounts < threadLimit) {
-        if (queueBook.size()) {
-            _getBook(queueBook.front());
-            queueBook.pop();
-        } else if (queueBookBrief.size()) {
-            _getBookBrief(queueBookBrief.front());
-            queueBookBrief.pop();
+        if (queueGetBook.size()) {
+            _getBook(queueGetBook.front());
+            queueGetBook.pop();
+        } else if (queueGetBookBrief.size()) {
+            _getBookBrief(queueGetBookBrief.front());
+            queueGetBookBrief.pop();
         }
     }
 }

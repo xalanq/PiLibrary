@@ -779,23 +779,52 @@ UserManager::ErrorCode UserManager::setResource(const ptree &pt) {
 
     using namespace mongo;
     auto client = pool.acquire();
-    auto res = (*client)[db_name]["book"].update_one(
+    mongocxx::options::find opt;
+    opt.projection(
+        make_document(
+            kvp("_id", 0),
+            kvp("resource", 1)
+        )
+    );
+    auto doc = (*client)[db_name]["book"].find_one(
         make_document(
             kvp("bookid", bookid),
             kvp("priority", make_document(
                 kvp("$lte", priority)
-            )),
-            kvp("resource.name", resourceName)
+            ))
+        ),
+        opt
+    );
+    if (!doc)
+        return X::NoSuchBook;
+    (*client)[db_name]["book"].update_one(
+        make_document(
+            kvp("bookid", bookid)
         ),
         make_document(
-            kvp("$set", make_document(
-                kvp("resource.$.path", resourcePath)
+            kvp("$pull", make_document(
+                kvp("resource", make_document(
+                    kvp("name", resourceName)
+                ))
             ))
         )
     );
-    if (res->modified_count() == 1)
-        return X::NoError;
-    return X::InvalidResource;
+    auto res = (*client)[db_name]["book"].update_one(
+        make_document(
+            kvp("bookid", bookid)
+        ),
+        make_document(
+            kvp("$push", make_document(
+                kvp("resource", make_document(
+                    kvp("name", resourceName),
+                    kvp("path", resourcePath)
+                ))
+            ))
+        )
+    );
+    if (res->modified_count() != 1)
+        return X::InvalidResource;
+    return X::NoError;
 }
 
 // need: userid, ip, time, ensure the user is exist

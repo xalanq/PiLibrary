@@ -25,7 +25,6 @@ Book& Book::setFromPtree(const ptree &pt) {
     BookBrief::setFromPtree(pt);
     setAmount(pt.get<xint>("amount", 0));
     setPosition(pt.get<xstring>("position", ""));
-    setStarCount(pt.get<xint>("starCount", 0));
     return *this;
 }
 
@@ -33,6 +32,17 @@ Book Book::fromPtree(const ptree &pt) {
     Book book;
     book.setFromPtree(pt);
     return std::move(book);
+}
+
+Book& Book::updateFromPtree(const ptree &pt) {
+    BookBrief::updateFromPtree(pt);
+    auto amount = pt.get_optional<xint>("amount");
+    auto position = pt.get_optional<xstring>("position");
+    if (amount)
+        setAmount(*amount);
+    if (position)
+        setPosition(*position);
+    return *this;
 }
 
 const Book& Book::unknown() {

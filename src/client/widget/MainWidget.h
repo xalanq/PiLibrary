@@ -30,7 +30,7 @@ public:
 
 public slots:
     void setEvents();
-    void refresh();
+    void refresh(bool force = true);
 
 private:
     void setUI();
@@ -56,4 +56,6 @@ private:
     PageRecord *pageRecord;
     PageReturn *pageReturn;
     PageSetting *pageSetting;
+
+    int eventCount;
 };

@@ -39,18 +39,23 @@ void ListWidgetItemBook::setUI() {
         str += QString::number(cnt);
 
     QFont font;
-    font.setFamily("Helvetica");
-    font.setPointSize(10);
+    font.setFamily("Microsoft YaHei");
+    font.setPointSize(9);
+
+    p = p.scaled(QSize(114, 160));
 
     QPainter painter(&p);
-    if (star)
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.fillRect(0, 7, 50, 23, QColor(0, 0, 0, 50));
+    if (star) {
+        painter.setBrush(Qt::red);
         painter.setPen(Qt::red);
-    else
+    } else {
+        painter.setBrush(Qt::white);
         painter.setPen(Qt::white);
+    }
     painter.setFont(font);
     painter.drawText(QPoint(5, 25), str);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setCompositionMode(QPainter::CompositionMode_Xor);
 
     QIcon icon;
     icon.addPixmap(p);

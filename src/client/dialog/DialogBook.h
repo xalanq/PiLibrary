@@ -22,6 +22,9 @@ public:
     DialogBook(UserManager &userManager, BookManager &bookManager, const X::xint &bookid, QWidget *parent = Q_NULLPTR);
     void setBook(const Book &book);
 
+signals:
+    void signalModify();
+
 public slots:
     void slotStarBegin();
     void slotStarEnd(const X::ErrorCode &ec);
@@ -31,6 +34,7 @@ public slots:
 
 private:
     void setUI();
+    void setConnection();
 
 private:
     QString strStar;

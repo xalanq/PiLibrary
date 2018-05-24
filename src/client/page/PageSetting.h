@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <QPushButton>
 #include <QWidget>
 
 #include <client/manager/UserManager.h>
@@ -14,8 +15,14 @@ public:
     PageSetting(UserManager &userManager, QWidget *parent = Q_NULLPTR);
 
 signals:
-    void signalReady();
+    void signalRefresh();
+
+private:
+    void setUI();
+    void setConnection();
 
 private:
     UserManager &userManager;
+    
+    QPushButton *btnRefresh;
 };

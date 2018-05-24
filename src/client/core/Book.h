@@ -18,6 +18,8 @@ public:
     Book& setFromPtree(const ptree &pt);
     static Book fromPtree(const ptree &pt); 
 
+    Book& updateFromPtree(const ptree &pt);
+
     static const Book& unknown();
 
 private:

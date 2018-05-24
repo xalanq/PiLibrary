@@ -24,10 +24,11 @@ class WidgetSetBook : public QWidget {
     Q_OBJECT
 
 public:
-    WidgetSetBook(UserManager &userManager, QWidget *parent = Q_NULLPTR);
+    WidgetSetBook(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+    void getData();
 
 public slots:
-    void slotAdd();
+    void slotUpload();
 
 private:
     void setUI();
@@ -35,6 +36,7 @@ private:
 
 protected:
     UserManager &userManager;
+    BookManager &bookManager;
 
     QLabel *lblCover;
     QLabel *lblBookid;
@@ -72,6 +74,7 @@ protected:
     QStringList priorityList;
     std::vector<X::xint> priorityInfo;
 
+    X::ptree pt;
     Resource cover;
     X::xll beforeKeepTime;
 };

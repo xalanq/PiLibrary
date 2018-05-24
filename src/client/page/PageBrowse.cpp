@@ -53,6 +53,7 @@ void PageBrowse::slotGetNewBookList(const X::ErrorCode &ec, const X::ptree &pt) 
 void PageBrowse::slotItemClicked(QListWidgetItem *item) {
     auto x = dynamic_cast<ListWidgetItemBook *> (item);
     auto dialog = new DialogBook(userManager, bookManager, x->getBook().getBookid(), this);
+    connect(dialog, SIGNAL(signalModify()), this, SIGNAL(signalModify()));
     dialog->show();
 }
 

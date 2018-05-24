@@ -71,7 +71,10 @@ void SocketWrapper::readHeader() {
             auto ac = info.decodeHeaderActionCode();
             _from(readHeader) << "token: " << token << ", length: " << length << ", action_code: " << X::what(ac) << '\n';
             auto p = sessionManager.findToken(token);
-            if ((p == nullptr || p->getPriority() < X::ADMINISTER) && bytes > SocketInfo::BODY_SIZE) {
+            if (length <= 0) {
+                _from(readHeader) << "body size is negative.\n";
+                write(X::UnknownError, X::Error);
+            } else if ((p == nullptr || p->getPriority() < X::ADMINISTER) && length > SocketInfo::BODY_SIZE) {
                 _from(readHeader) << "body size is too big.\n";
                 write(X::UnknownError, X::Error);
             } else
@@ -206,9 +209,9 @@ void SocketWrapper::saveFile(const ErrorCode &ec, const ActionCode &ac, const xl
                 stop();
                 return;
             }
-            auto e = X::NoError;
+            auto e = userManager.setResource(pt);
             auto path = pt.get<xstring>("resourcePath");
-            if (Resource::add(path, Resource(info.getBuffer(), size)) && userManager.setResource(pt)) {
+            if (e == X::NoError && Resource::add(path, Resource(info.getBuffer(), size))) {
                 _from(saveFile) << "succeed to save file to " + path << '\n';
             } else {
                 _from(saveFile) << "failed to save file to " + path << '\n';

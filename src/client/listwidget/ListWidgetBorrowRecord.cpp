@@ -32,7 +32,7 @@ void ListWidgetItemBorrowRecord::setUI() {
         p.fill(Qt::black);
 
     QIcon icon;
-    icon.addPixmap(p);
+    icon.addPixmap(p.scaled(QSize(114, 160)));
     setIcon(icon);
 
     auto beginTime = record.getBeginTime();

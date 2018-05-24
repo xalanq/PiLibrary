@@ -13,8 +13,13 @@ class PageAddBook : public WidgetSetBook {
     Q_OBJECT
 
 public:
-    PageAddBook(UserManager &userManager, QWidget *parent = Q_NULLPTR);
+    PageAddBook(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+
+public slots:
+    void slotAdd();
+    void slotAddEnd(const X::ErrorCode &ec);
 
 private:
     void setUI();
+    void setConnection();
 };

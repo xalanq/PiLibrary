@@ -1,16 +1,34 @@
 ﻿// copyright 2018 xalanq, chang-ran
 // license: lgpl v3.0
 
+#include <QMessageBox>
 #include <QVBoxLayout>
 
 #include <client/thread/ThreadSetBook.h>
 #include <client/dialog/DialogModifyBook.h>
+#include <core/utils.h>
 
-WidgetModifyBook::WidgetModifyBook(UserManager &userManager, const Book &book, QWidget *parent) :
+WidgetModifyBook::WidgetModifyBook(UserManager &userManager, BookManager &bookManager, const Book &book, QWidget *parent) :
     book(book),
-    WidgetSetBook(userManager, parent) {
+    WidgetSetBook(userManager, bookManager, parent) {
 
     setUI();
+    setConnection();
+}
+
+void WidgetModifyBook::slotModify() {
+    WidgetSetBook::getData();
+    bookManager.updateBook(pt, cover, std::bind(&WidgetModifyBook::slotModifyEnd, this, std::placeholders::_1));
+}
+
+void WidgetModifyBook::slotModifyEnd(const X::ErrorCode &ec) {
+    if (ec == X::NoError) {
+        QMessageBox::information(this, tr("Modify result"), tr("Successfully!"));
+        emit signalModify();
+    } else {
+        lblMessage->setText(QString::fromStdString(X::what(ec)));
+        lblMessage->show();
+    }
 }
 
 void WidgetModifyBook::setUI() {
@@ -43,16 +61,25 @@ void WidgetModifyBook::setUI() {
     beforeKeepTime = maxKeepTime;
 
     btnAdd->setText(tr("Modif&y"));
+
+    if (book.getCover().getSize()) {
+        QPixmap p(QSize(114, 160));
+        p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
+        lblCover->setPixmap(p.scaled(QSize(114, 160)));
+    }
 }
 
-DialogModifyBook::DialogModifyBook(UserManager &userManager, const Book &book, QWidget *parent) :
-    userManager(userManager),
-    book(book),
+void WidgetModifyBook::setConnection() {
+    connect(btnAdd, &QPushButton::clicked, this, &WidgetModifyBook::slotModify);
+}
+
+DialogModifyBook::DialogModifyBook(UserManager &userManager, BookManager &bookManager, const Book &book, QWidget *parent) :
     QDialog(parent) {
 
-    w = new WidgetModifyBook(userManager, book, this);
+    w = new WidgetModifyBook(userManager, bookManager, book, this);
         
     setUI();
+    setConnection();
 }
 
 void DialogModifyBook::setUI() {
@@ -63,4 +90,8 @@ void DialogModifyBook::setUI() {
     layout->addWidget(w);
 
     setLayout(layout);
+}
+
+void DialogModifyBook::setConnection() {
+    connect(w, SIGNAL(signalModify()), this, SIGNAL(signalModify()));
 }
