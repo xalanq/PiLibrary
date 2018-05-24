@@ -42,6 +42,6 @@ private:
     QLabel *labelMessage;
     
     QPushButton *btnSignUp;
-    QDialogButtonBox *btns;
+    QPushButton *btnLogin;
 };
 
