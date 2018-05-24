@@ -9,6 +9,7 @@
 #include <QStackedWidget>
 #include <QWidget>
 
+#include <client/dialog/DialogRefresh.h>
 #include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
 #include <client/page/PageAbout.h>
@@ -59,6 +60,8 @@ private:
     PageRecord *pageRecord;
     PageReturn *pageReturn;
     PageSetting *pageSetting;
+
+    DialogRefresh *dialogRefresh;
 
     int eventCount;
 };

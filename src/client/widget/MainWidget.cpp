@@ -21,6 +21,7 @@ MainWidget::MainWidget(UserManager &userManager, BookManager &bookManager, QWidg
     listWidget = new QListWidget(this);
     pageWidget = new QStackedWidget(this);
     scrollArea = new QScrollArea(this);
+    dialogRefresh = new DialogRefresh(this);
 
     setUI();
     setConnection();
@@ -42,10 +43,14 @@ void MainWidget::setEvents() {
         userManager.installStarEvent(std::bind(&PageFavorite::updateStar, pageFavorite, std::placeholders::_1, std::placeholders::_2));
         userManager.installBorrowEvent(std::bind(&PageRecord::updateBorrow, pageRecord, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         bookManager.installBrowseEvent(std::bind(&PageRecord::updateBrowse, pageRecord, std::placeholders::_1));
+        setDisabled(false);
+        dialogRefresh->hide();
     }
 }
 
 void MainWidget::refresh(bool force) {
+    dialogRefresh->show();
+    setDisabled(true);
     if (force) {
         userManager.refresh();
         bookManager.refresh();

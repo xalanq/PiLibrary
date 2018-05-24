@@ -31,12 +31,17 @@ DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, const
     lblAuthor = new QLabel(this);
     lblIntroduction = new QLabel(this);
     lblPosition = new QLabel(this);
-    lblAmount = new QLabel(this);
     lblMaxKeepTime = new QLabel(this);
+
+    lblBookid = new QLabel(this);
+    lblPublisher = new QLabel(this);
+    lblAmount = new QLabel(this);
+    lblISBN = new QLabel(this);
 
     btnStar = new QPushButton(this);
     btnBorrow = new QPushButton(this);
     btnModify = new QPushButton(this);
+    btnMore = new QPushButton(this);
 
     setUI();
     setConnection();
@@ -61,6 +66,10 @@ void DialogBook::setBook(const Book &book) {
     lblAuthor->setText(QString::fromStdString(book.getAuthor()));
     lblIntroduction->setText(QString::fromStdString(book.getIntroduction()));
     lblPosition->setText(QString::fromStdString(book.getPosition()));
+
+    lblBookid->setText(tr("Bookid: ") + QString::number(book.getBookid()));
+    lblPublisher->setText(tr("Publisher: ") + QString::fromStdString(book.getPublisher()));
+    lblISBN->setText(tr("ISBN: ") + QString::fromStdString(book.getISBN()));
     lblAmount->setText(tr("Amount: ") + QString::number(book.getAmount()));
 
     auto maxKeepTime = book.getMaxKeepTime();
@@ -76,6 +85,7 @@ void DialogBook::setBook(const Book &book) {
     if (bookid > 0) {
         btnStar->setDisabled(false);
         btnBorrow->setDisabled(false);
+        btnMore->setDisabled(false);
 
         btnStar->setText(strStar);
         if (userManager.isStaredBook(bookid))
@@ -165,6 +175,20 @@ void DialogBook::slotModify() {
     dialog.exec();
 }
 
+void DialogBook::slotMore() {
+    if (lblBookid->isHidden()) {
+        lblBookid->show();
+        lblPublisher->show();
+        lblISBN->show();
+        lblAmount->show();
+    } else {
+        lblBookid->hide();;
+        lblPublisher->hide();
+        lblISBN->hide();
+        lblAmount->hide();
+    }
+}
+
 void DialogBook::setUI() {
     setWindowTitle(tr("Book"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -176,14 +200,20 @@ void DialogBook::setUI() {
     btnModify->setText(tr("&Modify"));
     btnModify->setDisabled(true);
     btnModify->hide();
+    btnMore->setText(tr("Mo&re"));
+    btnMore->setDisabled(true);
 
     auto layoutInfo = new QVBoxLayout;
     layoutInfo->addWidget(lblTitle);
     layoutInfo->addWidget(lblAuthor);
     layoutInfo->addWidget(lblPosition);
-    layoutInfo->addWidget(lblPosition);
-    layoutInfo->addWidget(lblAmount);
     layoutInfo->addWidget(lblMaxKeepTime);
+
+    layoutInfo->addWidget(lblBookid);
+    layoutInfo->addWidget(lblPublisher);
+    layoutInfo->addWidget(lblISBN);
+    layoutInfo->addWidget(lblAmount);
+    slotMore();
 
     auto layoutUp = new QHBoxLayout;
     layoutUp->addWidget(lblCover);
@@ -198,6 +228,7 @@ void DialogBook::setUI() {
     layoutButton->addWidget(btnStar);
     layoutButton->addWidget(btnBorrow);
     layoutButton->addWidget(btnModify);
+    layoutButton->addWidget(btnMore);
 
     auto layout = new QVBoxLayout;
     layout->addWidget(w);
@@ -223,4 +254,9 @@ void DialogBook::setConnection() {
             &QPushButton::clicked,
             this,
             &DialogBook::slotModify);
+    connect(btnMore,
+            &QPushButton::clicked,
+            this,
+            &DialogBook::slotMore);
+
 }

@@ -31,6 +31,7 @@ public slots:
     void slotBorrowBegin();
     void slotBorrowEnd(const X::ErrorCode &ec);
     void slotModify();
+    void slotMore();
 
 private:
     void setUI();
@@ -52,10 +53,15 @@ private:
     QLabel *lblAuthor;
     QLabel *lblIntroduction;
     QLabel *lblPosition;
-    QLabel *lblAmount;
     QLabel *lblMaxKeepTime;
+
+    QLabel *lblBookid;
+    QLabel *lblPublisher;
+    QLabel *lblISBN;
+    QLabel *lblAmount;
 
     QPushButton *btnStar;
     QPushButton *btnBorrow;
     QPushButton *btnModify;
+    QPushButton *btnMore;
 };
