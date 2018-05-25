@@ -883,7 +883,6 @@ UserManager::ptree UserManager::getSearchBookList(const ptree &pt) {
         doc << "introduction" << open_document << "$regex" << bsoncxx::types::b_utf8(*introduction) << close_document;
     if (position)
         doc << "position" << open_document << "$regex" << bsoncxx::types::b_utf8(*position) << close_document;
-    doc << close_document;
     bsoncxx::document::value val = doc << finalize;
 
     mongocxx::options::find opt;

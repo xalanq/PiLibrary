@@ -3,11 +3,16 @@
 
 #pragma once
 
+#include <map>
+
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QWidget>
 
+#include <client/manager/BookManager.h>
+#include <client/manager/UserManager.h>
 #include <client/core/BookBrief.h>
+#include <core/types.h>
 
 class ListWidgetItemBook : public QListWidgetItem {
 public:
@@ -27,10 +32,26 @@ class ListWidgetBrowseBook : public QListWidget {
     Q_OBJECT
 
 public:
-    ListWidgetBrowseBook(QWidget *parent = Q_NULLPTR);
+    ListWidgetBrowseBook(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
     void add(const BookBrief &book, bool star, int row = 0);
     void update(const BookBrief &book, bool star, int row);
+    void updateStar(const X::xint &bookid, bool star);
+
+signals:
+    void signalReady();
+    void signalModify();
+
+public slots:
+    void slotGetBookList(const X::ErrorCode &ec, const X::ptree &pt);
+    void slotItemClicked(QListWidgetItem *item);
 
 private:
     void setUI();
+    void setConnection();
+
+private:
+    UserManager &userManager;
+    BookManager &bookManager;
+
+    std::map<X::xint, int> books;
 };
