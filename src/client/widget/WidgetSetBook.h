@@ -60,7 +60,7 @@ protected:
     QLineEdit *editISBN;
     QLineEdit *editPublisher;
     QPlainTextEdit *editIntroduction;
-    QComboBox *cbboxPrirority;
+    QComboBox *cbboxPriority;
     QLineEdit *editPosition;
     QLineEdit *editAmount;
 

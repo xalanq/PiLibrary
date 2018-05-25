@@ -159,6 +159,15 @@ void DialogBook::slotBorrowEnd(const X::ErrorCode &ec) {
         );
         return;
     }
+    QMessageBox::information(
+        this,
+        tr("Borrow book"),
+        tr("Successfully borrow a book: \n") +
+        QString::fromStdString(bookPtr->getTitle()) +
+        tr("\nPlease go to ") +
+        QString::fromStdString(bookPtr->getPosition()) +
+        tr(" to get the book")
+    );
     auto beginTime = time(0);
     auto endTime = beginTime + keepTime;
     userManager.borrowBook(bookPtr->getBookid(), beginTime, endTime);

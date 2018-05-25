@@ -143,6 +143,10 @@ void SocketWrapper::readBody(const xll &token, const xint &length, const ActionC
                 doGetBookCover(std::move(pt), token);
             else if (ac == X::SetBookCover)
                 doSetBookCover(std::move(pt), token);
+            else if (ac == X::GetSearchBookList)
+                doGetSearchBookList(std::move(pt), token);
+            else if (ac == X::SetPriority)
+                doSetPriority(std::move(pt), token);
             else
                 write(X::UnknownError, X::Error);
         }
@@ -618,4 +622,56 @@ void SocketWrapper::doSetBookCover(ptree pt, const xll &token) {
         }
     }
     saveFile(ec, X::SetBookCoverFeedback, tk, pt);
+}
+
+void SocketWrapper::doGetSearchBookList(ptree pt, const xll &token) {
+    auto tr = ptree();
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doGetSearchBookList) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doGetSearchBookList) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("priority", it->getPriority());
+            _from(doGetSearchBookList);
+            tr = userManager.getSearchBookList(pt);
+        }
+    }
+    write(ec, X::GetSearchBookListFeedback, tk, std::move(tr));
+}
+
+void SocketWrapper::doSetPriority(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doSetPriority) << "token = 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doSetPriority) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            auto userPriority = it->getPriority();
+            if (userPriority != X::SUPER_ADMINISTER)
+                ec = X::NoPermission;
+            else {
+                pt.put<xint>("userPriority", userPriority);
+                _from(doSetPriority);
+                ec = userManager.setPriority(pt);
+                if (!ec)
+                    _from(doSetPriority) << "succeed to set priority\n";
+                else
+                    _from(doSetPriority) << "fail to set priority: " << X::what(ec) << '\n';
+            }
+        }
+    }
+    write(ec, X::SetPriorityFeedback, tk);
 }

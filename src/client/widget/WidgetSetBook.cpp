@@ -46,7 +46,7 @@ WidgetSetBook::WidgetSetBook(UserManager &userManager, BookManager &bookManager,
     spinHour = new QSpinBox(this);
     spinMinute = new QSpinBox(this);
 
-    cbboxPrirority = new QComboBox(this);
+    cbboxPriority = new QComboBox(this);
     editAmount = new QLineEdit(this);
     editIntroduction = new QPlainTextEdit(this);
 
@@ -90,7 +90,7 @@ void WidgetSetBook::getData() {
         pt.put("publisher", editPublisher->text().toStdString());
     if (editIntroduction->document()->isModified())
         pt.put("introduction", editIntroduction->toPlainText().toStdString());
-    pt.put("priority", priorityInfo[cbboxPrirority->currentIndex()]);
+    pt.put("priority", priorityInfo[cbboxPriority->currentIndex()]);
     if (editAmount->isModified())
         pt.put("amount", editAmount->text().toInt());
     if (editPosition->isModified())
@@ -231,11 +231,11 @@ void WidgetSetBook::setUI() {
         priorityList.append(tr("Super Administer"));
         priorityInfo.push_back(X::SUPER_ADMINISTER);
     }
+    cbboxPriority->addItems(priorityList);
     lblPriority->setText(tr("P&riority: "));
-    lblPriority->setBuddy(cbboxPrirority);
-    cbboxPrirority->addItems(priorityList);
+    lblPriority->setBuddy(cbboxPriority);
     layoutDown->addWidget(lblPriority);
-    layoutDown->addWidget(cbboxPrirority);
+    layoutDown->addWidget(cbboxPriority);
 
     lblAmount->setText(tr("A&mount: "));
     lblAmount->setBuddy(editAmount);

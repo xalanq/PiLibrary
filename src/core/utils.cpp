@@ -151,6 +151,14 @@ namespace X {
             return "Set Book Cover";
         case SetBookCoverFeedback:
             return "Set Book Cover Feedback";
+        case GetSearchBookList:
+            return "Get Search Book List";
+        case GetSearchBookListFeedback:
+            return "Get Search Book List Feedback";
+        case SetPriority:
+            return "Set Priority";
+        case SetPriorityFeedback:
+            return "Set Priority Feedback";
         default:
             return "No Such Action";
         }

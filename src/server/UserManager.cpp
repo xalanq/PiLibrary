@@ -206,6 +206,9 @@ UserManager::ErrorCode UserManager::borrowBook(const ptree &pt) {
     auto keepTime = pt.get<xll>("keepTime", 0);
     auto endTime = beginTime + keepTime;
 
+    if (!bookid)
+        return X::NoSuchBook;
+
     using namespace mongo;
     auto client = pool.acquire();
     mongo::pipeline p;
@@ -269,7 +272,7 @@ UserManager::ErrorCode UserManager::borrowBook(const ptree &pt) {
                                 kvp("bookid", bookid),
                                 kvp("beginTime", beginTime),
                                 kvp("endTime", endTime),
-                                kvp("returnTime", X::xll(0))
+                                kvp("returnTime", xll(0))
                             ))
                         ))
                     )
@@ -289,7 +292,7 @@ UserManager::ErrorCode UserManager::borrowBook(const ptree &pt) {
                                 kvp("userid", userid),
                                 kvp("beginTime", beginTime),
                                 kvp("endTime", endTime),
-                                kvp("returnTime", X::xll(0))
+                                kvp("returnTime", xll(0))
                             ))
                         ))
                     )
@@ -306,6 +309,11 @@ UserManager::ErrorCode UserManager::returnBook(const ptree &pt) {
     auto returnTime = pt.get<xll>("returnTime");
     auto userid = pt.get<xint>("userid", 0);
     auto bookid = pt.get<xint>("bookid", 0);
+
+    if (!bookid)
+        return X::NoSuchBook;
+    if (!userid)
+        return X::NoSuchUser;
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -348,7 +356,8 @@ UserManager::ErrorCode UserManager::returnBook(const ptree &pt) {
         (*client)[db_name]["user"].update_one(
             make_document(
                 kvp("userid", userid),
-                kvp("borrowRecord.bookid", bookid)
+                kvp("borrowRecord.bookid", bookid),
+                kvp("borrowRecord.returnTime", xll(0))
             ),
             make_document(
                 kvp("$set", make_document(
@@ -367,6 +376,9 @@ UserManager::ErrorCode UserManager::starBook(const ptree &pt) {
     auto priority = pt.get<xint>("priority");
     auto time = pt.get<xll>("time");
     auto bookid = pt.get<xint>("bookid", 0);
+
+    if (!bookid)
+        return X::NoSuchBook;
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -430,6 +442,9 @@ UserManager::ErrorCode UserManager::unStarBook(const ptree &pt) {
     auto userid = pt.get<xint>("userid");
     auto bookid = pt.get<xint>("bookid", 0);
 
+    if (!bookid)
+        return X::NoSuchBook;
+
     using namespace mongo;
     auto client = pool.acquire();
     auto res = (*client)[db_name]["book"].update_one(
@@ -480,6 +495,9 @@ UserManager::ptree UserManager::getBook(const ptree &pt) {
     auto time = pt.get<xll>("time");
     auto bookid = pt.get<xint>("bookid", 0);
 
+    if (!bookid)
+        return {};
+
     using namespace mongo;
     auto client = pool.acquire();
     mongocxx::options::find opt;
@@ -526,6 +544,9 @@ UserManager::ptree UserManager::getBookBrief(const ptree &pt) {
     auto userid = pt.get<xint>("userid");
     auto priority = pt.get<xint>("priority");
     auto bookid = pt.get<xint>("bookid", 0);
+
+    if (!bookid)
+        return {};
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -744,6 +765,9 @@ UserManager::xstring UserManager::getResource(const ptree &pt) {
     auto bookid = pt.get<xint>("bookid", 0);
     xstring path = "";
 
+    if (!bookid)
+        return "";
+
     using namespace mongo;
     auto client = pool.acquire();
     mongocxx::options::find opt;
@@ -776,6 +800,9 @@ UserManager::ErrorCode UserManager::setResource(const ptree &pt) {
     auto resourceName = pt.get<xstring>("resourceName");
     auto resourcePath = pt.get<xstring>("resourcePath");
     auto bookid = pt.get<xint>("bookid", 0);
+
+    if (!bookid)
+        return X::NoSuchBook;
 
     using namespace mongo;
     auto client = pool.acquire();
@@ -824,6 +851,93 @@ UserManager::ErrorCode UserManager::setResource(const ptree &pt) {
     );
     if (res->modified_count() != 1)
         return X::InvalidResource;
+    return X::NoError;
+}
+
+UserManager::ptree UserManager::getSearchBookList(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto priority = pt.get<xint>("priority");
+    auto bookid = pt.get_optional<xstring>("bookid");
+    auto title = pt.get_optional<xstring>("title");
+    auto author = pt.get_optional<xstring>("author");
+    auto ISBN = pt.get_optional<xstring>("ISBN");
+    auto publisher = pt.get_optional<xstring>("publisher");
+    auto introduction = pt.get_optional<xstring>("introduction");
+    auto position = pt.get_optional<xstring>("position");
+
+    using namespace mongo;
+    auto client = pool.acquire();
+
+    auto doc = document();
+    if (bookid)
+        doc << "bookid" << open_document << "$regex" << bsoncxx::types::b_utf8(*bookid) << close_document;
+    if (title)
+        doc << "title" << open_document << "$regex" << bsoncxx::types::b_utf8(*title) << close_document;
+    if (author)
+        doc << "author" << open_document << "$regex" << bsoncxx::types::b_utf8(*author) << close_document;
+    if (ISBN)
+        doc << "ISBN" << open_document << "$regex" << bsoncxx::types::b_utf8(*ISBN) << close_document;
+    if (publisher)
+        doc << "publisher" << open_document << "$regex" << bsoncxx::types::b_utf8(*publisher) << close_document;
+    if (introduction)
+        doc << "introduction" << open_document << "$regex" << bsoncxx::types::b_utf8(*introduction) << close_document;
+    if (position)
+        doc << "position" << open_document << "$regex" << bsoncxx::types::b_utf8(*position) << close_document;
+    doc << close_document;
+    bsoncxx::document::value val = doc << finalize;
+
+    mongocxx::options::find opt;
+    opt.projection(
+        make_document(
+            kvp("_id", 0),
+            kvp("bookid", 1)
+        )
+    );
+
+    auto cur = (*client)[db_name]["book"].find(
+        val.view(),
+        opt
+    );
+
+    ptree p;
+    ptree child;
+    ptree value;
+    for (auto &&doc : cur) {
+        auto bookid = xint(doc["bookid"].get_int32().value);
+        value.put("", bookid);
+        child.push_back(std::make_pair("", value));
+    }
+    p.add_child("bookid", child);
+    return std::move(p);
+}
+
+UserManager::ErrorCode UserManager::setPriority(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    xint userPriority = pt.get<xint>("userPriority");
+    xint userid = pt.get<xint>("userid", 0);
+    xint priority = pt.get<xint>("priority", X::USER);
+    if (priority >= userPriority)
+        return X::NoPermission;
+
+    using namespace mongo;
+    auto client = pool.acquire();
+    auto res = (*client)[db_name]["user"].update_one(
+        make_document(
+            kvp("userid", userid),
+            kvp("priority", make_document(
+                kvp("$lt", userPriority)
+            ))
+        ),
+        make_document(
+            kvp("$set", make_document(
+                kvp("priority", priority)
+            ))
+        )
+    );
+    if (res->matched_count() != 1)
+        return X::NoSuchUser;
+    if (res->matched_count() != 1)
+        return X::NoPermission;
     return X::NoError;
 }
 

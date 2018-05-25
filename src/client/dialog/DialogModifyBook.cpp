@@ -45,7 +45,7 @@ void WidgetModifyBook::setUI() {
     auto priority = book.getPriority();
     for (int i = 0; i < priorityInfo.size(); ++i)
         if (priorityInfo[i] == priority) {
-            cbboxPrirority->setCurrentIndex(i);
+            cbboxPriority->setCurrentIndex(i);
             break;
         }
     editPosition->setText(QString::fromStdString(book.getPosition()));

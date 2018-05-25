@@ -136,7 +136,7 @@ void MainWidget::initListWidget() {
     if (userManager.isAdminister())
         items.append(tr("Add Book"));
     if (userManager.isAdminister())
-        items.append(tr("Return"));
+        items.append(tr("Administer"));
     items.append(tr("Setting"));
     items.append(tr("About"));
 
@@ -151,7 +151,7 @@ void MainWidget::initPageWidget() {
     if (userManager.isAdminister())
         pageWidget->addWidget(pageAddBook = new PageAddBook(userManager, bookManager, this));
     if (userManager.isAdminister())
-        pageWidget->addWidget(pageReturn = new PageReturn(userManager, bookManager, this));
+        pageWidget->addWidget(pageAdminister = new PageAdminister(userManager, bookManager, this));
     pageWidget->addWidget(pageSetting = new PageSetting(userManager, this));
     pageWidget->addWidget(pageAbout = new PageAbout(this));
 
