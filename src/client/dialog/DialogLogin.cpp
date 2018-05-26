@@ -120,28 +120,44 @@ void DialogLogin::slotRegister() {
 }
 
 void DialogLogin::setUI() {
-    setWindowTitle(QString::fromStdString(X::APP_NAME));
+	setWindowTitle(QString::fromStdString(X::APP_NAME));
 	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
 	setWindowOpacity(1);
 	setAutoFillBackground(true);
-	
-	labelMessage->setGeometry(50,180,400,30);
-    labelMessage->hide();
-		
-    cbboxUsername->setEditable(true);
-    cbboxUsername->lineEdit()->setPlaceholderText(tr("Username"));
+
+	labelMessage->setGeometry(50, 180, 400, 30);
+	labelMessage->hide();
+
+	cbboxUsername->setEditable(true);
+	cbboxUsername->lineEdit()->setPlaceholderText(tr("Username"));
 	cbboxUsername->setGeometry(50, 60, 200, 40);
-	
+	cbboxUsername->setStyleSheet("QComboBox::dro-down{subcontrol - origin: padding;subcontrol - position: top right;width: 20px;border - left - width: 1px;border - left - color: darkgray;border - left - style: solid; border - top - right - radius: 3px;border - bottom - right - radius: 3px;}");
+
     editPassword->setEchoMode(QLineEdit::Password);
     editPassword->setPlaceholderText(tr("Password"));
-	editPassword->setGeometry(50, 120, 200, 40);
+	editPassword->setGeometry(50, 98, 200, 40);
+	editPassword->setStyleSheet("border:2px solid gray;border-bottom-left-radius:10px;border-bottom-right-radius:10px;padding:2px 4px");
 
     btnLogin->setText(tr("&Log in"));
     btnSignUp->setText(tr("&Sign up"));
-	
-	btnLogin->setGeometry(75, 210, 150, 50);
-	btnSignUp->setGeometry(75, 280, 150, 35);
+
+
+	btnLogin->setStyleSheet("QPushButton{background-color:rgb(120,170,255);\
+							border:2px groove gray;\
+							border-radius:10px;\
+							padding:2px 4px} \
+							QPushButton:hover{ background-color:rgb(85, 170, 255); }\
+							QPushBotton:pressed{background-color:black");
+	btnSignUp->setStyleSheet("QPushButton{background-color:rgb(120,170,255);\
+							border:2px groove gray; \
+							border-radius:10px; \
+							padding:2px 4px} \
+							QPushButton:hover{ background-color:rgb(85, 170, 255); } \
+							QPushBotton:pressed{background-color:black");
+
+	btnLogin->setGeometry(75, 190, 150, 50);
+	btnSignUp->setGeometry(75, 260, 150, 35);
    
 	setFixedSize(300, 350);
    

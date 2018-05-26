@@ -138,6 +138,14 @@ void DialogSignUp::setUI() {
     editPasswordConfirm->setPlaceholderText(tr("Confirm password"));
     editPasswordConfirm->setEchoMode(QLineEdit::Password);
     editEmail->setPlaceholderText(tr("Email"));
+	
+	editUsername->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
+	editNickname->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
+	editPassword->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
+	editPasswordConfirm->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
+	editEmail->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
+
+
 
     labelMessage->hide();
 
