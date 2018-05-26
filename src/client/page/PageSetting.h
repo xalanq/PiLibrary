@@ -3,7 +3,11 @@
 
 #pragma once
 
+#include <QComboBox>
+#include <QLabel>
 #include <QPushButton>
+#include <QString>
+#include <QStringList>
 #include <QWidget>
 
 #include <client/manager/UserManager.h>
@@ -22,6 +26,7 @@ signals:
 public slots:
     void slotModify();
     void slotLogout();
+    void slotChangeLanguage(int index);
 
 private:
     void setUI();
@@ -30,7 +35,14 @@ private:
 private:
     UserManager &userManager;
     
-    QPushButton *btnRefresh;
     QPushButton *btnModify;
     QPushButton *btnLogout;
+
+    QPushButton *btnRefresh;
+
+    QComboBox *cbboxLanguage;
+    QLabel *lblLanguage;
+
+    QStringList languageList;
+    QStringList languageFileName;
 };

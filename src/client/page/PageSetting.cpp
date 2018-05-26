@@ -4,6 +4,7 @@
 #include <QGroupBox>
 #include <QMessageBox>
 #include <QHBoxLayout>
+#include <QSettings>
 #include <QVBoxLayout>
 
 #include <client/dialog/DialogModifyUser.h>
@@ -13,12 +14,23 @@ PageSetting::PageSetting(UserManager &userManager, QWidget *parent) :
     userManager(userManager),
     QWidget(parent) {
 
-    btnRefresh = new QPushButton(this);
     btnModify = new QPushButton(this);
     btnLogout = new QPushButton(this);
 
+    btnRefresh = new QPushButton(this);
+
+    cbboxLanguage = new QComboBox(this);
+    lblLanguage = new QLabel(this);
+
     setUI();
     setConnection();
+}
+
+void PageSetting::slotChangeLanguage(int index) {
+    QSettings setting;
+    setting.beginGroup("Setting");
+    setting.setValue("Language", languageFileName[index]);
+    setting.endGroup();
 }
 
 void PageSetting::slotModify() {
@@ -56,15 +68,37 @@ void PageSetting::setUI() {
     groupBook->setLayout(layoutBook);
 
 
+    auto groupInterface = new QGroupBox(tr("Interface"));
+
+    languageList.append(tr("Default"));
+    languageList.append("English");
+    languageList.append(u8"¼òÌåÖÐÎÄ");
+    languageFileName.append("default");
+    languageFileName.append("en_US");
+    languageFileName.append("zh_CN");
+
+    lblLanguage->setText(tr("&Language (need restart)"));
+    lblLanguage->setBuddy(cbboxLanguage);
+    cbboxLanguage->addItems(languageList);
+    cbboxLanguage->setCurrentIndex(languageFileName.indexOf(QSettings().value("Setting/Language", "default").toString()));
+    auto layoutInterface = new QHBoxLayout;
+    layoutInterface->addWidget(lblLanguage);
+    layoutInterface->addWidget(cbboxLanguage);
+
+    groupInterface->setLayout(layoutInterface);
+
+
     auto layout = new QVBoxLayout;
     layout->addWidget(groupUser);
     layout->addWidget(groupBook);
+    layout->addWidget(groupInterface);
     layout->addStretch();
     setLayout(layout);
 }
 
 void PageSetting::setConnection() {
-    connect(btnRefresh, SIGNAL(clicked()), this, SIGNAL(signalRefresh()));
     connect(btnModify, &QPushButton::clicked, this, &PageSetting::slotModify);
     connect(btnLogout, &QPushButton::clicked, this, &PageSetting::slotLogout);
+    connect(btnRefresh, SIGNAL(clicked()), this, SIGNAL(signalRefresh()));
+    connect(cbboxLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &PageSetting::slotChangeLanguage);
 }
