@@ -12,7 +12,7 @@
 #include <client/dialog/DialogSignUp.h>
 #include <client/thread/ThreadSignUp.h>
 #include <client/values.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 DialogSignUp::DialogSignUp(QWidget *parent) : 
     QDialog(parent) {
@@ -122,7 +122,7 @@ void DialogSignUp::slotSignUpEnd(const X::ErrorCode &ec) {
             labelMessage->setText(tr("Invalid email"));
             editEmail->setFocus();
         } else {
-            labelMessage->setText(QString::fromStdString(X::what(X::ErrorCode(ec))));
+            labelMessage->setText(X::what(X::ErrorCode(ec)));
         }
     }
 }

@@ -4,7 +4,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <server/SocketWrapper.h>
-#include <core/utils.h>
+#include <server/utils.h>
 
 #define _from(func) cerr << "(" << #func << ") from " << socket.remote_endpoint().address() << " : " 
 #define _to(func) cerr << "(" << #func << ") send to " << socket.remote_endpoint().address() << " : " 
@@ -105,46 +105,55 @@ void SocketWrapper::readBody(const xll &token, const xint &length, const ActionC
                 write(X::UnknownError, X::Error);
                 return;
             }
-            if (ac == X::Login)
-                doLogin(std::move(pt), token);
-            else if (ac == X::Register)
-                doRegister(std::move(pt), token);
-            else if (ac == X::Logout)
-                doLogout(std::move(pt), token);
-            else if (ac == X::Modify)
-                doModify(std::move(pt), token);
-            else if (ac == X::BorrowBook)
-                doBorrowBook(std::move(pt), token);
-            else if (ac == X::ReturnBook)
-                doReturnBook(std::move(pt), token);
-            else if (ac == X::StarBook)
-                doStarBook(std::move(pt), token);
-            else if (ac == X::UnStarBook)
-                doUnStarBook(std::move(pt), token);
-            else if (ac == X::GetBook)
-                doGetBook(std::move(pt), token);
-            else if (ac == X::GetBookBrief)
-                doGetBookBrief(std::move(pt), token);
-            else if (ac == X::SetBook)
-                doSetBook(std::move(pt), token);
-            else if (ac == X::GetLoginRecord)
-                doGetRecord(std::move(pt), token, "loginRecord", X::GetLoginRecordFeedback);
-            else if (ac == X::GetStarRecord)
-                doGetRecord(std::move(pt), token, "starRecord", X::GetStarRecordFeedback);
-            else if (ac == X::GetBorrowRecord)
-                doGetRecord(std::move(pt), token, "borrowRecord", X::GetBorrowRecordFeedback);
-            else if (ac == X::GetBrowseRecord)
-                doGetRecord(std::move(pt), token, "browseRecord", X::GetBrowseRecordFeedback);
-            else if (ac == X::GetKeepRecord)
-                doGetRecord(std::move(pt), token, "keepRecord", X::GetKeepRecordFeedback);
-            else if (ac == X::GetNewBookList)
-                doGetNewBookList(std::move(pt), token);
-            else if (ac == X::GetBookCover)
-                doGetBookCover(std::move(pt), token);
-            else if (ac == X::SetBookCover)
-                doSetBookCover(std::move(pt), token);
-            else
+            try {
+                if (ac == X::Login)
+                    doLogin(std::move(pt), token);
+                else if (ac == X::Register)
+                    doRegister(std::move(pt), token);
+                else if (ac == X::Logout)
+                    doLogout(std::move(pt), token);
+                else if (ac == X::Modify)
+                    doModify(std::move(pt), token);
+                else if (ac == X::BorrowBook)
+                    doBorrowBook(std::move(pt), token);
+                else if (ac == X::ReturnBook)
+                    doReturnBook(std::move(pt), token);
+                else if (ac == X::StarBook)
+                    doStarBook(std::move(pt), token);
+                else if (ac == X::UnStarBook)
+                    doUnStarBook(std::move(pt), token);
+                else if (ac == X::GetBook)
+                    doGetBook(std::move(pt), token);
+                else if (ac == X::GetBookBrief)
+                    doGetBookBrief(std::move(pt), token);
+                else if (ac == X::SetBook)
+                    doSetBook(std::move(pt), token);
+                else if (ac == X::GetLoginRecord)
+                    doGetRecord(std::move(pt), token, "loginRecord", X::GetLoginRecordFeedback);
+                else if (ac == X::GetStarRecord)
+                    doGetRecord(std::move(pt), token, "starRecord", X::GetStarRecordFeedback);
+                else if (ac == X::GetBorrowRecord)
+                    doGetRecord(std::move(pt), token, "borrowRecord", X::GetBorrowRecordFeedback);
+                else if (ac == X::GetBrowseRecord)
+                    doGetRecord(std::move(pt), token, "browseRecord", X::GetBrowseRecordFeedback);
+                else if (ac == X::GetKeepRecord)
+                    doGetRecord(std::move(pt), token, "keepRecord", X::GetKeepRecordFeedback);
+                else if (ac == X::GetNewBookList)
+                    doGetNewBookList(std::move(pt), token);
+                else if (ac == X::GetBookCover)
+                    doGetBookCover(std::move(pt), token);
+                else if (ac == X::SetBookCover)
+                    doSetBookCover(std::move(pt), token);
+                else if (ac == X::GetSearchBookList)
+                    doGetSearchBookList(std::move(pt), token);
+                else if (ac == X::SetPriority)
+                    doSetPriority(std::move(pt), token);
+                else
+                    write(X::UnknownError, X::Error);
+            } catch (std::exception &e) {
+                _from(readBody) << e.what() << '\n';
                 write(X::UnknownError, X::Error);
+            }
         }
     );
 }
@@ -589,7 +598,6 @@ void SocketWrapper::doGetBookCover(ptree pt, const xll &token) {
         }
     }
     write(ec, X::GetBookCoverFeedback, tk, {}, file);
-    file.clean();
 }
 
 void SocketWrapper::doSetBookCover(ptree pt, const xll &token) {
@@ -619,4 +627,56 @@ void SocketWrapper::doSetBookCover(ptree pt, const xll &token) {
         }
     }
     saveFile(ec, X::SetBookCoverFeedback, tk, pt);
+}
+
+void SocketWrapper::doGetSearchBookList(ptree pt, const xll &token) {
+    auto tr = ptree();
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doGetSearchBookList) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doGetSearchBookList) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("priority", it->getPriority());
+            _from(doGetSearchBookList);
+            tr = userManager.getSearchBookList(pt);
+        }
+    }
+    write(ec, X::GetSearchBookListFeedback, tk, std::move(tr));
+}
+
+void SocketWrapper::doSetPriority(ptree pt, const xll &token) {
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doSetPriority) << "token = 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doSetPriority) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            auto userPriority = it->getPriority();
+            if (userPriority != X::SUPER_ADMINISTER)
+                ec = X::NoPermission;
+            else {
+                pt.put<xint>("userPriority", userPriority);
+                _from(doSetPriority);
+                ec = userManager.setPriority(pt);
+                if (!ec)
+                    _from(doSetPriority) << "succeed to set priority\n";
+                else
+                    _from(doSetPriority) << "fail to set priority: " << X::what(ec) << '\n';
+            }
+        }
+    }
+    write(ec, X::SetPriorityFeedback, tk);
 }

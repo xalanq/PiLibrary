@@ -66,6 +66,8 @@ void Resource::clean() {
     }
 }
 
+std::map<X::xstring, Resource> Resource::resourceTemp {};
+
 size_t Resource::fileSize(const xstring &path) {
     struct stat statbuff;
     if (stat(path.c_str(), &statbuff) >= 0)
@@ -74,21 +76,30 @@ size_t Resource::fileSize(const xstring &path) {
 }
 
 bool Resource::add(const xstring &path, const Resource &file) {
+    auto f = Resource::copy(file);
     boost::filesystem::path p(path);
     boost::filesystem::create_directories(p.parent_path());
     FILE *fio = fopen(path.c_str(), "wb");
     if (fio == NULL)
         return false;
-    if (fwrite(file.getData(), file.getSize(), 1, fio) != 1)
+    if (fwrite(f.getData(), f.getSize(), 1, fio) != 1)
         return false;
     fclose(fio);
+    auto &t = resourceTemp[path];
+    t.clean();
+    t = f;
     return true;
 }
 
 Resource Resource::get(const xstring &path) {
+    auto &t = resourceTemp[path];
     FILE *fio = fopen(path.c_str(), "rb");
-    if (fio == NULL)
+    if (fio == NULL) {
+        t.clean();
         return nullptr;
+    }
+    if (t.getSize())
+        return t;
     Resource file;
     auto size = fileSize(path);
     file.setSize(size)

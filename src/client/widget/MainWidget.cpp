@@ -21,6 +21,7 @@ MainWidget::MainWidget(UserManager &userManager, BookManager &bookManager, QWidg
     listWidget = new QListWidget(this);
     pageWidget = new QStackedWidget(this);
     scrollArea = new QScrollArea(this);
+    dialogRefresh = new DialogRefresh(this);
 
     setUI();
     setConnection();
@@ -42,15 +43,23 @@ void MainWidget::setEvents() {
         userManager.installStarEvent(std::bind(&PageFavorite::updateStar, pageFavorite, std::placeholders::_1, std::placeholders::_2));
         userManager.installBorrowEvent(std::bind(&PageRecord::updateBorrow, pageRecord, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         bookManager.installBrowseEvent(std::bind(&PageRecord::updateBrowse, pageRecord, std::placeholders::_1));
+        setDisabled(false);
+        dialogRefresh->hide();
     }
 }
 
 void MainWidget::refresh(bool force) {
+    dialogRefresh->show();
+    setDisabled(true);
+    eventCount = 0;
+
+    userManager.clearBorrowEvent();
+    userManager.clearStarEvent();
+    bookManager.clearBrowseEvent();
     if (force) {
         userManager.refresh();
         bookManager.refresh();
     }
-    eventCount = 0;
     pageFavorite->refresh();
     pageRecord->refresh();
 }
@@ -112,6 +121,8 @@ void MainWidget::setConnection() {
     );
 
     connect(pageBrowse, &PageBrowse::signalModify, this, std::bind(&MainWidget::refresh, this, false));
+    connect(pageFavorite, &PageFavorite::signalModify, this, std::bind(&MainWidget::refresh, this, false));
+    connect(pageRecord, &PageRecord::signalModify, this, std::bind(&MainWidget::refresh, this, false));
     connect(pageSetting, &PageSetting::signalRefresh, this, std::bind(&MainWidget::refresh, this, true));
     connect(pageSetting, &PageSetting::signalModifyUser, widgetHead, &WidgetHead::slotModify);
     connect(pageSetting, SIGNAL(signalLogout()), this, SIGNAL(signalLogout()));
@@ -125,7 +136,7 @@ void MainWidget::initListWidget() {
     if (userManager.isAdminister())
         items.append(tr("Add Book"));
     if (userManager.isAdminister())
-        items.append(tr("Return"));
+        items.append(tr("Administer"));
     items.append(tr("Setting"));
     items.append(tr("About"));
 
@@ -140,7 +151,7 @@ void MainWidget::initPageWidget() {
     if (userManager.isAdminister())
         pageWidget->addWidget(pageAddBook = new PageAddBook(userManager, bookManager, this));
     if (userManager.isAdminister())
-        pageWidget->addWidget(pageReturn = new PageReturn(userManager, bookManager, this));
+        pageWidget->addWidget(pageAdminister = new PageAdminister(userManager, bookManager, this));
     pageWidget->addWidget(pageSetting = new PageSetting(userManager, this));
     pageWidget->addWidget(pageAbout = new PageAbout(this));
 

@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadGetBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadGetBook::ThreadGetBook(const xll &token, const xint &bookid, bool brief, QObject *parent) :
     token(token),

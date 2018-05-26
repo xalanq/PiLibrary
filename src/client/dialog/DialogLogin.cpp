@@ -16,7 +16,7 @@
 #include <client/dialog/DialogSignUp.h>
 #include <client/thread/ThreadLogin.h>
 #include <client/values.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 DialogLogin::DialogLogin(UserManager &userManager, QWidget *parent) :
     userManager(userManager),
@@ -109,7 +109,7 @@ void DialogLogin::slotLoginEnd(const X::ErrorCode &ec, const X::xll &token, cons
         else if (ec == X::LoginFailed)
             s = tr("Login failed, check network");
         else
-            s = QString::fromStdString(X::what(ec));
+            s = X::what(ec);
         labelMessage->setText(s);
     }
 }

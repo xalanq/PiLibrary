@@ -4,7 +4,7 @@
 #include <QMessageBox>
 
 #include <client/page/PageAddBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 PageAddBook::PageAddBook(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     WidgetSetBook(userManager, bookManager, parent) {
@@ -22,7 +22,7 @@ void PageAddBook::slotAddEnd(const X::ErrorCode &ec) {
     if (ec == X::NoError) {
         QMessageBox::information(this, tr("Add result"), tr("Successfully!"));
     } else {
-        lblMessage->setText(QString::fromStdString(X::what(ec)));
+        lblMessage->setText(X::what(ec));
         lblMessage->show();
     }
 }

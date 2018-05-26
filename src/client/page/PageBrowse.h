@@ -3,13 +3,13 @@
 
 #pragma once
 
-#include <map>
-
+#include <QTabWidget>
 #include <QWidget>
 
 #include <client/listwidget/ListWidgetBrowseBook.h>
 #include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
+#include <client/widget/WidgetSearchBook.h>
 #include <core/types.h>
 
 class PageBrowse : public QWidget {
@@ -24,10 +24,8 @@ signals:
     void signalModify();
 
 public slots:
-    void slotGetNewBookList(const X::ErrorCode &ec, const X::ptree &pt);
-    void slotItemClicked(QListWidgetItem *item);
-
     void refresh();
+    void slotSearch(const X::ptree &pt);
 
 private:
     void setUI();
@@ -37,7 +35,9 @@ private:
     UserManager &userManager;
     BookManager &bookManager;
 
-    ListWidgetBrowseBook *listWidgetBrowseBook;
+    QTabWidget *tabWidget;
+    ListWidgetBrowseBook *listWidgetNewBook;
 
-    std::map<X::xint, int> books;
+    WidgetSearchBook *widgetSearchBook;
+    ListWidgetBrowseBook *listWidgetSearchBook;
 };

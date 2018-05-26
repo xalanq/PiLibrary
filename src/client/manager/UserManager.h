@@ -30,11 +30,13 @@ public:
     bool isStaredBook(const xint &bookid);
     void clearStar();
     void installStarEvent(std::function<void(xint &, bool)> f);
+    void clearStarEvent();
 
     void borrowBook(const xint &bookid, const xll &beginTime, const xll &endTime);
     bool isBorrowedBook(const xint &bookid);
     void clearBorrowBook();
     void installBorrowEvent(std::function<void(xint &, xll &, xll &)> f);
+    void clearBorrowEvent();
 
     void refresh();
 

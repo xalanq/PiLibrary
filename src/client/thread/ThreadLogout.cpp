@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadLogout.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadLogout::ThreadLogout(const xll &token, QObject *parent) :
     token(token),

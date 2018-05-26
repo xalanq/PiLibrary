@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadStarBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadStarBook::ThreadStarBook(const xll &token, const xint &bookid, QObject *parent) :
     token(token),

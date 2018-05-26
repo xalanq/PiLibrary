@@ -4,7 +4,7 @@
 #include <QPixmap>
 
 #include <client/listwidget/ListWidgetKeepRecord.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ListWidgetItemKeepRecord::ListWidgetItemKeepRecord(const BookBrief &book, const KeepRecord &record) :
     book(book),
@@ -34,7 +34,9 @@ void ListWidgetItemKeepRecord::setUI() {
     icon.addPixmap(p.scaled(QSize(114, 160)));
     setIcon(icon);
 
-    setText(QObject::tr("Title: ") +
+    setText(QObject::tr("Bookid: ") + 
+            QString::number(book.getBookid()) +
+            QObject::tr("\nTitle: ") +
             QString::fromStdString(book.getTitle()) +
             QObject::tr("\nbeginTime: ") +
             QString::fromStdString(X::time_to_str(record.getBeginTime())) +

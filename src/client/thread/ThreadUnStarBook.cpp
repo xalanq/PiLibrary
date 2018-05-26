@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadUnStarBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadUnStarBook::ThreadUnStarBook(const xll &token, const xint &bookid, QObject *parent) :
     token(token),

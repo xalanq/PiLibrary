@@ -5,7 +5,7 @@
 #include <boost/thread.hpp>
 
 #include <core/SocketInfo.h>
-#include <core/utils.h>
+#include <server/utils.h>
 
 using boost::asio::ip::tcp;
 boost::asio::io_service io_service;

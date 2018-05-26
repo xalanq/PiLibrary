@@ -1,35 +1,31 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
-#include <client/thread/ThreadBorrowBook.h>
-#include <client/utils.h>
+#include <client/thread/ThreadGetSearchBookList.h>
+#include <core/utils.h>
 
-ThreadBorrowBook::ThreadBorrowBook(const xll &token, const xint &bookid, const xll &keepTime, QObject *parent) :
+ThreadGetSearchBookList::ThreadGetSearchBookList(const xll &token, const ptree &pt, QObject *parent) :
     token(token),
-    bookid(bookid),
-    keepTime(keepTime),
+    pt(pt),
     ThreadNetwork(parent) {
 }
 
-void ThreadBorrowBook::run() {
+void ThreadGetSearchBookList::run() {
     xll token = this->token;
-    ptree pt;
     ActionCode ac = X::NoAction;
     ErrorCode ec = X::NoError;
 
-    pt.put("bookid", this->bookid);
-    pt.put("keepTime", this->keepTime);
-
     try {
         auto socket = newSocket();
-        X::tcp_sync_write(socket, token, X::BorrowBook, pt);
+        X::tcp_sync_write(socket, token, X::GetSearchBookList, pt);
         pt = ptree();
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
         ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
     } catch (std::exception &) {
         ec = X::UnknownError;
+        pt = ptree();
     }
 
-    emit done(ec);
+    emit done(ec, pt);
 }

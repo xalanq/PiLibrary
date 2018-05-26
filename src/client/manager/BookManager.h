@@ -44,6 +44,7 @@ public:
     void updateBook(const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f);
 
     void installBrowseEvent(std::function<void(xint &)> f);
+    void clearBrowseEvent();
 
     void refresh();
 

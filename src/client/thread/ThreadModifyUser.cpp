@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadModifyUser.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadModifyUser::ThreadModifyUser(const xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent) :
     token(token),

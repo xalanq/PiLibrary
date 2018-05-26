@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadGetNewBookList.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadGetNewBookList::ThreadGetNewBookList(const xll &token, const xint &number, QObject *parent) :
     token(token),

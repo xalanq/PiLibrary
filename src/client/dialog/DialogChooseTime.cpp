@@ -7,7 +7,7 @@
 #include <QVBoxLayout>
 
 #include <client/dialog/DialogChooseTime.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 DialogChooseTime::DialogChooseTime(const X::xll &maxKeepTime, QWidget *parent) :
     maxKeepTime(maxKeepTime),

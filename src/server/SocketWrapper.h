@@ -58,6 +58,10 @@ private:
     void doGetBookCover(ptree pt, const xll &token);
     void doSetBookCover(ptree pt, const xll &token);
 
+    void doGetSearchBookList(ptree pt, const xll &token);
+
+    void doSetPriority(ptree pt, const xll &token);
+
     boost::asio::ip::tcp::socket socket;
     SocketInfo info;
     SessionManager &sessionManager;

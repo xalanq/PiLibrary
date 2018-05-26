@@ -103,6 +103,10 @@ namespace X {
         GetBookCover,
         GetBookCoverFeedback,
         SetBookCover,
-        SetBookCoverFeedback
+        SetBookCoverFeedback,
+        GetSearchBookList,
+        GetSearchBookListFeedback,
+        SetPriority,
+        SetPriorityFeedback
     };
 }
