@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadLogin.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadLogin::ThreadLogin(const QString &username, const QString &password, QObject *parent) :
     username(username.toStdString()),

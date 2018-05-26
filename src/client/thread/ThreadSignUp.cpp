@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadSignUp.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadSignUp::ThreadSignUp(const QString &username, const QString &nickname, const QString &password, const QString &email, QObject *parent) :
     username(username.toStdString()),

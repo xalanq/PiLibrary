@@ -9,13 +9,11 @@
 #include <core/types.h>
 
 namespace X {
-    extern xstring what(const ErrorCode &ec);
-    extern xstring what(const ActionCode &ac);
-
     extern bool checkUsername(const xstring &username);
     extern bool checkNickname(const xstring &nickname);
     extern bool checkPassword(const xstring &password);
     extern bool checkEmail(const xstring &email);
+    extern xstring escape(const xstring &str);
 
     extern xstring time_to_str(const xll &time);
 

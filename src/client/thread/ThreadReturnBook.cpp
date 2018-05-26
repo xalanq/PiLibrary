@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadReturnBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadReturnBook::ThreadReturnBook(const xll &token, const xint &userid, const xint &bookid, QObject *parent) :
     token(token),

@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadSetBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadSetBook::ThreadSetBook(const xll &token, const ptree &pt, const Resource &cover, QObject *parent) :
     token(token),

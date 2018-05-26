@@ -4,7 +4,7 @@
 #include <QPixmap>
 
 #include <client/listwidget/ListWidgetKeepRecord.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ListWidgetItemKeepRecord::ListWidgetItemKeepRecord(const BookBrief &book, const KeepRecord &record) :
     book(book),

@@ -12,7 +12,7 @@
 #include <client/dialog/DialogModifyUser.h>
 #include <client/thread/ThreadModifyUser.h>
 #include <client/values.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 DialogModifyUser::DialogModifyUser(UserManager &userManager, QWidget *parent) : 
     userManager(userManager),
@@ -117,7 +117,7 @@ void DialogModifyUser::slotModifyEnd(const X::ErrorCode &ec) {
             labelMessage->setText(tr("Invalid new password"));
             editPasswordNew->setFocus();
         } else {
-            labelMessage->setText(QString::fromStdString(X::what(ec)));
+            labelMessage->setText(X::what(ec));
         }
     }
 }

@@ -5,8 +5,8 @@
 #include <regex>
 
 #include <core/SocketInfo.h>
-#include <core/utils.h>
 #include <server/UserManager.h>
+#include <server/utils.h>
 
 UserManager::UserManager(const xstring &mongo_url, const xstring &mongo_db_name) :
     pool(mongo::uri(mongo_url)),

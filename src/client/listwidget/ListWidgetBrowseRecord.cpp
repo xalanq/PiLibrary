@@ -4,7 +4,7 @@
 #include <QPixmap>
 
 #include <client/listwidget/ListWidgetBrowseRecord.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ListWidgetItemBrowseRecord::ListWidgetItemBrowseRecord(const BookBrief &book, const BrowseRecord &record) :
     book(book),

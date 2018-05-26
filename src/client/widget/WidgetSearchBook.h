@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <QCheckBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -43,6 +44,14 @@ private:
     QLineEdit *editBookid;
     QLineEdit *editPublisher;
     QLineEdit *editISBN;
+
+    QCheckBox *regexTitle;
+    QCheckBox *regexAuthor;
+    QCheckBox *regexIntroduction;
+    QCheckBox *regexPosition;
+    QCheckBox *regexBookid;
+    QCheckBox *regexPublisher;
+    QCheckBox *regexISBN;
 
     QPushButton *btnSearch;
     QPushButton *btnMore;

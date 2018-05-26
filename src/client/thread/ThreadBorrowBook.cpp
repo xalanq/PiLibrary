@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadBorrowBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadBorrowBook::ThreadBorrowBook(const xll &token, const xint &bookid, const xll &keepTime, QObject *parent) :
     token(token),

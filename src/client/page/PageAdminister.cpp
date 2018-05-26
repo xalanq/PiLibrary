@@ -10,7 +10,7 @@
 #include <client/thread/ThreadReturnBook.h>
 #include <client/thread/ThreadSetPriority.h>
 #include <client/page/PageAdminister.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 PageAdminister::PageAdminister(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     userManager(userManager),
@@ -40,7 +40,7 @@ void PageAdminister::slotReturn() {
     connect(thread, &ThreadReturnBook::done, this, [this](const X::ErrorCode &ec) {
         QString text;
         if (ec != X::NoError)
-            text = QString::fromStdString(X::what(ec));
+            text = X::what(ec);
         else
             text = tr("Successfully!");
         QMessageBox::information(this, tr("Return Result"), text, QMessageBox::Ok);
@@ -56,7 +56,7 @@ void PageAdminister::slotSetPriority() {
     connect(thread, &ThreadSetPriority::done, this, [this](const X::ErrorCode &ec) {
         QString text;
         if (ec != X::NoError)
-            text = QString::fromStdString(X::what(ec));
+            text = X::what(ec);
         else
             text = tr("Successfully!");
         QMessageBox::information(this, tr("Set Priority Result"), text, QMessageBox::Ok);

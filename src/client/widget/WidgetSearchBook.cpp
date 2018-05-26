@@ -1,29 +1,29 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <regex>
+
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
 #include <client/widget/WidgetSearchBook.h>
+#include <core/utils.h>
 
 WidgetSearchBook::WidgetSearchBook(QWidget *parent) :
     QWidget(parent) {
 
-    lblTitle = new QLabel(this);
-    lblAuthor = new QLabel(this);
-    lblIntroduction = new QLabel(this);
-    lblPosition = new QLabel(this);
-    lblBookid = new QLabel(this);
-    lblPublisher = new QLabel(this);
-    lblISBN = new QLabel(this);
+#define XNEW(name) \
+    lbl##name = new QLabel(this); \
+    edit##name = new QLineEdit(this); \
+    regex##name = new QCheckBox(this);
 
-    editTitle = new QLineEdit(this);
-    editAuthor = new QLineEdit(this);
-    editIntroduction = new QLineEdit(this);
-    editPosition = new QLineEdit(this);
-    editBookid = new QLineEdit(this);
-    editPublisher = new QLineEdit(this);
-    editISBN = new QLineEdit(this);
+    XNEW(Title)
+    XNEW(Author)
+    XNEW(Introduction)
+    XNEW(Position)
+    XNEW(Bookid)
+    XNEW(Publisher)
+    XNEW(ISBN)
 
     btnSearch = new QPushButton(this);
     btnMore = new QPushButton(this);
@@ -34,62 +34,54 @@ WidgetSearchBook::WidgetSearchBook(QWidget *parent) :
 
 void WidgetSearchBook::slotSearch() {
     X::ptree pt;
-    auto title = editTitle->text();
-    auto author = editAuthor->text();
-    auto introduction = editIntroduction->text();
-    auto position = editPosition->text();
-    auto bookid = editBookid->text();
-    auto publisher = editPublisher->text();
-    auto ISBN = editISBN->text();
-    if (title.size())
-        pt.put("title", title.toStdString());
-    if (author.size())
-        pt.put("author", author.toStdString());
-    if (introduction.size())
-        pt.put("introduction", introduction.toStdString());
-    if (position.size())
-        pt.put("position", position.toStdString());
-    if (bookid.size())
-        pt.put("bookid", bookid.toStdString());
-    if (publisher.size())
-        pt.put("publisher", publisher.toStdString());
-    if (ISBN.size())
-        pt.put("ISBN", ISBN.toStdString());
+
+#define XPUT(low, big) \
+    auto x##low = edit##big->text(); \
+    if (x##low.size()) { \
+        if (regex##big->isChecked()) \
+            pt.put(#low, x##low.toStdString()); \
+        else \
+            pt.put(#low, X::escape(x##low.toStdString())); \
+    }
+
+    XPUT(title, Title)
+    XPUT(author, Author)
+    XPUT(introduction, Introduction)
+    XPUT(position, Position)
+    XPUT(bookid, Bookid)
+    XPUT(publisher, Publisher)
+    XPUT(ISBN, ISBN)
 
     emit searchInfo(pt);
 }
 
 void WidgetSearchBook::slotMore() {
     if (lblAuthor->isHidden()) {
-        lblAuthor->show();
-        editAuthor->show();
-        lblIntroduction->show();
-        editIntroduction->show();
-        lblPosition->show();
-        editPosition->show();
-        lblPublisher->show();
-        editPublisher->show();
-        lblBookid->show();
-        editBookid->show();
-        lblPublisher->show();
-        editPublisher->show();
-        lblISBN->show();
-        editISBN->show();
+#define XSHOW(name) \
+        lbl##name->show(); \
+        edit##name->show(); \
+        regex##name->show();
+
+        regexTitle->show();
+        XSHOW(Author)
+        XSHOW(Introduction)
+        XSHOW(Position)
+        XSHOW(Publisher)
+        XSHOW(Bookid)
+        XSHOW(ISBN)
     } else {
-        lblAuthor->hide();
-        editAuthor->hide();
-        lblIntroduction->hide();
-        editIntroduction->hide();
-        lblPosition->hide();
-        editPosition->hide();
-        lblPublisher->hide();
-        editPublisher->hide();
-        lblBookid->hide();
-        editBookid->hide();
-        lblPublisher->hide();
-        editPublisher->hide();
-        lblISBN->hide();
-        editISBN->hide();
+#define XHIDE(name) \
+        lbl##name->hide(); \
+        edit##name->hide(); \
+        regex##name->hide();
+
+        regexTitle->hide();
+        XHIDE(Author)
+        XHIDE(Introduction)
+        XHIDE(Position)
+        XHIDE(Publisher)
+        XHIDE(Bookid)
+        XHIDE(ISBN)
     }
 }
 
@@ -99,76 +91,46 @@ void WidgetSearchBook::setUI() {
     auto layout = new QVBoxLayout;
 
     auto layoutTitle = new QHBoxLayout;
-    lblTitle->setText(tr("Title: "));
     lblTitle->setFixedWidth(maxWidth);
     lblTitle->setBuddy(editTitle);
     btnSearch->setText(tr("&Search"));
     btnMore->setText(tr("&More"));
+    regexTitle->setText("&Regex");
+    regexTitle->hide();
     layoutTitle->addWidget(lblTitle);
     layoutTitle->addWidget(editTitle);
     layoutTitle->addWidget(btnSearch);
     layoutTitle->addWidget(btnMore);
+    layoutTitle->addWidget(regexTitle);
     layout->addLayout(layoutTitle);
 
-    auto layoutAuthor = new QHBoxLayout;
-    lblAuthor->setText(tr("Author: "));
-    lblAuthor->setFixedWidth(maxWidth);
-    lblAuthor->setBuddy(editAuthor);
-    lblAuthor->hide();
-    editAuthor->hide();
-    layoutAuthor->addWidget(lblAuthor);
-    layoutAuthor->addWidget(editAuthor);
-    layout->addLayout(layoutAuthor);
+#define XSETUI(name) \
+    auto layout##name = new QHBoxLayout; \
+    lbl##name->setBuddy(edit##name); \
+    lbl##name->setFixedWidth(maxWidth); \
+    lbl##name->hide(); \
+    edit##name->hide(); \
+    regex##name->setText(tr("&Regex")); \
+    regex##name->hide(); \
+    layout##name->addWidget(lbl##name); \
+    layout##name->addWidget(edit##name); \
+    layout##name->addWidget(regex##name); \
+    layout->addLayout(layout##name);
 
-    auto layoutIntroduction = new QHBoxLayout;
-    lblIntroduction->setText(tr("Introduction: "));
-    lblIntroduction->setFixedWidth(maxWidth);
-    lblIntroduction->setBuddy(editIntroduction);
-    lblIntroduction->hide();
-    editIntroduction->hide();
-    layoutIntroduction->addWidget(lblIntroduction);
-    layoutIntroduction->addWidget(editIntroduction);
-    layout->addLayout(layoutIntroduction);
+    XSETUI(Author)
+    XSETUI(Introduction)
+    XSETUI(Position)
+    XSETUI(Bookid)
+    XSETUI(Publisher)
+    XSETUI(ISBN)
 
-    auto layoutPosition = new QHBoxLayout;
-    lblPosition->setText(tr("Position: "));
-    lblPosition->setFixedWidth(maxWidth);
-    lblPosition->setBuddy(editPosition);
-    lblPosition->hide();
-    editPosition->hide();
-    layoutPosition->addWidget(lblPosition);
-    layoutPosition->addWidget(editPosition);
-    layout->addLayout(layoutPosition);
-
-    auto layoutBookid = new QHBoxLayout;
-    lblBookid->setText(tr("Bookid: "));
-    lblBookid->setFixedWidth(maxWidth);
-    lblBookid->setBuddy(editBookid);
-    lblBookid->hide();
-    editBookid->hide();
-    layoutBookid->addWidget(lblBookid);
-    layoutBookid->addWidget(editBookid);
-    layout->addLayout(layoutBookid);
-
-    auto layoutPublisher = new QHBoxLayout;
-    lblPublisher->setText(tr("Publisher: "));
-    lblPublisher->setFixedWidth(maxWidth);
-    lblPublisher->setBuddy(editPublisher);
-    lblPublisher->hide();
-    editPublisher->hide();
-    layoutPublisher->addWidget(lblPublisher);
-    layoutPublisher->addWidget(editPublisher);
-    layout->addLayout(layoutPublisher);
-
-    auto layoutISBN = new QHBoxLayout;
-    lblISBN->setText(tr("ISBN: "));
-    lblISBN->setFixedWidth(maxWidth);
-    lblISBN->setBuddy(editISBN);
-    lblISBN->hide();
-    editISBN->hide();
-    layoutISBN->addWidget(lblISBN);
-    layoutISBN->addWidget(editISBN);
-    layout->addLayout(layoutISBN);
+    lblTitle->setText(tr("Title: "));
+    lblAuthor->setText(tr("&Author: "));
+    lblIntroduction->setText(tr("&Introduction: "));
+    lblPosition->setText(tr("&Position: "));
+    lblBookid->setText(tr("&Bookid: "));
+    lblPublisher->setText(tr("&Publisher: "));
+    lblISBN->setText(tr("&ISBN: "));
 
     setLayout(layout);
 }

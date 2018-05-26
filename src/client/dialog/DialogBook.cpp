@@ -14,7 +14,7 @@
 #include <client/thread/ThreadBorrowBook.h>
 #include <client/thread/ThreadStarBook.h>
 #include <client/thread/ThreadUnStarBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, const X::xint &bookid, QWidget *parent) :
     userManager(userManager),
@@ -123,7 +123,7 @@ void DialogBook::slotStarEnd(const X::ErrorCode &ec) {
         QMessageBox::critical(
             this,
             tr("Failed to star"),
-            QString::fromStdString(X::what(ec))
+            X::what(ec)
         );
         return;
     }
@@ -155,7 +155,7 @@ void DialogBook::slotBorrowEnd(const X::ErrorCode &ec) {
         QMessageBox::critical(
             this,
             tr("Failed to borrow"),
-            QString::fromStdString(X::what(ec))
+            X::what(ec)
         );
         return;
     }

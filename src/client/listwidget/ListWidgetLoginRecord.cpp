@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/listwidget/ListWidgetLoginRecord.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ListWidgetLoginRecord::ListWidgetLoginRecord(QWidget *parent) :
     QListWidget(parent) {

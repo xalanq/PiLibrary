@@ -6,7 +6,7 @@
 
 #include <client/thread/ThreadSetBook.h>
 #include <client/dialog/DialogModifyBook.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 WidgetModifyBook::WidgetModifyBook(UserManager &userManager, BookManager &bookManager, const Book &book, QWidget *parent) :
     book(book),
@@ -26,7 +26,7 @@ void WidgetModifyBook::slotModifyEnd(const X::ErrorCode &ec) {
         QMessageBox::information(this, tr("Modify result"), tr("Successfully!"));
         emit signalModify();
     } else {
-        lblMessage->setText(QString::fromStdString(X::what(ec)));
+        lblMessage->setText(X::what(ec));
         lblMessage->show();
     }
 }

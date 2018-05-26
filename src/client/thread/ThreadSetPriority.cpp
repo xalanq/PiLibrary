@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadSetPriority.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadSetPriority::ThreadSetPriority(const xll &token, const xint &userid, const xint &priority, QObject *parent) :
     token(token),

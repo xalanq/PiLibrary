@@ -13,9 +13,9 @@ find_package(Boost 1.56.0 COMPONENTS regex date_time system thread)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${Boost_INCLUDE_DIR})
 
-add_executable(testServer1 test1.cpp)
-add_executable(testServer2 test2.cpp)
-add_executable(testServer3 test3.cpp)
+add_executable(testServer1 test1.cpp ../utils.cpp)
+add_executable(testServer2 test2.cpp ../utils.cpp)
+add_executable(testServer3 test3.cpp ../utils.cpp)
 
 target_link_libraries(testServer1 PUBLIC ${Boost_LIBRARIES})
 target_link_libraries(testServer1 PUBLIC core)

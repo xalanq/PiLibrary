@@ -2,7 +2,7 @@
 // License: LGPL v3.0
 
 #include <client/thread/ThreadGetRecord.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ThreadGetRecord::ThreadGetRecord(const xll &token, const ActionCode &type, const xint &number, const xint &begin, QObject *parent) :
     type(type),

@@ -5,7 +5,7 @@
 #include <QPixmap>
 
 #include <client/listwidget/ListWidgetBorrowRecord.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ListWidgetItemBorrowRecord::ListWidgetItemBorrowRecord(const BookBrief &book, const BorrowRecord &record) :
     book(book),

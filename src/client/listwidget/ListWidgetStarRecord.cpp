@@ -4,7 +4,7 @@
 #include <QPixmap>
 
 #include <client/listwidget/ListWidgetStarRecord.h>
-#include <core/utils.h>
+#include <client/utils.h>
 
 ListWidgetItemStarRecord::ListWidgetItemStarRecord(const BookBrief &book, const StarRecord &record) :
     book(book),
