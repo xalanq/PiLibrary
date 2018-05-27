@@ -36,7 +36,7 @@
     <message>
         <location filename="../dialog/DialogBook.cpp" line="72"/>
         <source>ISBN: </source>
-        <translation>书籍编号: </translation>
+        <translation>ISBN: </translation>
     </message>
     <message>
         <location filename="../dialog/DialogBook.cpp" line="73"/>
@@ -978,7 +978,7 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSearchBook.cpp" line="133"/>
         <source>&amp;ISBN: </source>
-        <translation>书籍编号(&amp;I): </translation>
+        <translation>&amp;ISBN: </translation>
     </message>
 </context>
 <context>
@@ -1026,7 +1026,7 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="167"/>
         <source>&amp;ISBN: </source>
-        <translation>书籍编号(&amp;I): </translation>
+        <translation>&amp;ISBN: </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="175"/>
