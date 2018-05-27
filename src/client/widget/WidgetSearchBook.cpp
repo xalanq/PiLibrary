@@ -86,7 +86,7 @@ void WidgetSearchBook::slotMore() {
 }
 
 void WidgetSearchBook::setUI() {
-    int maxWidth = 80;
+    int maxWidth = 130;
 
     auto layout = new QVBoxLayout;
 
@@ -95,7 +95,7 @@ void WidgetSearchBook::setUI() {
     lblTitle->setBuddy(editTitle);
     btnSearch->setText(tr("&Search"));
     btnMore->setText(tr("&More"));
-    regexTitle->setText("&Regex");
+    regexTitle->setText(tr("&Regex"));
     regexTitle->hide();
     layoutTitle->addWidget(lblTitle);
     layoutTitle->addWidget(editTitle);
