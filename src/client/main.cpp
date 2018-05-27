@@ -21,10 +21,10 @@ int main(int argc, char *argv[]) {
         language = QLocale::system().name();
 
     auto *translator = new QTranslator;
-    translator->load(":/i18n/" + language);
+    translator->load(":/Language/qm/" + language);
     QApplication::installTranslator(translator);
     auto *translatorQt = new QTranslator;
-    translatorQt->load(":/i18n/qt_" + language);
+    translatorQt->load(":/Language/qm/qt_" + language);
     QApplication::installTranslator(translatorQt);
 
     MainWindow w;

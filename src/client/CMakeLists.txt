@@ -15,7 +15,7 @@ find_package(Qt5Gui)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${Boost_INCLUDE_DIR})
 
-file(GLOB_RECURSE client_sources *.cpp *h)
+file(GLOB_RECURSE client_sources *.cpp *h *.qrc)
 add_executable(client ${client_sources})
 
 target_link_libraries(client core ${Boost_LIBRARIES} Qt5::Widgets Qt5::Core Qt5::Gui)

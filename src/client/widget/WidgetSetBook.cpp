@@ -121,7 +121,7 @@ void WidgetSetBook::slotUpload() {
 }
 
 void WidgetSetBook::setUI() {
-    int maxWidth = 80;
+    int maxWidth = 130;
     auto layoutLeft = new QVBoxLayout;
     lblCover->setFrameStyle(QFrame::NoFrame);
     lblCover->setAlignment(Qt::AlignCenter);

@@ -79,7 +79,7 @@ void MainWindow::logout() {
 
 void MainWindow::setUI() {
     setCentralWidget(mainWidget);
-    setMinimumSize(QSize(800, 600));
+    setMinimumSize(QSize(1280, 760));
     adjustSize();
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
 
