@@ -26,27 +26,27 @@
     <message>
         <location filename="../dialog/DialogBook.cpp" line="70"/>
         <source>Bookid: </source>
-        <translation>书籍ID: </translation>
+        <translation>书籍ID： </translation>
     </message>
     <message>
         <location filename="../dialog/DialogBook.cpp" line="71"/>
         <source>Publisher: </source>
-        <translation>出版社: </translation>
+        <translation>出版社： </translation>
     </message>
     <message>
         <location filename="../dialog/DialogBook.cpp" line="72"/>
         <source>ISBN: </source>
-        <translation>ISBN: </translation>
+        <translation>ISBN： </translation>
     </message>
     <message>
         <location filename="../dialog/DialogBook.cpp" line="73"/>
         <source>Amount: </source>
-        <translation>馆藏数: </translation>
+        <translation>馆藏数： </translation>
     </message>
     <message>
         <location filename="../dialog/DialogBook.cpp" line="79"/>
         <source>MaxKeepTime: </source>
-        <translation>最大借阅时间: </translation>
+        <translation>最大借阅时间： </translation>
     </message>
     <message>
         <location filename="../dialog/DialogBook.cpp" line="80"/>
@@ -155,12 +155,12 @@ Please go to </source>
         <source>Ensure you want to borrow this book. 
 Note: you can not return this book yourself.</source>
         <translation>请确认您要借阅此书。
-注意: 您无法通过客户端来自行还书。</translation>
+注意： 您无法通过客户端来自行还书。</translation>
     </message>
     <message>
         <location filename="../dialog/DialogChooseTime.cpp" line="73"/>
         <source>&lt;font color=&apos;red&apos;&gt;Warning: Invalid Time&lt;/font&gt;</source>
-        <translation>&lt;font color=&apos;red&apos;&gt;注意: 无效的时间&lt;/font&gt;</translation>
+        <translation>&lt;font color=&apos;red&apos;&gt;注意： 无效的时间&lt;/font&gt;</translation>
     </message>
     <message>
         <location filename="../dialog/DialogChooseTime.cpp" line="86"/>
@@ -281,7 +281,7 @@ Note: you can not return this book yourself.</source>
     <message>
         <location filename="../dialog/DialogModifyUser.cpp" line="129"/>
         <source>Userid: </source>
-        <translation>用户ID: </translation>
+        <translation>用户ID： </translation>
     </message>
     <message>
         <location filename="../dialog/DialogModifyUser.cpp" line="133"/>
@@ -301,7 +301,7 @@ Note: you can not return this book yourself.</source>
     <message>
         <location filename="../dialog/DialogModifyUser.cpp" line="138"/>
         <source>Priority: </source>
-        <translation>权限: </translation>
+        <translation>权限： </translation>
     </message>
     <message>
         <location filename="../dialog/DialogModifyUser.cpp" line="140"/>
@@ -465,12 +465,12 @@ Please wait a while...</source>
     <message>
         <location filename="../listwidget/ListWidgetLoginRecord.cpp" line="15"/>
         <source>IP Address: </source>
-        <translation>IP地址: </translation>
+        <translation>IP地址： </translation>
     </message>
     <message>
         <location filename="../listwidget/ListWidgetLoginRecord.cpp" line="17"/>
         <source>, 	Time: </source>
-        <translation>, 	登录时间: </translation>
+        <translation>, 	登录时间： </translation>
     </message>
 </context>
 <context>
@@ -520,7 +520,7 @@ Please wait a while...</source>
     <message>
         <location filename="../page/PageAbout.cpp" line="37"/>
         <source>&lt;center&gt;&lt;b&gt; %1 v%2&lt;/b&gt;&lt;/center&gt;          &lt;p&gt;Copyright &amp;copy; 2018 by %3.&lt;/p&gt;          &lt;p&gt;Email: %4&lt;/p&gt;          &lt;p&gt;Website: &lt;a href=&apos;http://%5&apos;&gt;%6&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Github: &lt;a href=&apos;https://%7&apos;&gt;%8&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Lisence: LGPL v3.0&lt;/p&gt;</source>
-        <translation>&lt;center&gt;&lt;b&gt; %1 v%2&lt;/b&gt;&lt;/center&gt;          &lt;p&gt;Copyright &amp;copy; 2018 by %3.&lt;/p&gt;          &lt;p&gt;邮箱: %4&lt;/p&gt;          &lt;p&gt;网址: &lt;a href=&apos;http://%5&apos;&gt;%6&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Github: &lt;a href=&apos;https://%7&apos;&gt;%8&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Lisence: LGPL v3.0&lt;/p&gt;</translation>
+        <translation>&lt;center&gt;&lt;b&gt; %1 v%2&lt;/b&gt;&lt;/center&gt;          &lt;p&gt;Copyright &amp;copy; 2018 by %3.&lt;/p&gt;          &lt;p&gt;邮箱： %4&lt;/p&gt;          &lt;p&gt;网址： &lt;a href=&apos;http://%5&apos;&gt;%6&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Github: &lt;a href=&apos;https://%7&apos;&gt;%8&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Lisence: LGPL v3.0&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../page/PageAbout.cpp" line="57"/>
@@ -563,12 +563,12 @@ Please wait a while...</source>
         <location filename="../page/PageAdminister.cpp" line="71"/>
         <location filename="../page/PageAdminister.cpp" line="102"/>
         <source>&amp;Userid: </source>
-        <translation>用户ID(&amp;U): </translation>
+        <translation>用户ID(&amp;U)： </translation>
     </message>
     <message>
         <location filename="../page/PageAdminister.cpp" line="73"/>
         <source>&amp;Bookid: </source>
-        <translation>书籍ID(&amp;B): </translation>
+        <translation>书籍ID(&amp;B)： </translation>
     </message>
     <message>
         <location filename="../page/PageAdminister.cpp" line="77"/>
@@ -583,7 +583,7 @@ Please wait a while...</source>
     <message>
         <location filename="../page/PageAdminister.cpp" line="104"/>
         <source>&amp;Priority: </source>
-        <translation>权限(&amp;P): </translation>
+        <translation>权限(&amp;P)： </translation>
     </message>
     <message>
         <location filename="../page/PageAdminister.cpp" line="108"/>
@@ -708,7 +708,7 @@ Please wait a while...</source>
         <location filename="../listwidget/ListWidgetBorrowRecord.cpp" line="41"/>
         <location filename="../listwidget/ListWidgetKeepRecord.cpp" line="37"/>
         <source>Bookid: </source>
-        <translation>书籍ID: </translation>
+        <translation>书籍ID： </translation>
     </message>
     <message>
         <location filename="../listwidget/ListWidgetBorrowRecord.cpp" line="43"/>
@@ -716,7 +716,7 @@ Please wait a while...</source>
         <source>
 Title: </source>
         <translation>
-书名: </translation>
+书名： </translation>
     </message>
     <message>
         <location filename="../listwidget/ListWidgetBorrowRecord.cpp" line="45"/>
@@ -739,7 +739,7 @@ endTime: </source>
         <source>
 returnTime: </source>
         <translation>
-还书日期: </translation>
+还书日期： </translation>
     </message>
     <message>
         <location filename="../listwidget/ListWidgetBorrowRecord.cpp" line="50"/>
@@ -953,32 +953,32 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSearchBook.cpp" line="128"/>
         <source>&amp;Author: </source>
-        <translation>作者(&amp;A): </translation>
+        <translation>作者(&amp;A)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSearchBook.cpp" line="129"/>
         <source>&amp;Introduction: </source>
-        <translation>介绍(&amp;I): </translation>
+        <translation>介绍(&amp;I)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSearchBook.cpp" line="130"/>
         <source>&amp;Position: </source>
-        <translation>位置(&amp;P): </translation>
+        <translation>位置(&amp;P)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSearchBook.cpp" line="131"/>
         <source>&amp;Bookid: </source>
-        <translation>书籍ID(&amp;B): </translation>
+        <translation>书籍ID(&amp;B)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSearchBook.cpp" line="132"/>
         <source>&amp;Publisher: </source>
-        <translation>出版社(&amp;P): </translation>
+        <translation>出版社(&amp;P)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSearchBook.cpp" line="133"/>
         <source>&amp;ISBN: </source>
-        <translation>&amp;ISBN: </translation>
+        <translation>&amp;ISBN： </translation>
     </message>
 </context>
 <context>
@@ -1011,37 +1011,37 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="143"/>
         <source>&amp;Bookid: </source>
-        <translation>书籍ID(&amp;B): </translation>
+        <translation>书籍ID(&amp;B)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="151"/>
         <source>&amp;Title: </source>
-        <translation>书名(&amp;T): </translation>
+        <translation>书名(&amp;T)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="159"/>
         <source>A&amp;uthor: </source>
-        <translation>作者(&amp;U): </translation>
+        <translation>作者(&amp;U)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="167"/>
         <source>&amp;ISBN: </source>
-        <translation>&amp;ISBN: </translation>
+        <translation>&amp;ISBN： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="175"/>
         <source>&amp;Publisher: </source>
-        <translation>出版社(&amp;P): </translation>
+        <translation>出版社(&amp;P)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="183"/>
         <source>Po&amp;sition: </source>
-        <translation>位置(&amp;S): </translation>
+        <translation>位置(&amp;S)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="191"/>
         <source>Keep Time: </source>
-        <translation>最大借阅时间: </translation>
+        <translation>最大借阅时间： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="193"/>
@@ -1076,12 +1076,12 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="235"/>
         <source>P&amp;riority: </source>
-        <translation>权限(&amp;R): </translation>
+        <translation>权限(&amp;R)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="240"/>
         <source>A&amp;mount: </source>
-        <translation>馆藏数量(&amp;M): </translation>
+        <translation>馆藏数量(&amp;M)： </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="248"/>
@@ -1091,7 +1091,7 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="258"/>
         <source>I&amp;ntroduction: </source>
-        <translation>介绍(&amp;N): </translation>
+        <translation>介绍(&amp;N)： </translation>
     </message>
 </context>
 </TS>
