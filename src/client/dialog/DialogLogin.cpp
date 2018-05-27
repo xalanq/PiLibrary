@@ -123,9 +123,6 @@ void DialogLogin::setUI() {
 	setWindowTitle(QString::fromStdString(X::APP_NAME));
 	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-	setWindowOpacity(1);
-	setAutoFillBackground(true);
-
 	labelMessage->setGeometry(50, 180, 400, 30);
 	labelMessage->hide();
 
@@ -142,19 +139,18 @@ void DialogLogin::setUI() {
     btnLogin->setText(tr("&Log in"));
     btnSignUp->setText(tr("&Sign up"));
 
-
 	btnLogin->setStyleSheet("QPushButton{background-color:rgb(120,170,255);\
 							border:2px groove gray;\
 							border-radius:10px;\
 							padding:2px 4px} \
 							QPushButton:hover{ background-color:rgb(85, 170, 255); }\
-							QPushBotton:pressed{background-color:black");
+							QPushBotton:pressed{background-color:black}");
 	btnSignUp->setStyleSheet("QPushButton{background-color:rgb(120,170,255);\
 							border:2px groove gray; \
 							border-radius:10px; \
 							padding:2px 4px} \
 							QPushButton:hover{ background-color:rgb(85, 170, 255); } \
-							QPushBotton:pressed{background-color:black");
+							QPushBotton:pressed{background-color:black}");
 
 	btnLogin->setGeometry(75, 190, 150, 50);
 	btnSignUp->setGeometry(75, 260, 150, 35);
@@ -162,6 +158,8 @@ void DialogLogin::setUI() {
 	setFixedSize(300, 350);
    
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
+
+    setStyleSheet("QDialog{background-image: url(:/Images/login.jpg);}");
 }
 
 void DialogLogin::setConnection() {
