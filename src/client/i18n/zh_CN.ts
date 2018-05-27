@@ -11,7 +11,7 @@
     <message>
         <location filename="../dialog/DialogBook.cpp" line="25"/>
         <source>Un&amp;star</source>
-        <translation>取消喜欢(&amp;s)</translation>
+        <translation>取消喜欢(&amp;S)</translation>
     </message>
     <message>
         <location filename="../dialog/DialogBook.cpp" line="26"/>
@@ -331,7 +331,7 @@ Note: you can not return this book yourself.</source>
     <message>
         <location filename="../dialog/DialogModifyUser.cpp" line="154"/>
         <source>Con&amp;firm</source>
-        <translation>确认(&amp;C)</translation>
+        <translation>确认(&amp;F)</translation>
     </message>
     <message>
         <location filename="../dialog/DialogModifyUser.cpp" line="155"/>
@@ -452,7 +452,7 @@ Please wait a while...</source>
     <message>
         <location filename="../dialog/DialogSignUp.cpp" line="152"/>
         <source>Con&amp;firm</source>
-        <translation>确认(&amp;f)</translation>
+        <translation>确认(&amp;F)</translation>
     </message>
     <message>
         <location filename="../dialog/DialogSignUp.cpp" line="153"/>
@@ -1021,7 +1021,7 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="159"/>
         <source>A&amp;uthor: </source>
-        <translation>作者(&amp;u): </translation>
+        <translation>作者(&amp;U): </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="167"/>
@@ -1036,7 +1036,7 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="183"/>
         <source>Po&amp;sition: </source>
-        <translation>位置(&amp;s): </translation>
+        <translation>位置(&amp;S): </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="191"/>
@@ -1076,12 +1076,12 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="235"/>
         <source>P&amp;riority: </source>
-        <translation>权限(&amp;r): </translation>
+        <translation>权限(&amp;R): </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="240"/>
         <source>A&amp;mount: </source>
-        <translation>馆藏数量(&amp;m): </translation>
+        <translation>馆藏数量(&amp;M): </translation>
     </message>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="248"/>
@@ -1091,7 +1091,7 @@ Time: </source>
     <message>
         <location filename="../widget/WidgetSetBook.cpp" line="258"/>
         <source>I&amp;ntroduction: </source>
-        <translation>介绍(&amp;n): </translation>
+        <translation>介绍(&amp;N): </translation>
     </message>
 </context>
 </TS>
