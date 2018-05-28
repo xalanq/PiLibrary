@@ -7,7 +7,7 @@
 #include <QSettings>
 #include <QTranslator>
 
-#include <client/MainWindow.h>
+#include <client/mainwindow/MainWindow.h>
 #include <client/values.h>
 
 int main(int argc, char *argv[]) {
@@ -21,10 +21,10 @@ int main(int argc, char *argv[]) {
         language = QLocale::system().name();
 
     auto *translator = new QTranslator;
-    translator->load(":/Language/qm/" + language);
+    translator->load(":/language/qm/" + language);
     QApplication::installTranslator(translator);
     auto *translatorQt = new QTranslator;
-    translatorQt->load(":/Language/qm/qt_" + language);
+    translatorQt->load(":/language/qm/qt_" + language);
     QApplication::installTranslator(translatorQt);
 
     MainWindow w;

@@ -8,7 +8,7 @@
 
 #include <client/dialog/DialogBook.h>
 #include <client/page/PageFavorite.h>
-#include <client/utils/GetRecords.h>
+#include <client/object/GetRecords.h>
 
 PageFavorite::PageFavorite(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     userManager(userManager),

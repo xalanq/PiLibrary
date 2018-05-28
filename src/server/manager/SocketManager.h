@@ -8,11 +8,11 @@
 #include <core/SocketInfo.h>
 #include <core/Resource.h>
 #include <core/values.h>
-#include <server/SessionManager.h>
-#include <server/UserManager.h>
+#include <server/manager/SessionManager.h>
+#include <server/manager/UserManager.h>
 
 // one read and one write as a turn
-class SocketWrapper : public std::enable_shared_from_this<SocketWrapper> {
+class SocketManager : public std::enable_shared_from_this<SocketManager> {
 public:
     typedef boost::system::system_error system_error;
     typedef boost::system::error_code error_code;
@@ -23,7 +23,7 @@ public:
     typedef X::ErrorCode ErrorCode;
     typedef X::ActionCode ActionCode;
 
-    SocketWrapper(boost::asio::ip::tcp::socket socket, SessionManager &sessionManager, UserManager &userManager);
+    SocketManager(boost::asio::ip::tcp::socket socket, SessionManager &sessionManager, UserManager &userManager);
     void start();
     void stop();
 

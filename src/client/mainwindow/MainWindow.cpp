@@ -6,8 +6,8 @@
 #include <QMenuBar>
 #include <QSize>
 
-#include <client/MainWindow.h>
 #include <client/dialog/DialogLogin.h>
+#include <client/mainwindow/MainWindow.h>
 #include <client/thread/ThreadLogout.h>
 
 MainWindow::MainWindow(QWidget *parent) : 

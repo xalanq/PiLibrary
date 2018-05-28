@@ -10,7 +10,7 @@ find_package(libmongocxx-static 3.2.0 REQUIRED)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${Boost_INCLUDE_DIR})
 
-file(GLOB server_sources *.cpp)
+file(GLOB_RECURSE server_sources *.cpp)
 add_executable(server ${server_sources})
 
 target_link_libraries(server PUBLIC ${Boost_LIBRARIES})
@@ -27,5 +27,3 @@ list(FIND LIBMONGOCXX_STATIC_DEFINITIONS "MONGOCXX_STATIC" LIST_IDX)
 if (${LIST_IDX} EQUAL -1)
     message(FATAL_ERROR "Expected MONGOCXX_STATIC to be defined")
 endif()
-
-add_subdirectory(test)

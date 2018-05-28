@@ -159,7 +159,7 @@ void DialogLogin::setUI() {
    
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
 
-    setStyleSheet("QDialog{background-image: url(:/Images/login.jpg);}");
+    setStyleSheet("QDialog{background-image: url(:/images/login.jpg);}");
 }
 
 void DialogLogin::setConnection() {

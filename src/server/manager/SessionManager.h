@@ -11,7 +11,7 @@
 #include <boost/thread/shared_mutex.hpp>
 
 #include <core/types.h>
-#include <server/Session.h>
+#include <server/core/Session.h>
 
 class SessionManager {
 public:

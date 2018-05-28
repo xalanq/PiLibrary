@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/language">
+        <file alias="qm/zh_CN.qm">i18n/zh_CN.qm</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file alias="login.jpg">images/login.jpg</file>
+    </qresource>
+</RCC>

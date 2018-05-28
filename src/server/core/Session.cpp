@@ -3,7 +3,7 @@
 
 #include <ctime>
 
-#include <server/Session.h>
+#include <server/core/Session.h>
 
 Session::Session(const xll &token, const xint &userid, const xll &alive, const xint &priority) :
     token(token),

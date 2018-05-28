@@ -8,9 +8,9 @@
 #include <boost/asio.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <server/SessionManager.h>
-#include <server/SocketWrapper.h>
-#include <server/UserManager.h>
+#include <server/manager/SessionManager.h>
+#include <server/manager/SocketManager.h>
+#include <server/manager/UserManager.h>
 #include <core/types.h>
 
 class Server {

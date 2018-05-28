@@ -3,13 +3,13 @@
 
 #include <boost/property_tree/json_parser.hpp>
 
-#include <server/SocketWrapper.h>
+#include <server/manager/SocketManager.h>
 #include <server/utils.h>
 
 #define _from(func) cerr << "(" << #func << ") from " << socket.remote_endpoint().address() << " : " 
 #define _to(func) cerr << "(" << #func << ") send to " << socket.remote_endpoint().address() << " : " 
 
-SocketWrapper::SocketWrapper(boost::asio::ip::tcp::socket socket, SessionManager &sessionManager, UserManager &userManager) :
+SocketManager::SocketManager(boost::asio::ip::tcp::socket socket, SessionManager &sessionManager, UserManager &userManager) :
     socket(std::move(socket)),
     info(),
     sessionManager(sessionManager),
@@ -17,17 +17,17 @@ SocketWrapper::SocketWrapper(boost::asio::ip::tcp::socket socket, SessionManager
 
 }
 
-void SocketWrapper::start() {
+void SocketManager::start() {
     _from(start) << "connected\n";
     read();
 }
 
-void SocketWrapper::stop() {
+void SocketManager::stop() {
     _from(stop) << "stop\n";
     socket.close();
 }
 
-void SocketWrapper::read() {
+void SocketManager::read() {
     auto self(shared_from_this());
     info.setSize(SocketInfo::HEADER_SIZE);
     boost::asio::async_read(
@@ -52,7 +52,7 @@ void SocketWrapper::read() {
     );
 }
 
-void SocketWrapper::readHeader() {
+void SocketManager::readHeader() {
     auto self(shared_from_this());
 
     info.setSize(SocketInfo::HEADER_SIZE);
@@ -83,7 +83,7 @@ void SocketWrapper::readHeader() {
     );
 }
 
-void SocketWrapper::readBody(const xll &token, const xint &length, const ActionCode &ac) {
+void SocketManager::readBody(const xll &token, const xint &length, const ActionCode &ac) {
     auto self(shared_from_this());
 
     info.setSize(length);
@@ -158,7 +158,7 @@ void SocketWrapper::readBody(const xll &token, const xint &length, const ActionC
     );
 }
 
-void SocketWrapper::write(const ErrorCode &ec, const ActionCode &ac, const xll &token, ptree pt, const Resource &file) {
+void SocketManager::write(const ErrorCode &ec, const ActionCode &ac, const xll &token, ptree pt, const Resource &file) {
     auto self(shared_from_this());
 
     auto fileSize = file.getSize();
@@ -193,7 +193,7 @@ void SocketWrapper::write(const ErrorCode &ec, const ActionCode &ac, const xll &
     );
 }
 
-void SocketWrapper::saveFile(const ErrorCode &ec, const ActionCode &ac, const xll &token, const ptree &pt) {
+void SocketManager::saveFile(const ErrorCode &ec, const ActionCode &ac, const xll &token, const ptree &pt) {
     if (ec != X::NoError) {
         write(ec, ac, token);
         return;
@@ -231,7 +231,7 @@ void SocketWrapper::saveFile(const ErrorCode &ec, const ActionCode &ac, const xl
     );
 }
 
-void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
+void SocketManager::doLogin(const ptree &pt, const xll &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     xll tk = 0;
@@ -267,7 +267,7 @@ void SocketWrapper::doLogin(const ptree &pt, const xll &token) {
     write(ec, X::LoginFeedback, tk, std::move(tr));
 }
 
-void SocketWrapper::doRegister(const ptree &pt, const xll &token) {
+void SocketManager::doRegister(const ptree &pt, const xll &token) {
     if (token != 0) {
         _from(doRegister) << "token != 0\n";
         write(X::RegisterFailed, X::RegisterFeedback);
@@ -282,7 +282,7 @@ void SocketWrapper::doRegister(const ptree &pt, const xll &token) {
     write(ec, X::RegisterFeedback);
 }
 
-void SocketWrapper::doLogout(const ptree &pt, const xll &token) {
+void SocketManager::doLogout(const ptree &pt, const xll &token) {
     auto ec = X::NoError;
     if (token == 0) {
         _from(doLogout) << "token = 0\n";
@@ -295,7 +295,7 @@ void SocketWrapper::doLogout(const ptree &pt, const xll &token) {
     write(ec, X::LogoutFeedback);
 }
 
-void SocketWrapper::doModify(ptree pt, const xll &token) {
+void SocketManager::doModify(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
@@ -320,7 +320,7 @@ void SocketWrapper::doModify(ptree pt, const xll &token) {
     write(ec, X::ModifyFeedback, tk);
 }
 
-void SocketWrapper::doBorrowBook(ptree pt, const xll &token) {
+void SocketManager::doBorrowBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
@@ -349,7 +349,7 @@ void SocketWrapper::doBorrowBook(ptree pt, const xll &token) {
     write(ec, X::BorrowBookFeedback, tk);
 }
 
-void SocketWrapper::doReturnBook(ptree pt, const xll &token) {
+void SocketManager::doReturnBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
@@ -380,7 +380,7 @@ void SocketWrapper::doReturnBook(ptree pt, const xll &token) {
     write(ec, X::ReturnBookFeedback, tk);
 }
 
-void SocketWrapper::doStarBook(ptree pt, const xll &token) {
+void SocketManager::doStarBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
@@ -407,7 +407,7 @@ void SocketWrapper::doStarBook(ptree pt, const xll &token) {
     write(ec, X::StarBookFeedback, tk);
 }
 
-void SocketWrapper::doUnStarBook(ptree pt, const xll &token) {
+void SocketManager::doUnStarBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
@@ -432,7 +432,7 @@ void SocketWrapper::doUnStarBook(ptree pt, const xll &token) {
     write(ec, X::UnStarBookFeedback, tk);
 }
 
-void SocketWrapper::doGetBook(ptree pt, const xll &token) {
+void SocketManager::doGetBook(ptree pt, const xll &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     xll tk = 0;
@@ -463,7 +463,7 @@ void SocketWrapper::doGetBook(ptree pt, const xll &token) {
     write(ec, X::GetBookFeedback, tk, std::move(tr));
 }
 
-void SocketWrapper::doGetBookBrief(ptree pt, const xll &token) {
+void SocketManager::doGetBookBrief(ptree pt, const xll &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     xll tk = 0;
@@ -493,7 +493,7 @@ void SocketWrapper::doGetBookBrief(ptree pt, const xll &token) {
     write(ec, X::GetBookBriefFeedback, tk, std::move(tr));
 }
 
-void SocketWrapper::doSetBook(ptree pt, const xll &token) {
+void SocketManager::doSetBook(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
@@ -526,7 +526,7 @@ void SocketWrapper::doSetBook(ptree pt, const xll &token) {
     write(ec, X::SetBookFeedback, tk);
 }
 
-void SocketWrapper::doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback) {
+void SocketManager::doGetRecord(ptree pt, const xll &token, const xstring &type, const ActionCode &feedback) {
     auto tr = ptree();
     auto ec = X::NoError;
     xll tk = 0;
@@ -549,7 +549,7 @@ void SocketWrapper::doGetRecord(ptree pt, const xll &token, const xstring &type,
     write(ec, feedback, tk, std::move(tr));
 }
 
-void SocketWrapper::doGetNewBookList(ptree pt, const xll &token) {
+void SocketManager::doGetNewBookList(ptree pt, const xll &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     xll tk = 0;
@@ -571,7 +571,7 @@ void SocketWrapper::doGetNewBookList(ptree pt, const xll &token) {
     write(ec, X::GetNewBookListFeedback, tk, std::move(tr));
 }
 
-void SocketWrapper::doGetBookCover(ptree pt, const xll &token) {
+void SocketManager::doGetBookCover(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     Resource file;
@@ -600,7 +600,7 @@ void SocketWrapper::doGetBookCover(ptree pt, const xll &token) {
     write(ec, X::GetBookCoverFeedback, tk, {}, file);
 }
 
-void SocketWrapper::doSetBookCover(ptree pt, const xll &token) {
+void SocketManager::doSetBookCover(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {
@@ -629,7 +629,7 @@ void SocketWrapper::doSetBookCover(ptree pt, const xll &token) {
     saveFile(ec, X::SetBookCoverFeedback, tk, pt);
 }
 
-void SocketWrapper::doGetSearchBookList(ptree pt, const xll &token) {
+void SocketManager::doGetSearchBookList(ptree pt, const xll &token) {
     auto tr = ptree();
     auto ec = X::NoError;
     xll tk = 0;
@@ -651,7 +651,7 @@ void SocketWrapper::doGetSearchBookList(ptree pt, const xll &token) {
     write(ec, X::GetSearchBookListFeedback, tk, std::move(tr));
 }
 
-void SocketWrapper::doSetPriority(ptree pt, const xll &token) {
+void SocketManager::doSetPriority(ptree pt, const xll &token) {
     auto ec = X::NoError;
     xll tk = 0;
     if (token == 0) {

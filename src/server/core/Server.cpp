@@ -3,7 +3,7 @@
 
 #include <boost/thread.hpp>
 
-#include <server/Server.h>
+#include <server/core/Server.h>
 
 Server::Server(boost::asio::io_service &service, const ptree &config) :
     acceptor(service, boost::asio::ip::tcp::endpoint(
@@ -53,7 +53,7 @@ void Server::doAccept() {
     acceptor.async_accept(socket,
         [this](const error_code &ec) {
             if (!ec)
-                std::make_shared<SocketWrapper> (std::move(socket), sessionManager, userManager)->start();
+                std::make_shared<SocketManager> (std::move(socket), sessionManager, userManager)->start();
             doAccept();
         }
     );

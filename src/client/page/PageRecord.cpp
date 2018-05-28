@@ -9,7 +9,7 @@
 #include <client/dialog/DialogBook.h>
 #include <client/page/PageRecord.h>
 #include <client/thread/ThreadGetRecord.h>
-#include <client/utils/GetRecords.h>
+#include <client/object/GetRecords.h>
 
 PageRecord::PageRecord(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     userManager(userManager),
