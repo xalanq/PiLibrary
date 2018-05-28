@@ -60,18 +60,27 @@ void Server::doAccept() {
 }
 
 void Server::initRoot() {
-    if (userManager.isDBEmpty()) {
-        cerr << "\n=============Attention=============\n";
-        cerr << "Database is empty, create a Super Administer user.\n";
-        cerr << "Username: \t\t PiRoot\n";
-        cerr << "Default Password: \t pi123456\n";
-        cerr << "Please change the password as soon as possible.\n";
-        cerr << "===================================\n\n";
-        ptree pt;
-        pt.put("username", "PiRoot");
-        pt.put("nickname", "root");
-        pt.put("password", "2d515aaf7a77cb6744bf91a49af70928bfb9f04b");
-        pt.put("email", "root@pi.com");
-        userManager.registerUser(pt, X::SUPER_ADMINISTER);
+    cerr << "\nLinking mongodb...";
+    try {
+        bool empty = userManager.isDBEmpty();
+        cerr << "Mongodb is available!\n";
+        if (empty) {
+            cerr << "\n=============Attention=============\n";
+            cerr << "Database is empty, create a Super Administer user.\n";
+            cerr << "Username: \t\t PiRoot\n";
+            cerr << "Default Password: \t pi123456\n";
+            cerr << "Please change the password as soon as possible.\n";
+            cerr << "===================================\n\n";
+            ptree pt;
+            pt.put("username", "PiRoot");
+            pt.put("nickname", "root");
+            pt.put("password", "2d515aaf7a77cb6744bf91a49af70928bfb9f04b");
+            pt.put("email", "root@pi.com");
+            userManager.registerUser(pt, X::SUPER_ADMINISTER);
+        }
+    } catch (std::exception &e) {
+        cerr << "Error: Mongodb is unavailable! Please checkout the mongodb's uri.\n";
+        cerr << "Error Message: " << e.what() << '\n';
+        exit(0);
     }
 }
