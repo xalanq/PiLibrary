@@ -11,8 +11,8 @@
 #include <client/page/PageSetting.h>
 
 PageSetting::PageSetting(UserManager &userManager, QWidget *parent) :
-    userManager(userManager),
-    QWidget(parent) {
+    QWidget(parent),
+    userManager(userManager) {
 
     btnModify = new QPushButton(this);
     btnLogout = new QPushButton(this);

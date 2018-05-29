@@ -10,8 +10,8 @@
 #include <client/utils.h>
 
 DialogChooseTime::DialogChooseTime(const X::xll &maxKeepTime, QWidget *parent) :
-    maxKeepTime(maxKeepTime),
-    QDialog(parent) {
+    QDialog(parent),
+    maxKeepTime(maxKeepTime) {
 
     lblBeginTime = new QLabel(this);
     lblEndTime = new QLabel(this);

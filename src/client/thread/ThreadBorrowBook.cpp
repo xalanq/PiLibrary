@@ -5,10 +5,10 @@
 #include <client/utils.h>
 
 ThreadBorrowBook::ThreadBorrowBook(const xll &token, const xint &bookid, const xll &keepTime, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
     bookid(bookid),
-    keepTime(keepTime),
-    ThreadNetwork(parent) {
+    keepTime(keepTime) {
 }
 
 void ThreadBorrowBook::run() {

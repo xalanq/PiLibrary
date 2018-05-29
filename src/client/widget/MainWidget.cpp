@@ -13,9 +13,9 @@
 #include <client/widget/MainWidget.h>
 
 MainWidget::MainWidget(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+    QWidget(parent),
     userManager(userManager),
-    bookManager(bookManager),
-    QWidget(parent) {
+    bookManager(bookManager) {
 
     widgetHead = new WidgetHead(userManager, this);
     listWidget = new QListWidget(this);

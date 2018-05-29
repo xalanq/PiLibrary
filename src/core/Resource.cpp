@@ -6,7 +6,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include <core/resource.h>
+#include <core/Resource.h>
 
 Resource::Resource(char *data, const size_t &size) :
     data(data), 

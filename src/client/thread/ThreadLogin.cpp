@@ -5,9 +5,9 @@
 #include <client/utils.h>
 
 ThreadLogin::ThreadLogin(const QString &username, const QString &password, QObject *parent) :
+    ThreadNetwork(parent),
     username(username.toStdString()),
-    password(password.toStdString()),
-    ThreadNetwork(parent) {
+    password(password.toStdString()) {
 }
 
 void ThreadLogin::run() {

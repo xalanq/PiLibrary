@@ -19,8 +19,8 @@
 #include <client/utils.h>
 
 DialogLogin::DialogLogin(UserManager &userManager, QWidget *parent) :
-    userManager(userManager),
-    QDialog(parent) {
+    QDialog(parent),
+    userManager(userManager) {
 
     cbboxUsername = new QComboBox(this);
     editPassword = new QLineEdit(this);

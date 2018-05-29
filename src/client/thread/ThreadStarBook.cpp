@@ -5,9 +5,9 @@
 #include <client/utils.h>
 
 ThreadStarBook::ThreadStarBook(const xll &token, const xint &bookid, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
-    bookid(bookid),
-    ThreadNetwork(parent) {
+    bookid(bookid) {
 }
 
 void ThreadStarBook::run() {

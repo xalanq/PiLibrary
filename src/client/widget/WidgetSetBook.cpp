@@ -15,9 +15,9 @@
 #include <core/Resource.h>
 
 WidgetSetBook::WidgetSetBook(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+    QWidget(parent),
     userManager(userManager),
-    bookManager(bookManager),
-    QWidget(parent) {
+    bookManager(bookManager) {
 
     lblCover = new QLabel(this);
     lblBookid = new QLabel(this);

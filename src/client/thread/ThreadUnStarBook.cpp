@@ -5,9 +5,9 @@
 #include <client/utils.h>
 
 ThreadUnStarBook::ThreadUnStarBook(const xll &token, const xint &bookid, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
-    bookid(bookid),
-    ThreadNetwork(parent) {
+    bookid(bookid) {
 }
 
 void ThreadUnStarBook::run() {

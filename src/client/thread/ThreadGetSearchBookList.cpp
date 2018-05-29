@@ -5,9 +5,9 @@
 #include <core/utils.h>
 
 ThreadGetSearchBookList::ThreadGetSearchBookList(const xll &token, const ptree &pt, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
-    pt(pt),
-    ThreadNetwork(parent) {
+    pt(pt) {
 }
 
 void ThreadGetSearchBookList::run() {

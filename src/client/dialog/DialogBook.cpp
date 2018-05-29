@@ -17,9 +17,9 @@
 #include <client/utils.h>
 
 DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, const X::xint &bookid, QWidget *parent) :
+    QDialog(parent),
     userManager(userManager),
-    bookManager(bookManager),
-    QDialog(parent) {
+    bookManager(bookManager) {
 
     strStar = tr("&Star");
     strUnStar = tr("Un&star");

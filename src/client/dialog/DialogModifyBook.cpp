@@ -9,8 +9,8 @@
 #include <client/utils.h>
 
 WidgetModifyBook::WidgetModifyBook(UserManager &userManager, BookManager &bookManager, const Book &book, QWidget *parent) :
-    book(book),
-    WidgetSetBook(userManager, bookManager, parent) {
+    WidgetSetBook(userManager, bookManager, parent),
+    book(book) {
 
     setUI();
     setConnection();

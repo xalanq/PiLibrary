@@ -5,11 +5,11 @@
 #include <client/utils.h>
 
 ThreadGetRecord::ThreadGetRecord(const xll &token, const ActionCode &type, const xint &number, const xint &begin, QObject *parent) :
+    ThreadNetwork(parent),
     type(type),
     token(token),
     number(number),
-    begin(begin),
-    ThreadNetwork(parent) {
+    begin(begin) {
 }
 
 void ThreadGetRecord::run() {

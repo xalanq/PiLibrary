@@ -5,12 +5,12 @@
 #include <client/utils.h>
 
 ThreadModifyUser::ThreadModifyUser(const xll &token, const QString &nickname, const QString &email, const QString &passwordOld, const QString &passwordNew, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
     nickname(nickname.toStdString()),
     email(email.toStdString()),
     passwordOld(passwordOld.toStdString()),
-    passwordNew(passwordNew.toStdString()), 
-    ThreadNetwork(parent) {
+    passwordNew(passwordNew.toStdString()) {
 
 }
 

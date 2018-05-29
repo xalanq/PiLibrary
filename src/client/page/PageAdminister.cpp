@@ -13,9 +13,9 @@
 #include <client/utils.h>
 
 PageAdminister::PageAdminister(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+    QWidget(parent),
     userManager(userManager),
-    bookManager(bookManager),
-    QWidget(parent) {
+    bookManager(bookManager) {
 
     lblReturnBookid = new QLabel(this);
     lblReturnUserid = new QLabel(this);

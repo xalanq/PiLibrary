@@ -15,14 +15,12 @@ A very weak(pi) library system. (一个非常菜(皮)的图书管理系统)
 
 ### Linux
 
-Use commands like these:
+Use commands like these(Ensure you have been install dependent libraries above):
 
 ```
 cd build
-cmake -DBOOST_ROOT=/usr/lib/boost -DCMAKE_PREFIX_PATH=/usr/lib/mongo-cxx-driver;/usr/lib/mongo-c-driver;/usr/lib/qt5 -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
-
-Ensure you have modified the path like `-DBOOST_ROOT=[path]` into your own path.
 
 Then:
 

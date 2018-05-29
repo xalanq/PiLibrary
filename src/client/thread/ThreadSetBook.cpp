@@ -5,10 +5,10 @@
 #include <client/utils.h>
 
 ThreadSetBook::ThreadSetBook(const xll &token, const ptree &pt, const Resource &cover, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
     pt(pt),
-    cover(cover),
-    ThreadNetwork(parent) {
+    cover(cover) {
 }
 
 void ThreadSetBook::run() {

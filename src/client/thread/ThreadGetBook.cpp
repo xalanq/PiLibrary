@@ -5,10 +5,10 @@
 #include <client/utils.h>
 
 ThreadGetBook::ThreadGetBook(const xll &token, const xint &bookid, bool brief, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
     bookid(bookid),
-    brief(brief),
-    ThreadNetwork(parent) {
+    brief(brief) {
         
     qRegisterMetaType<Resource>("Resource");
 }

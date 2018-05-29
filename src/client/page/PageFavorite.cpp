@@ -11,9 +11,9 @@
 #include <client/object/GetRecords.h>
 
 PageFavorite::PageFavorite(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+    QWidget(parent),
     userManager(userManager),
-    bookManager(bookManager),
-    QWidget(parent) {
+    bookManager(bookManager) {
 
     listWidgetStarRecord = new ListWidgetStarRecord(this);
 

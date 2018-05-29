@@ -14,9 +14,9 @@
 #include <client/values.h>
 #include <client/utils.h>
 
-DialogModifyUser::DialogModifyUser(UserManager &userManager, QWidget *parent) : 
-    userManager(userManager),
-    QDialog(parent) {
+DialogModifyUser::DialogModifyUser(UserManager &userManager, QWidget *parent) :
+    QDialog(parent),
+    userManager(userManager) {
 
     lblUserid = new QLabel(this);
     lblPriority = new QLabel(this);

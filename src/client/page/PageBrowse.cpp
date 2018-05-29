@@ -10,9 +10,9 @@
 #include <client/thread/ThreadGetSearchBookList.h>
 
 PageBrowse::PageBrowse(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+    QWidget(parent),
     userManager(userManager),
-    bookManager(bookManager),
-    QWidget(parent) {
+    bookManager(bookManager) {
 
     tabWidget = new QTabWidget(this);
 

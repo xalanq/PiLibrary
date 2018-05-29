@@ -5,9 +5,9 @@
 #include <client/utils.h>
 
 ThreadGetNewBookList::ThreadGetNewBookList(const xll &token, const xint &number, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
-    number(number),
-    ThreadNetwork(parent) {
+    number(number) {
 }
 
 void ThreadGetNewBookList::run() {

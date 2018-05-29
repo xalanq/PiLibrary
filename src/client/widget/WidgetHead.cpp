@@ -6,9 +6,9 @@
 
 #include <client/widget/WidgetHead.h>
 
-WidgetHead::WidgetHead(UserManager &userManager, QWidget *parent) : 
-    userManager(userManager),
-    QWidget(parent) {
+WidgetHead::WidgetHead(UserManager &userManager, QWidget *parent) :
+    QWidget(parent),
+    userManager(userManager) {
 
     lblNickname = new QLabel(this);
 

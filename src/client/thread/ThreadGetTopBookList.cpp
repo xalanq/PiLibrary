@@ -5,9 +5,9 @@
 #include <client/utils.h>
 
 ThreadGetTopBookList::ThreadGetTopBookList(const xll &token, const xint &number, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
-    number(number),
-    ThreadNetwork(parent) {
+    number(number) {
 }
 
 void ThreadGetTopBookList::run() {

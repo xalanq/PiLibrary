@@ -5,10 +5,10 @@
 #include <client/utils.h>
 
 ThreadReturnBook::ThreadReturnBook(const xll &token, const xint &userid, const xint &bookid, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
     userid(userid),
-    bookid(bookid),
-    ThreadNetwork(parent) {
+    bookid(bookid) {
 }
 
 void ThreadReturnBook::run() {

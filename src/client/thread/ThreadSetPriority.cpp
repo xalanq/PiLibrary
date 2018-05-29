@@ -5,10 +5,10 @@
 #include <client/utils.h>
 
 ThreadSetPriority::ThreadSetPriority(const xll &token, const xint &userid, const xint &priority, QObject *parent) :
+    ThreadNetwork(parent),
     token(token),
     userid(userid),
-    priority(priority),
-    ThreadNetwork(parent) {
+    priority(priority) {
 }
 
 void ThreadSetPriority::run() {

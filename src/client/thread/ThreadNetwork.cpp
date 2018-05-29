@@ -6,11 +6,11 @@
 #include <client/thread/ThreadNetwork.h>
 
 ThreadNetwork::ThreadNetwork(QObject *parent) :
+    QThread(parent),
     io_service(),
     ep(boost::asio::ip::address::from_string(
           QSettings().value("Network/server_url", "127.0.0.1").toString().toStdString()),
-       QSettings().value("Network/server_port", 2333).toInt()),
-    QThread(parent) {
+       QSettings().value("Network/server_port", 2333).toInt()) {
     qRegisterMetaType<xll>("xll");
     qRegisterMetaType<xint>("xint");
     qRegisterMetaType<ptree>("ptree");

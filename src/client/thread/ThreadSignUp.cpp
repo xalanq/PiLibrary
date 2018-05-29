@@ -5,11 +5,11 @@
 #include <client/utils.h>
 
 ThreadSignUp::ThreadSignUp(const QString &username, const QString &nickname, const QString &password, const QString &email, QObject *parent) :
+    ThreadNetwork(parent),
     username(username.toStdString()),
     nickname(nickname.toStdString()),
     password(password.toStdString()),
-    email(email.toStdString()),
-    ThreadNetwork(parent) {
+    email(email.toStdString()) {
 }
 
 void ThreadSignUp::run() {

@@ -5,8 +5,8 @@
 #include <client/utils.h>
 
 ThreadLogout::ThreadLogout(const xll &token, QObject *parent) :
-    token(token),
-    ThreadNetwork(parent) {
+    ThreadNetwork(parent),
+    token(token) {
 }
 
 void ThreadLogout::run() {

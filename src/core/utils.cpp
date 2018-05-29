@@ -40,7 +40,8 @@ namespace X {
     }
 
     xstring time_to_str(const xll &time) {
-        xstring str = asctime(localtime(&time));
+        time_t t = time;
+        xstring str = asctime(localtime(&t));
         str.pop_back();
         return str;
     }

@@ -8,11 +8,11 @@
 
 #define WTF(CLASS_NAME, TYPE_NAME, ACTION_CODE, ARRAY_NAME) \
 Get##CLASS_NAME::Get##CLASS_NAME(const X::xll &token, BookManager &bookManager, const X::xint &number, const X::xint &begin, QObject *parent) : \
+    QObject(parent), \
     token(token), \
     bookManager(bookManager), \
     number(number), \
-    begin(begin), \
-    QObject(parent) { \
+    begin(begin) { \
 } \
 void Get##CLASS_NAME::start() { \
     auto thread = new ThreadGetRecord(token, ##ACTION_CODE, number, begin, this); \

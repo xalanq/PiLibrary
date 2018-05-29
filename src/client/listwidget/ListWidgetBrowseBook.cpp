@@ -69,9 +69,9 @@ void ListWidgetItemBook::setUI() {
 }
 
 ListWidgetBrowseBook::ListWidgetBrowseBook(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+    QListWidget(parent),
     userManager(userManager),
-    bookManager(bookManager),
-    QListWidget(parent) {
+    bookManager(bookManager) {
 
     setUI();
     setConnection();
