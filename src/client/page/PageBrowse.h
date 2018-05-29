@@ -24,6 +24,7 @@ signals:
     void signalModify();
 
 public slots:
+    void slotReady();
     void refresh();
     void slotSearch(const X::ptree &pt);
 
@@ -36,8 +37,13 @@ private:
     BookManager &bookManager;
 
     QTabWidget *tabWidget;
+
     ListWidgetBrowseBook *listWidgetNewBook;
+
+    ListWidgetBrowseBook *listWidgetTopBook;
 
     WidgetSearchBook *widgetSearchBook;
     ListWidgetBrowseBook *listWidgetSearchBook;
+
+    int readyCount;
 };

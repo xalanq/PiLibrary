@@ -132,10 +132,23 @@ void WidgetSearchBook::setUI() {
     lblPublisher->setText(tr("&Publisher: "));
     lblISBN->setText(tr("&ISBN: "));
 
+    btnSearch->setDefault(true);
+
     setLayout(layout);
 }
 
 void WidgetSearchBook::setConnection() {
     connect(btnSearch, &QPushButton::clicked, this, &WidgetSearchBook::slotSearch);
     connect(btnMore, &QPushButton::clicked, this, &WidgetSearchBook::slotMore);
+
+#define XENTER(name) \
+    connect(##name, &QLineEdit::returnPressed, btnSearch, std::bind(&QPushButton::clicked, btnSearch, true));
+
+    XENTER(editTitle)
+    XENTER(editAuthor)
+    XENTER(editIntroduction)
+    XENTER(editPosition)
+    XENTER(editBookid)
+    XENTER(editPublisher)
+    XENTER(editISBN)
 }

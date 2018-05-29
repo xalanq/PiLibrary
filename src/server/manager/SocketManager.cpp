@@ -148,6 +148,8 @@ void SocketManager::readBody(const xll &token, const xint &length, const ActionC
                     doGetSearchBookList(std::move(pt), token);
                 else if (ac == X::SetPriority)
                     doSetPriority(std::move(pt), token);
+                else if (ac == X::GetTopBookList)
+                    doGetTopBookList(std::move(pt), token);
                 else
                     write(X::UnknownError, X::Error);
             } catch (std::exception &e) {
@@ -679,4 +681,26 @@ void SocketManager::doSetPriority(ptree pt, const xll &token) {
         }
     }
     write(ec, X::SetPriorityFeedback, tk);
+}
+
+void SocketManager::doGetTopBookList(ptree pt, const xll &token) {
+    auto tr = ptree();
+    auto ec = X::NoError;
+    xll tk = 0;
+    if (token == 0) {
+        _from(doGetTopBookList) << "token == 0\n";
+        ec = X::NotLogin;
+    } else {
+        auto it = sessionManager.findToken(token);
+        if (it == nullptr) {
+            _from(doGetTopBookList) << "not found session\n";
+            ec = X::NotLogin;
+        } else {
+            tk = token;
+            pt.put<xint>("priority", it->getPriority());
+            _from(doGetTopBookList);
+            tr = userManager.getTopBookList(pt);
+        }
+    }
+    write(ec, X::GetTopBookListFeedback, tk, std::move(tr));
 }

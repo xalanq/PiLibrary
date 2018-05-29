@@ -81,6 +81,8 @@ public:
 
     ErrorCode setPriority(const ptree &pt);
 
+    ptree getTopBookList(const ptree &pt);
+
     // not open for user, so ensure the userid exists in the below methods
     void recordLogin(const ptree &pt);
 

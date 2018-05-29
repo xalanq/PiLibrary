@@ -62,6 +62,8 @@ private:
 
     void doSetPriority(ptree pt, const xll &token);
 
+    void doGetTopBookList(ptree pt, const xll &token);
+
     boost::asio::ip::tcp::socket socket;
     SocketInfo info;
     SessionManager &sessionManager;

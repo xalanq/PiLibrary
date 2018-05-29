@@ -107,6 +107,8 @@ namespace X {
         GetSearchBookList,
         GetSearchBookListFeedback,
         SetPriority,
-        SetPriorityFeedback
+        SetPriorityFeedback,
+        GetTopBookList,
+        GetTopBookListFeedback
     };
 }

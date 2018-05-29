@@ -940,6 +940,43 @@ UserManager::ErrorCode UserManager::setPriority(const ptree &pt) {
     return X::NoError;
 }
 
+UserManager::ptree UserManager::getTopBookList(const ptree &pt) {
+    cerr << SocketInfo::encodePtree(pt, true);
+    auto priority = pt.get<xint>("priority");
+    auto number = std::min(50, pt.get<xint>("number", 0));
+
+    using namespace mongo;
+
+    auto client = pool.acquire();
+
+    mongocxx::options::find opt;
+
+    opt.projection(
+        make_document(
+            kvp("_id", 0),
+            kvp("bookid", 1)
+        )
+    ).sort(make_document(kvp("starCount", -1))).limit(number);
+    auto cur = (*client)[db_name]["book"].find(
+        make_document(
+            kvp("priority", make_document(
+                kvp("$lte", priority)
+            ))
+        ),
+        opt
+    );
+    ptree p;
+    ptree child;
+    ptree value;
+    for (auto &&doc : cur) {
+        auto bookid = xint(doc["bookid"].get_int32().value);
+        value.put("", bookid);
+        child.push_back(std::make_pair("", value));
+    }
+    p.add_child("bookid", child);
+    return std::move(p);
+}
+
 // need: userid, ip, time, ensure the user is exist
 void UserManager::recordLogin(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);

@@ -42,7 +42,7 @@ signals:
     void signalModify();
 
 public slots:
-    void slotGetBookList(const X::ErrorCode &ec, const X::ptree &pt);
+    void slotGetBookList(const X::ErrorCode &ec, const X::ptree &pt, bool reverse = false);
     void slotItemClicked(QListWidgetItem *item);
 
 private:

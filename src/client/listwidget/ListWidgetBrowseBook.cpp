@@ -93,10 +93,12 @@ void ListWidgetBrowseBook::updateStar(const X::xint &bookid, bool star) {
         bookManager.getBookBrief(bookid, std::bind(&ListWidgetBrowseBook::update, this, std::placeholders::_1, star, it->second));
 }
 
-void ListWidgetBrowseBook::slotGetBookList(const X::ErrorCode &ec, const X::ptree &pt) {
+void ListWidgetBrowseBook::slotGetBookList(const X::ErrorCode &ec, const X::ptree &pt, bool reverse) {
     if (ec != X::NoError)
         return;
     auto arr = pt.get_child("bookid");
+    if (reverse)
+        arr.reverse();
     books.clear();
     std::vector<X::xint> l;
     for (auto &&child : arr) {

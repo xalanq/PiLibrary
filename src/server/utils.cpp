@@ -155,6 +155,10 @@ namespace X {
             return "Set Priority";
         case SetPriorityFeedback:
             return "Set Priority Feedback";
+        case GetTopBookList:
+            return "Get Top Book List";
+        case GetTopBookListFeedback:
+            return "Get Top Book List Feedback";
         default:
             return "No Such Action";
         }
