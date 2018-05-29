@@ -52,15 +52,20 @@ void Server::start() {
 void Server::doAccept() {
     acceptor.async_accept(socket,
         [this](const error_code &ec) {
-            if (!ec)
-                std::make_shared<SocketManager> (std::move(socket), sessionManager, userManager)->start();
+            if (!ec) {
+                try {
+                    std::make_shared<SocketManager> (std::move(socket), sessionManager, userManager)->start();
+                } catch (std::exception &e) {
+                    cerr << "Error Message: " << e.what() << '\n';
+                }
+            }
             doAccept();
         }
     );
 }
 
 void Server::initRoot() {
-    cerr << "\nLinking mongodb...";
+    cerr << "Linking mongodb...\n";
     try {
         bool empty = userManager.isDBEmpty();
         cerr << "Mongodb is available!\n";
