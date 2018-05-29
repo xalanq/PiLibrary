@@ -23,8 +23,6 @@ Here are the functions:
 
 ## How to build
 
-**Notice**: We just provide the way to build it with **static** libraries(mongocxx driver), ensure you have already built these static libraries. If you want to build a **dynamic** version, modify `CMakeLists.txt`, `src/core/CMakeLists.txt`, `src/server/CMakeLists.txt`, `src/client/CMakeLists.txt`, `src/test/CMakeLists.txt` yourself.
-
 **Notice**: You should install some dependent libraries firstly. You can check these following links to install them:
 
 * [Qt5 Downloads(needed by Client)](https://www1.qt.io/offline-installers/)
@@ -44,28 +42,29 @@ Here are some CMake's options:
 | - | - |
 | `-DBUILD_CLIENT=ON` | Build `Client` |
 | `-DBUILD_SERVER=ON` | Build `Server` |
-| `-DBUILD_BOTH=ON` | Build both `Client` and `Server` |
+| `-DBUILD_BOTH=ON` | Build both `Client` and `Server`(default) |
 | `-DBUILD_ALL=ON` | Build both `Client` and `Server` and `Test` |
-| `-DCMAKE_BUILD_TYPE=Release` | Build a release version |
+| `-DBUILD_STATIC=ON` | Build a static version(default is dynamic version) |
+| `-DCMAKE_BUILD_TYPE=Release` | Build a release version(default) |
 | `-DCMAKE_BUILD_TYPE=Debug` | Build a debug version |
 
-### Linux
+### Linux & OSX
 
-Use the following commands to build `Server`:
+Use the following commands to build `Server`(static version):
 
 ```
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SERVER=ON ..
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SERVER=ON -DBUILD_STATIC=ON ..
 make
 ```
 
 ### Windows (with Visual Studio)
 
-Use the following commands to build `Client`:
+Use the following commands to build `Client`(dynamic version):
 
 ```
 cd build
-cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT=E:\Boost\boost_1_67_0 -DCMAKE_PREFIX_PATH=E:\mongo\mongo-cxx-driver;E:\mongo\mongo-c-driver;E:\Qt\Qt5.10.1 -DCMAKE_BUILD_TYPE=Release -DBUILD_CLIENT=ON ..
+cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT="E:\Boost\boost_1_67_0" -DCMAKE_PREFIX_PATH="E:\mongo\mongo-cxx-driver;E:\mongo\mongo-c-driver;E:\Qt\Qt5.10.1" -DCMAKE_BUILD_TYPE=Release -DBUILD_CLIENT=ON ..
 ```
 
 **Ensure you have modified the path like `-DBOOST_ROOT=[path]` into your own path.**
