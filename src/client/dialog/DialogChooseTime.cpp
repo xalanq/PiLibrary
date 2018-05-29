@@ -44,7 +44,7 @@ void DialogChooseTime::slotGo() {
     }
 }
 
-void DialogChooseTime::slotChanged(int t) {
+void DialogChooseTime::slotChanged(int) {
     X::xll d = spinDay->value();
     X::xll h = spinHour->value();
     X::xll m = spinMinute->value();

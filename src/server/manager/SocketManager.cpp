@@ -60,7 +60,7 @@ void SocketManager::readHeader() {
         socket,
         boost::asio::buffer(info.getBuffer(), SocketInfo::HEADER_SIZE),
         boost::asio::transfer_exactly(SocketInfo::HEADER_SIZE),
-        [this, self](const error_code &ec, size_t bytes) {
+        [this, self](const error_code &ec, size_t) {
             if (ec) {
                 _from(readHeader) << system_error(ec).what() << '\n';
                 stop();
@@ -183,7 +183,7 @@ void SocketManager::write(const ErrorCode &ec, const ActionCode &ac, const xll &
     boost::asio::async_write(
         socket,
         boost::asio::buffer(info.getBuffer(), size),
-        [this, self](const error_code &ec, size_t bytes) {
+        [this, self](const error_code &ec, size_t) {
             if (ec) {
                 _to(write) << system_error(ec).what() << '\n';
                 stop();
@@ -214,7 +214,7 @@ void SocketManager::saveFile(const ErrorCode &ec, const ActionCode &ac, const xl
         socket,
         boost::asio::buffer(info.getBuffer(), size),
         boost::asio::transfer_exactly(size),
-        [this, self, ac, token, pt, size](const error_code &ec, size_t bytes) {
+        [this, self, ac, token, pt, size](const error_code &ec, size_t) {
             if (ec) {
                 _from(saveFile) << system_error(ec).what() << '\n';
                 stop();
@@ -284,7 +284,7 @@ void SocketManager::doRegister(const ptree &pt, const xll &token) {
     write(ec, X::RegisterFeedback);
 }
 
-void SocketManager::doLogout(const ptree &pt, const xll &token) {
+void SocketManager::doLogout(const ptree &, const xll &token) {
     auto ec = X::NoError;
     if (token == 0) {
         _from(doLogout) << "token = 0\n";
@@ -479,7 +479,6 @@ void SocketManager::doGetBookBrief(ptree pt, const xll &token) {
             ec = X::NotLogin;
         } else {
             tk = token;
-            pt.put<xint>("userid", it->getUserid());
             pt.put<xint>("priority", it->getPriority());
             _from(doGetBookBrief);
             auto p = userManager.getBookBrief(pt);

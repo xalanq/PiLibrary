@@ -201,7 +201,6 @@ UserManager::ErrorCode UserManager::borrowBook(const ptree &pt) {
     auto userid = pt.get<xint>("userid");
     auto priority = pt.get<xint>("priority");
     auto bookid = pt.get<xint>("bookid", 0);
-    auto t = pt.get<xll>("keepTime", 0);
     auto beginTime = pt.get<xll>("beginTime", 0);
     auto keepTime = pt.get<xll>("keepTime", 0);
     auto endTime = beginTime + keepTime;
@@ -541,7 +540,6 @@ UserManager::ptree UserManager::getBook(const ptree &pt) {
 
 UserManager::ptree UserManager::getBookBrief(const ptree &pt) {
     cerr << SocketInfo::encodePtree(pt, true);
-    auto userid = pt.get<xint>("userid");
     auto priority = pt.get<xint>("priority");
     auto bookid = pt.get<xint>("bookid", 0);
 
@@ -669,8 +667,8 @@ UserManager::ErrorCode UserManager::setBook(const ptree &pt) {
                 kvp("amount", amount ? *amount : 0),
                 kvp("introduction", bsoncxx::types::b_utf8(introduction ? *introduction : "")),
                 kvp("position", bsoncxx::types::b_utf8(position ? *position : "")),
-                kvp("priority", priority ? *priority : int(X::ADMINISTER)),
-                kvp("maxKeepTime", maxKeepTime ? *maxKeepTime : 0),
+                kvp("priority", priority ? *priority : xint(X::ADMINISTER)),
+                kvp("maxKeepTime", maxKeepTime ? *maxKeepTime : xll(0)),
                 kvp("starCount", 0),
                 kvp("starRecord", make_array()),
                 kvp("borrowRecord", make_array()),
@@ -737,7 +735,7 @@ UserManager::ptree UserManager::getNewBookList(const ptree &pt) {
             kvp("_id", 0),
             kvp("bookid", 1)
         )
-    ).skip(std::max(0ll, count - number));
+    ).skip(std::max(xll(0), (xll)(count - number)));
     auto cur = (*client)[db_name]["book"].find(
         make_document(
             kvp("priority", make_document(
@@ -869,6 +867,7 @@ UserManager::ptree UserManager::getSearchBookList(const ptree &pt) {
     auto client = pool.acquire();
 
     auto doc = document();
+    doc << "priority" << open_document << "$lte" << priority << close_document;
     if (bookid)
         doc << "bookid" << open_document << "$regex" << bsoncxx::types::b_utf8(*bookid) << close_document;
     if (title)

@@ -6,8 +6,8 @@
 
 ThreadGetRecord::ThreadGetRecord(const xll &token, const ActionCode &type, const xint &number, const xint &begin, QObject *parent) :
     ThreadNetwork(parent),
-    type(type),
     token(token),
+    type(type),
     number(number),
     begin(begin) {
 }

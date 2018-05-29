@@ -162,11 +162,11 @@ void BookManager::slotGetBookBrief(const ErrorCode &ec, const ptree &pt, const x
     popThread();
 }
 
-void BookManager::slotAddBook(const ErrorCode &ec, std::function<void(ErrorCode &)> f) {
-    f(ErrorCode(ec));
+void BookManager::slotAddBook(ErrorCode ec, std::function<void(ErrorCode &)> f) {
+    f(ec);
 }
 
-void BookManager::slotUpdateBook(const ErrorCode &ec, const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f) {
+void BookManager::slotUpdateBook(ErrorCode ec, const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f) {
     if (ec == X::NoError) {
         auto bookid = pt.get<xint>("bookid");
         auto &a = mapBook[bookid].updateFromPtree(pt);
@@ -176,7 +176,7 @@ void BookManager::slotUpdateBook(const ErrorCode &ec, const ptree &pt, const Res
             b.cleanCover().setCover(Resource::copy(cover));
         }
     }
-    f(ErrorCode(ec));
+    f(ec);
 }
 
 void BookManager::_getBook(const xint &bookid) {
@@ -216,7 +216,7 @@ void BookManager::popThread() {
     }
 }
 
-void BookManager::emitBrowseEvents(const xint &bookid) {
+void BookManager::emitBrowseEvents(xint bookid) {
     for (auto f : browseEvents)
-        f(xint(bookid));
+        f(bookid);
 }

@@ -51,8 +51,8 @@ public:
 public slots:
     void slotGetBook(const ErrorCode &ec, const ptree &pt, const xint &bookid, const Resource &cover);
     void slotGetBookBrief(const ErrorCode &ec, const ptree &pt, const xint &bookid, const Resource &cover);
-    void slotAddBook(const ErrorCode &ec, std::function<void(ErrorCode &)> f);
-    void slotUpdateBook(const ErrorCode &ec, const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f);
+    void slotAddBook(ErrorCode ec, std::function<void(ErrorCode &)> f);
+    void slotUpdateBook(ErrorCode ec, const ptree &pt, const Resource &cover, std::function<void(ErrorCode &)> f);
 
 private:
     void _getBook(const xint &bookid);
@@ -60,7 +60,7 @@ private:
 
     void popThread();
     
-    void emitBrowseEvents(const xint &bookid);
+    void emitBrowseEvents(xint bookid);
 
 private:
     UserManager &userManager;

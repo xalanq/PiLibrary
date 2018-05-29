@@ -20,7 +20,7 @@ public:
 
 public slots:
     void slotGo();
-    void slotChanged(int t);
+    void slotChanged(int);
 
 private:
     void setUI();

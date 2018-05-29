@@ -22,8 +22,7 @@ void ThreadLogout::run() {
         X::tcp_sync_read(socket, token, ac, pt);
         socket.close();
         ec = static_cast<ErrorCode> (pt.get<int>("error_code"));
-    } catch (std::exception &e) {
-        auto str = e.what();
+    } catch (std::exception &) {
         ec = X::UnknownError;
     }
 

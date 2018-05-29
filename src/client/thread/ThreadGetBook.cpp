@@ -37,8 +37,7 @@ void ThreadGetBook::run() {
             cover = X::tcp_sync_read_with_file(socket, token, a, p);
         }
         socket.close();
-    } catch (std::exception &e) {
-        auto s = e.what();
+    } catch (std::exception &) {
         ec = X::InvalidBook;
         pt = ptree();
         cover.clean();

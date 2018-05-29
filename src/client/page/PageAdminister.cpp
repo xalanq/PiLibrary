@@ -104,15 +104,15 @@ void PageAdminister::setUI() {
     lblSetPriority->setText(tr("&Priority: "));
     lblSetPriority->setBuddy(cbboxSetPriority);
     auto priority = userManager.getUser().getPriority();
-    if (userManager.getUser().getPriority() > X::USER) {
+    if (priority > X::USER) {
         priorityList.append(tr("User"));
         priorityInfo.push_back(X::USER);
     }
-    if (userManager.getUser().getPriority() > X::ADMINISTER) {
+    if (priority > X::ADMINISTER) {
         priorityList.append(tr("Administer"));
         priorityInfo.push_back(X::ADMINISTER);
     }
-    if (userManager.getUser().getPriority() > X::SUPER_ADMINISTER) {
+    if (priority > X::SUPER_ADMINISTER) {
         priorityList.append(tr("Super Administer"));
         priorityInfo.push_back(X::SUPER_ADMINISTER);
     }

@@ -78,12 +78,12 @@ void UserManager::refresh() {
     borrowEvents.clear();
 }
 
-void UserManager::emitStarEvents(const xint &bookid, bool star) {
+void UserManager::emitStarEvents(xint bookid, bool star) {
     for (auto f: starEvents)
-        f(xint(bookid), star);
+        f(bookid, star);
 }
 
-void UserManager::emitBorrowEvents(const xint &bookid, const xll &beginTime, const xll &endTime) {
+void UserManager::emitBorrowEvents(xint bookid, xll beginTime, xll endTime) {
     for (auto f: borrowEvents)
-        f(xint(bookid), xll(beginTime), xll(endTime));
+        f(bookid, beginTime, endTime);
 }

@@ -41,8 +41,8 @@ public:
     void refresh();
 
 private:
-    void emitStarEvents(const xint &bookid, bool star);
-    void emitBorrowEvents(const xint &bookid, const xll &beginTime, const xll &endTime);
+    void emitStarEvents(xint bookid, bool star);
+    void emitBorrowEvents(xint bookid, xll beginTime, xll endTime);
     
 private:
     xll token {};

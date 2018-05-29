@@ -43,7 +43,7 @@ void WidgetModifyBook::setUI() {
     editIntroduction->document()->setPlainText(QString::fromStdString(book.getIntroduction()));
     editIntroduction->document()->setModified(false);
     auto priority = book.getPriority();
-    for (int i = 0; i < priorityInfo.size(); ++i)
+    for (int i = 0; i < int(priorityInfo.size()); ++i)
         if (priorityInfo[i] == priority) {
             cbboxPriority->setCurrentIndex(i);
             break;

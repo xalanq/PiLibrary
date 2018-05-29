@@ -36,12 +36,12 @@ void WidgetSearchBook::slotSearch() {
     X::ptree pt;
 
 #define XPUT(low, big) \
-    auto x##low = edit##big->text(); \
-    if (x##low.size()) { \
+    auto low = edit##big->text(); \
+    if (low.size()) { \
         if (regex##big->isChecked()) \
-            pt.put(#low, x##low.toStdString()); \
+            pt.put(#low, low.toStdString()); \
         else \
-            pt.put(#low, X::escape(x##low.toStdString())); \
+            pt.put(#low, X::escape(low.toStdString())); \
     }
 
     XPUT(title, Title)
@@ -142,7 +142,7 @@ void WidgetSearchBook::setConnection() {
     connect(btnMore, &QPushButton::clicked, this, &WidgetSearchBook::slotMore);
 
 #define XENTER(name) \
-    connect(##name, &QLineEdit::returnPressed, btnSearch, std::bind(&QPushButton::clicked, btnSearch, true));
+    connect(name, &QLineEdit::returnPressed, btnSearch, std::bind(&QPushButton::clicked, btnSearch, true));
 
     XENTER(editTitle)
     XENTER(editAuthor)
