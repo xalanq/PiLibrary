@@ -1,5 +1,6 @@
 add_subdirectory(core)
 
+option(BUILD_STATIC "Build static version" OFF)
 option(BUILD_CLIENT "Build client" OFF)
 option(BUILD_SERVER "Build server" OFF)
 option(BUILD_BOTH "Build server, client" ON)

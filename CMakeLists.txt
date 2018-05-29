@@ -49,6 +49,4 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     endif()
 endif()
 
-option(BUILD_STATIC "Build static version" OFF)
-
 add_subdirectory(src)
