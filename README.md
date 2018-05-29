@@ -7,7 +7,7 @@ A very weak(pi) library system. (一个非常菜(皮)的图书管理系统)
 
 ## Introduction
 
-It's a cross-platform/multi-thread/async(in Server)/sync(in Client) library system.
+It's a cross-platform/multi-thread/async(Server)/sync(Client) library system.
 
 Here are the functions:
 
@@ -28,7 +28,7 @@ Here are the functions:
 **Notice**: You should install some dependent libraries firstly. You can check these following links to install them:
 
 * [Qt5 Downloads(needed by Client)](https://www1.qt.io/offline-installers/)
-* [Boost Downloads(needed by both Client and Server)](https://www.boost.org/users/download/)
+* [Boost Downloads(needed by Client, Server)](https://www.boost.org/users/download/)
 * [MongoDB Downloads(needed by Server)](https://www.mongodb.com/download-center)
 * [mongocxx driver(needed by Server)](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/)
 * [My tutorial for Windows 10](http://blog.xalanq.com/win10_vs2017_qt_boost_mongodb_setting/)
@@ -55,7 +55,7 @@ Use the following commands to build `Server`:
 
 ```
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SERVER=ON..
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SERVER=ON ..
 make
 ```
 
