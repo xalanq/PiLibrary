@@ -1,4 +1,13 @@
-add_subdirectory(client)
 add_subdirectory(core)
-add_subdirectory(server)
-add_subdirectory(test)
+
+if (BUILD_CLIENT OR BUILD_BOTH OR BUILD_ALL)
+    add_subdirectory(client)
+endif()
+
+if (BUILD_SERVER OR BUILD_BOTH OR BUILD_ALL)
+    add_subdirectory(server)
+endif()
+
+if (BUILD_SERVER_TEST OR BUILD_ALL)
+    add_subdirectory(test)
+endif()
