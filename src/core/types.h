@@ -12,8 +12,8 @@ using std::cerr;
 
 namespace X {
     typedef boost::property_tree::ptree ptree;
-    typedef int xint;
-    typedef long long xll;
+    typedef int32_t xint;
+    typedef int64_t xll;
     typedef std::string xstring;
     
     enum UserPriority {
