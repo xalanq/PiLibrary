@@ -1,21 +1,25 @@
 project(server)
 
-option(BUILD_STATIC "Build static version" OFF)
-
-set(Boost_USE_MULTITHREADED ON)
-
 if (BUILD_STATIC)
     set(Boost_USE_STATIC_LIBS ON)
     set(Boost_USE_STATIC_RUNTIME ON)
+else()
+    add_definitions(-DBOOST_ALL_DYN_LINK)
+    set(Boost_USE_STATIC_LIBS OFF)
+    set(Boost_USE_STATIC_RUNTIME OFF)
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(Boost_USE_RELEASE_LIBS ON)
     set(Boost_USE_DEBUG_RUNTIME OFF)
 else()
+    set(Boost_USE_RELEASE_LIBS OFF)
     set(Boost_USE_DEBUG_RUNTIME ON)
 endif()
 
-find_package(Boost 1.56.0 COMPONENTS regex date_time system thread)
+set(Boost_USE_MULTITHREADED ON) 
+
+find_package(Boost 1.56.0 REQUIRED COMPONENTS regex date_time system thread)
 
 if (BUILD_STATIC)
     find_package(libmongocxx-static 3.2.0 REQUIRED)
@@ -24,7 +28,7 @@ else()
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${Boost_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
 
 file(GLOB_RECURSE server_sources *.cpp)
 add_executable(server ${server_sources})
