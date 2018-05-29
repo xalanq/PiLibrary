@@ -1,9 +1,10 @@
 # PiLibrary（皮一下真开心）
 
-A very weak(pi) library system. (一个非常菜(皮)的图书管理系统)
+[![Build Status](https://travis-ci.org/xalanq/PiLibrary.svg?branch=master)](https://travis-ci.org/xalanq/PiLibrary)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://github.com/xalanq/PiLibrary/blob/master/LICENSE)
+[![GitHub version](https://badge.fury.io/gh/xalanq%2FPiLibrary.svg)](https://github.com/xalanq/PiLibrary/)
 
-[![GitHub license](https://img.shields.io/github/license/xalanq/PiLibrary.svg)](https://github.com/xalanq/PiLibrary/blob/master/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/xalanq/PiLibrary.svg)](https://github.com/xalanq/PiLibrary/issues)
+A very weak(pi) library system. (一个非常菜(皮)的图书管理系统)
 
 ## Introduction
 
