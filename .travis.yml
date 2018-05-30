@@ -10,7 +10,7 @@ branches:
     
 env:
     global:
-        - DEPS_DIR=deps/
+        - DEPS_DIR=deps
         - CMAKE_VERSION=v3.11
         - CMAKE_FILE=cmake-3.11.2-Linux-x86_64.tar.gz
     matrix:
