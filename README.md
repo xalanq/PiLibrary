@@ -41,11 +41,11 @@ Here are some CMake's options:
 
 | Option | Description |
 | - | - |
-| `-DBUILD_CLIENT=ON` | Build `Client` |
-| `-DBUILD_SERVER=ON` | Build `Server` |
-| `-DBUILD_BOTH=ON` | Build both `Client` and `Server`(default) |
-| `-DBUILD_ALL=ON` | Build both `Client` and `Server` and `Test` |
-| `-DBUILD_STATIC=ON` | Build a static version(default is dynamic version) |
+| `-DBUILD_CLIENT_X=ON` | Build `Client` |
+| `-DBUILD_SERVER_X=ON` | Build `Server` |
+| `-DBUILD_BOTH_X=ON` | Build both `Client` and `Server`(default) |
+| `-DBUILD_ALL_X=ON` | Build both `Client` and `Server` and `Test` |
+| `-DBUILD_STATIC_X=ON` | Build a static version(default is dynamic version) |
 | `-DCMAKE_BUILD_TYPE=Release` | Build a release version(default) |
 | `-DCMAKE_BUILD_TYPE=Debug` | Build a debug version |
 
@@ -55,7 +55,7 @@ Use the following commands to build `Server`(static version):
 
 ```
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SERVER=ON -DBUILD_STATIC=ON ..
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SERVER_X=ON -DBUILD_STATIC_X=ON ..
 make
 ```
 
@@ -65,7 +65,7 @@ Use the following commands to build `Client`(dynamic version):
 
 ```
 cd build
-cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT="E:\Boost\boost_1_67_0" -DCMAKE_PREFIX_PATH="E:\mongo\mongo-cxx-driver;E:\mongo\mongo-c-driver;E:\Qt\Qt5.10.1" -DCMAKE_BUILD_TYPE=Release -DBUILD_CLIENT=ON ..
+cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT="E:\Boost\boost_1_67_0" -DCMAKE_PREFIX_PATH="E:\mongo\mongo-cxx-driver;E:\mongo\mongo-c-driver;E:\Qt\Qt5.10.1" -DCMAKE_BUILD_TYPE=Release -DBUILD_CLIENT_X=ON ..
 ```
 
 **Ensure you have modified the path like `-DBOOST_ROOT=[path]` into your own path.**
