@@ -23,16 +23,14 @@ addons:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
             
-            # Add the MongoDB 3.2 repository
-            - mongodb-3.6-precise
         packages:
             - mongodb-org-server
-            - g++-5.4
+            - g++-5
             - clang-3.8
 
 install:
     # GCC
-    - if [ "$CXX" = "g++" ]; then export CXX="g++-5.4"; export CC="gcc-5.4"; fi
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-5"; export CC="gcc-5"; fi
 
     # Clang
     - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.8"; export CC="clang-3.8"; fi
