@@ -1,0 +1,54 @@
+language: cpp
+
+compiler:
+    - gcc
+    - clang
+
+branches:
+    only:
+        - master
+    
+env:
+    global:
+        - DEPS_DIR=deps/
+        - CMAKE_VERSION=v3.11
+        - CMAKE_FILE=cmake-3.11.2-Linux-x86_64.tar.gz
+    matrix:
+        - CONFIG=Release
+        - CONFIG=Debug
+    
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+            
+            # Add the MongoDB 3.2 repository
+            - mongodb-3.6-precise
+        packages:
+            - mongodb-org-server
+            - g++-5.4
+            - clang-3.8
+
+install:
+    # GCC
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-5.4"; export CC="gcc-5.4"; fi
+
+    # Clang
+    - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.8"; export CC="clang-3.8"; fi
+    
+    # Install dependencies
+    - curl -O https://cmake.org/files/${CMAKE_VERSION}/${CMAKE_FILE}
+    - tar -zxf ${CMAKE_FILE} -C ${DEPS_DIR}/cmake
+    - export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+
+before_script:
+    - $CC --version
+    - $CXX --version
+    - cmake --version
+    
+    - cd build
+    # - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DBUILD_ALL=ON -DBUILD_STATIC=ON ..
+    
+script:
+    # - make
