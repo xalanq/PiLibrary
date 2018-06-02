@@ -23,11 +23,11 @@ Server::Server(boost::asio::io_service &service, const ptree &config) :
 void Server::start(const ptree &config) {
     xint thread_number = config.get<xint>("thread_number");
 
-    cerr << "Listening: " << config.get<xstring> ("server_url") << ":" << config.get<xint> ("server_port") << '\n';
-    cerr << "mongo_url: " << config.get<xstring>("mongodb_url") << '\n';
-    cerr << "mongo_db_name: " << config.get<xstring>("mongodb_db_name") << '\n';
-    cerr << "Thread number: " << thread_number << '\n';
-    cerr << "Default alive time: " << config.get<xll> ("default_alive_ms") << " ms\n";
+    cout << "Listening: " << config.get<xstring> ("server_url") << ":" << config.get<xint> ("server_port") << '\n';
+    cout << "mongo_url: " << config.get<xstring>("mongodb_url") << '\n';
+    cout << "mongo_db_name: " << config.get<xstring>("mongodb_db_name") << '\n';
+    cout << "Thread number: " << thread_number << '\n';
+    cout << "Default alive time: " << config.get<xll> ("default_alive_ms") << " ms\n";
 
     boost::asio::io_service service;
     Server server(service, config);
@@ -41,7 +41,7 @@ void Server::start(const ptree &config) {
         );
     }
     service.run();
-    cerr << "done\n";
+    cout << "done\n";
 }
 
 void Server::start() {
@@ -65,17 +65,17 @@ void Server::doAccept() {
 }
 
 void Server::initRoot() {
-    cerr << "Linking mongodb...\n";
+    cout << "Linking mongodb...\n";
     try {
         bool empty = userManager.isDBEmpty();
-        cerr << "Mongodb is available!\n";
+        cout << "Mongodb is available!\n";
         if (empty) {
-            cerr << "\n=============Attention=============\n";
-            cerr << "Database is empty, create a Super Administer user.\n";
-            cerr << "Username: \t\t PiRoot\n";
-            cerr << "Default Password: \t pi123456\n";
-            cerr << "Please change the password as soon as possible.\n";
-            cerr << "===================================\n\n";
+            cout << "\n=============Attention=============\n";
+            cout << "Database is empty, create a Super Administer user.\n";
+            cout << "Username: \t\t PiRoot\n";
+            cout << "Default Password: \t pi123456\n";
+            cout << "Please change the password as soon as possible.\n";
+            cout << "===================================\n\n";
             ptree pt;
             pt.put("username", "PiRoot");
             pt.put("nickname", "root");
@@ -84,8 +84,8 @@ void Server::initRoot() {
             userManager.registerUser(pt, X::SUPER_ADMINISTER);
         }
     } catch (std::exception &e) {
-        cerr << "Error: Mongodb is unavailable! Please checkout the mongodb's uri.\n";
-        cerr << "Error Message: " << e.what() << '\n';
+        cout << "Error: Mongodb is unavailable! Please checkout the mongodb's uri.\n";
+        cout << "Error Message: " << e.what() << '\n';
         exit(0);
     }
 }

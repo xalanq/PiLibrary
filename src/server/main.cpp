@@ -15,13 +15,13 @@
 using namespace std;
 
 int main() {
-    cerr << "===================================\n";
-    cerr << X::APP_NAME << " v" << X::VERSION << '\n';
-    cerr << "Author: " << X::AUTHOR[0] << ", " << X::AUTHOR[1] << '\n';
-    cerr << "Website: " << X::WEBSITE << '\n';
-    cerr << "GitHub: " << X::GITHUB << '\n';
-    cerr << "===================================\n";
-    cerr << '\n';
+    cout << "===================================\n";
+    cout << X::APP_NAME << " v" << X::VERSION << '\n';
+    cout << "Author: " << X::AUTHOR[0] << ", " << X::AUTHOR[1] << '\n';
+    cout << "Website: " << X::WEBSITE << '\n';
+    cout << "GitHub: " << X::GITHUB << '\n';
+    cout << "===================================\n";
+    cout << '\n';
 
     mongocxx::instance _ {};
     boost::property_tree::ptree config;
@@ -30,7 +30,7 @@ int main() {
     if (f)
         boost::property_tree::read_json("config.json", config);
     else
-        cerr << "Config file is not exist, create new one[./config.json]\n";
+        cout << "Config file is not exist, create new one[./config.json]\n";
     if (!config.get_optional<X::xstring>("server_url"))
         config.put("server_url", "127.0.0.1");
     if (!config.get_optional<X::xint>("server_port"))
