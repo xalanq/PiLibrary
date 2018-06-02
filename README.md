@@ -20,7 +20,7 @@ Here are the functions:
 * Record(Browse, Borrow, Keep, Login)
 * Administer(Add/Modify book, Modify user)
 * Internationalization(supported en_US, zh_CN until now)
-* etc
+* etc.
 
 ## How to build
 
@@ -51,6 +51,8 @@ Here are some CMake's options:
 
 ### Linux & OSX
 
+Example:
+
 Use the following commands to build `Server`(static version):
 
 ```
@@ -60,6 +62,8 @@ make
 ```
 
 ### Windows (with Visual Studio)
+
+Example:
 
 Use the following commands to build `Client`(dynamic version):
 
