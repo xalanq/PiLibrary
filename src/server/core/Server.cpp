@@ -1,9 +1,13 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <iostream>
+
 #include <boost/thread.hpp>
 
 #include <server/core/Server.h>
+
+using std::cout;
 
 Server::Server(boost::asio::io_service &service, const ptree &config) :
     acceptor(service, boost::asio::ip::tcp::endpoint(
