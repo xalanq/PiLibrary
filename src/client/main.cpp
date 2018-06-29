@@ -11,20 +11,21 @@
 #include <client/values.h>
 
 int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
-
+    // QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setOrganizationName(QString::fromStdString(X::ORG_NAME));
     QCoreApplication::setApplicationName(QString::fromStdString(X::APP_NAME));
+
+    QApplication a(argc, argv);
 
     auto language = QSettings().value("Setting/Language", "default").toString();
     if (language == "default")
         language = QLocale::system().name();
 
     auto *translator = new QTranslator;
-    translator->load(":/language/qm/" + language);
+    translator->load(":/i18n/" + language);
     QApplication::installTranslator(translator);
     auto *translatorQt = new QTranslator;
-    translatorQt->load(":/language/qm/qt_" + language);
+    translatorQt->load(":/i18n/qt_" + language);
     QApplication::installTranslator(translatorQt);
 
     MainWindow w;

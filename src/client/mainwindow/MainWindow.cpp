@@ -13,7 +13,7 @@
 MainWindow::MainWindow(QWidget *parent) : 
     QMainWindow(parent) {
     
-    mainWidget = nullptr;
+    widgetMain = nullptr;
     userManager = nullptr;
     bookManager = nullptr;
     go();
@@ -24,8 +24,8 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::go() {
-    if (mainWidget)
-        delete mainWidget;
+    if (widgetMain)
+        delete widgetMain;
     if (userManager) {
         userManager->refresh();
         delete userManager;
@@ -40,7 +40,7 @@ void MainWindow::go() {
 
     login();
 
-    mainWidget = new MainWidget(*userManager, *bookManager, this);
+    widgetMain = new WidgetMain(*userManager, *bookManager, this);
 
     setUI();
     setConnection();
@@ -64,7 +64,7 @@ void MainWindow::saveSetting() {
     setting.setValue("State", saveState());
 
     setting.endGroup();
-    mainWidget->saveSetting();
+    widgetMain->saveSetting();
 }
 
 void MainWindow::logout() {
@@ -78,7 +78,7 @@ void MainWindow::logout() {
 }
 
 void MainWindow::setUI() {
-    setCentralWidget(mainWidget);
+    setCentralWidget(widgetMain);
     setMinimumSize(QSize(1280, 760));
     adjustSize();
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
@@ -87,11 +87,11 @@ void MainWindow::setUI() {
 }
 
 void MainWindow::setConnection() {
-    connect(mainWidget, &MainWidget::signalLogout, this, &MainWindow::logout);
+    connect(widgetMain, &WidgetMain::signalLogout, this, &MainWindow::logout);
 }
 
 void MainWindow::login() {
-    DialogLogin dialog(*userManager, this);
+    DialogLogin dialog(*userManager);
     if (dialog.exec() != QDialog::Accepted)
         exit(0);
     if (userManager->getToken() == 0)

@@ -8,7 +8,7 @@
 
 #include <client/manager/BookManager.h>
 #include <client/manager/UserManager.h>
-#include <client/widget/MainWidget.h>
+#include <client/widget/WidgetMain.h>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -31,5 +31,5 @@ private:
 private:
     UserManager *userManager;
     BookManager *bookManager;
-    MainWidget *mainWidget;
+    WidgetMain *widgetMain;
 };

@@ -21,11 +21,11 @@
 #include <client/page/PageSetting.h>
 #include <client/widget/WidgetHead.h>
 
-class MainWidget : public QWidget {
+class WidgetMain : public QWidget {
     Q_OBJECT
 
 public:
-    MainWidget(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
+    WidgetMain(UserManager &userManager, BookManager &bookManager, QWidget *parent = Q_NULLPTR);
     void loadSetting();
     void saveSetting();
 

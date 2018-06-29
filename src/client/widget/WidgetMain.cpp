@@ -10,9 +10,9 @@
 #include <QString>
 #include <QVBoxLayout>
 
-#include <client/widget/MainWidget.h>
+#include <client/widget/WidgetMain.h>
 
-MainWidget::MainWidget(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
+WidgetMain::WidgetMain(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     QWidget(parent),
     userManager(userManager),
     bookManager(bookManager) {
@@ -28,15 +28,15 @@ MainWidget::MainWidget(UserManager &userManager, BookManager &bookManager, QWidg
     refresh();
 }
 
-void MainWidget::loadSetting() {
+void WidgetMain::loadSetting() {
 
 }
 
-void MainWidget::saveSetting() {
+void WidgetMain::saveSetting() {
 
 }
 
-void MainWidget::setEvents() {
+void WidgetMain::setEvents() {
     if (++eventCount == 3) {
         userManager.installStarEvent(std::bind(&BookManager::updateStar, &bookManager, std::placeholders::_1, std::placeholders::_2));
         userManager.installStarEvent(std::bind(&PageBrowse::updateStar, pageBrowse, std::placeholders::_1, std::placeholders::_2));
@@ -48,7 +48,7 @@ void MainWidget::setEvents() {
     }
 }
 
-void MainWidget::refresh(bool force) {
+void WidgetMain::refresh(bool force) {
     dialogRefresh->show();
     setDisabled(true);
     eventCount = 0;
@@ -64,7 +64,7 @@ void MainWidget::refresh(bool force) {
     pageRecord->refresh();
 }
 
-void MainWidget::setUI() {
+void WidgetMain::setUI() {
     initListWidget();
     initPageWidget();
     scrollArea->setWidget(pageWidget);
@@ -87,7 +87,7 @@ void MainWidget::setUI() {
     setLayout(layout);
 }
 
-void MainWidget::setConnection() {
+void WidgetMain::setConnection() {
     connect(
         listWidget,
         &QListWidget::currentRowChanged,
@@ -105,30 +105,30 @@ void MainWidget::setConnection() {
         pageBrowse,
         &PageBrowse::signalReady,
         this,
-        &MainWidget::setEvents
+        &WidgetMain::setEvents
     );
     connect(
         pageFavorite,
         &PageFavorite::signalReady,
         this,
-        &MainWidget::setEvents
+        &WidgetMain::setEvents
     );
     connect(
         pageRecord,
         &PageRecord::signalReady,
         this,
-        &MainWidget::setEvents
+        &WidgetMain::setEvents
     );
 
-    connect(pageBrowse, &PageBrowse::signalModify, this, std::bind(&MainWidget::refresh, this, false));
-    connect(pageFavorite, &PageFavorite::signalModify, this, std::bind(&MainWidget::refresh, this, false));
-    connect(pageRecord, &PageRecord::signalModify, this, std::bind(&MainWidget::refresh, this, false));
-    connect(pageSetting, &PageSetting::signalRefresh, this, std::bind(&MainWidget::refresh, this, true));
+    connect(pageBrowse, &PageBrowse::signalModify, this, std::bind(&WidgetMain::refresh, this, false));
+    connect(pageFavorite, &PageFavorite::signalModify, this, std::bind(&WidgetMain::refresh, this, false));
+    connect(pageRecord, &PageRecord::signalModify, this, std::bind(&WidgetMain::refresh, this, false));
+    connect(pageSetting, &PageSetting::signalRefresh, this, std::bind(&WidgetMain::refresh, this, true));
     connect(pageSetting, &PageSetting::signalModifyUser, widgetHead, &WidgetHead::slotModify);
     connect(pageSetting, SIGNAL(signalLogout()), this, SIGNAL(signalLogout()));
 }
 
-void MainWidget::initListWidget() {
+void WidgetMain::initListWidget() {
     QStringList items;
     items.append(tr("Browse"));
     items.append(tr("Favorite"));
@@ -144,7 +144,7 @@ void MainWidget::initListWidget() {
     listWidget->setCurrentRow(0);
 }
 
-void MainWidget::initPageWidget() {
+void WidgetMain::initPageWidget() {
     pageWidget->addWidget(pageBrowse = new PageBrowse(userManager, bookManager, this));
     pageWidget->addWidget(pageFavorite = new PageFavorite(userManager, bookManager, this));
     pageWidget->addWidget(pageRecord = new PageRecord(userManager, bookManager, this));

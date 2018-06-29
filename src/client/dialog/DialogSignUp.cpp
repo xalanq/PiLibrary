@@ -4,6 +4,7 @@
 #include <regex>
 
 #include <QCryptographicHash>
+#include <QFile>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSettings>
@@ -23,7 +24,7 @@ DialogSignUp::DialogSignUp(QWidget *parent) :
     editPasswordConfirm = new QLineEdit(this);
     editEmail = new QLineEdit(this);
 
-    labelMessage = new QLabel(this);
+    lblMessage = new QLabel(this);
 
     btns = new QDialogButtonBox(this);
 
@@ -32,23 +33,23 @@ DialogSignUp::DialogSignUp(QWidget *parent) :
 }
 
 void DialogSignUp::slotSignUpBegin() {
-    labelMessage->hide();
+    lblMessage->hide();
 
     auto &&username = editUsername->text().toStdString();
     if (!X::checkUsername(username)) {
-        labelMessage->show();
+        lblMessage->show();
         if (username.size() < 1 || username.size() > 100)
-            labelMessage->setText(tr("Username's length should be in [1, 100]"));
+            lblMessage->setText(tr("Username's length should be in [1, 100]"));
         else
-            labelMessage->setText(tr("Invalid username"));
+            lblMessage->setText(tr("Invalid username"));
         editUsername->setFocus();
         return;
     }
 
     auto &&nickname = editNickname->text().toStdString();
     if (!X::checkNickname(nickname)) {
-        labelMessage->show();
-        labelMessage->setText(tr("Nickname's length should be in [1, 100]"));
+        lblMessage->show();
+        lblMessage->setText(tr("Nickname's length should be in [1, 100]"));
         editNickname->setFocus();
         return;
     }
@@ -56,32 +57,32 @@ void DialogSignUp::slotSignUpBegin() {
     auto &&password = editPassword->text().toStdString();
     auto &&passwordConfirm = editPasswordConfirm->text().toStdString();
     if (password != passwordConfirm) {
-        labelMessage->show();
-        labelMessage->setText(tr("Different passwords"));
+        lblMessage->show();
+        lblMessage->setText(tr("Different passwords"));
         editPassword->setFocus();
         return;
     }
 
     if (!X::checkPassword(password)) {
-        labelMessage->show();
-        labelMessage->setText(tr("Password's length should be in [6, 100]"));
+        lblMessage->show();
+        lblMessage->setText(tr("Password's length should be in [6, 100]"));
         editPassword->setFocus();
         return;
     }
 
     auto &&email = editEmail->text().toStdString();
     if (!X::checkEmail(email)) {
-        labelMessage->show();
+        lblMessage->show();
         if (email.size() < 5 || email.size() > 100)
-            labelMessage->setText(tr("Email's length should be in [5, 100]"));
+            lblMessage->setText(tr("Email's length should be in [5, 100]"));
         else
-            labelMessage->setText(tr("Invalid email"));
+            lblMessage->setText(tr("Invalid email"));
         editEmail->setFocus();
         return;
     }
 
-    labelMessage->show();
-    labelMessage->setText("Registering...");
+    lblMessage->show();
+    lblMessage->setText("Registering...");
 
     auto thread = new ThreadSignUp(
         editUsername->text(),
@@ -105,24 +106,24 @@ void DialogSignUp::slotSignUpEnd(const X::ErrorCode &ec) {
         close();
     } else {
         if (ec == X::RegisterFailed) {
-            labelMessage->setText(tr("Sign up failed, check network"));
+            lblMessage->setText(tr("Sign up failed, check network"));
         } else if (ec == X::AlreadyRegister) {
-            labelMessage->setText(tr("Username has already been registered"));
+            lblMessage->setText(tr("Username has already been registered"));
             editUsername->setFocus();
         } else if (ec == X::InvalidUsername) {
-            labelMessage->setText(tr("Invalid username"));
+            lblMessage->setText(tr("Invalid username"));
             editUsername->setFocus();
         } else if (ec == X::InvalidNickname) {
-            labelMessage->setText(tr("Invalid nickname"));
+            lblMessage->setText(tr("Invalid nickname"));
             editNickname->setFocus();
         } else if (ec == X::InvalidPassword) {
-            labelMessage->setText(tr("Invalid password"));
+            lblMessage->setText(tr("Invalid password"));
             editPassword->setFocus();
         } else if (ec == X::InvalidEmail) {
-            labelMessage->setText(tr("Invalid email"));
+            lblMessage->setText(tr("Invalid email"));
             editEmail->setFocus();
         } else {
-            labelMessage->setText(X::what(X::ErrorCode(ec)));
+            lblMessage->setText(X::what(X::ErrorCode(ec)));
         }
     }
 }
@@ -131,26 +132,32 @@ void DialogSignUp::setUI() {
     setWindowTitle(tr("Sign up"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
+    QFile f(":/style/DialogSignUp/style.css");
+    f.open(QFile::ReadOnly);
+    if (f.isOpen())
+        setStyleSheet(f.readAll());
+
     editUsername->setPlaceholderText(tr("Username"));
+    editUsername->setFixedHeight(50);
     editNickname->setPlaceholderText(tr("Nickname"));
+    editNickname->setFixedHeight(50);
     editPassword->setPlaceholderText(tr("Password"));
+    editPassword->setFixedHeight(50);
     editPassword->setEchoMode(QLineEdit::Password);
+    editPassword->setFixedHeight(50);
     editPasswordConfirm->setPlaceholderText(tr("Confirm password"));
     editPasswordConfirm->setEchoMode(QLineEdit::Password);
+    editPasswordConfirm->setFixedHeight(50);
     editEmail->setPlaceholderText(tr("Email"));
-	
-	editUsername->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
-	editNickname->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
-	editPassword->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
-	editPasswordConfirm->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
-	editEmail->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px");
+    editEmail->setFixedHeight(50);
 
-
-
-    labelMessage->hide();
+    lblMessage->hide();
+    lblMessage->setWordWrap(true);
 
     btns->addButton(QDialogButtonBox::Ok)->setText(tr("Con&firm"));
     btns->addButton(QDialogButtonBox::Cancel)->setText(tr("&Cancel"));
+    btns->button(QDialogButtonBox::Ok)->setFixedSize(80, 50);
+    btns->button(QDialogButtonBox::Cancel)->setFixedSize(80, 50);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(editUsername);
@@ -158,10 +165,12 @@ void DialogSignUp::setUI() {
     layout->addWidget(editPassword);
     layout->addWidget(editPasswordConfirm);
     layout->addWidget(editEmail);
-    layout->addWidget(labelMessage);
+    layout->addStretch();
+    layout->addWidget(lblMessage);
     layout->addWidget(btns);
 
     setLayout(layout);
+    setFixedWidth(300);
 }
 
 void DialogSignUp::setConnection() {

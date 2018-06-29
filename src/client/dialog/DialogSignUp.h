@@ -32,7 +32,7 @@ private:
     QLineEdit *editPasswordConfirm;
     QLineEdit *editEmail;
 
-    QLabel *labelMessage;
+    QLabel *lblMessage;
 
     QDialogButtonBox *btns;
 };

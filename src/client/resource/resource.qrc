@@ -1,8 +1,12 @@
 <RCC>
-    <qresource prefix="/language">
-        <file alias="qm/zh_CN.qm">i18n/zh_CN.qm</file>
-    </qresource>
-    <qresource prefix="/images">
-        <file alias="login.jpg">images/login.jpg</file>
+    <qresource prefix="/">
+        <file>images/WidgetLogin/drop_down_button.png</file>
+        <file>images/WidgetLogin/head.jpg</file>
+        <file>i18n/zh_CN.qm</file>
+        <file>style/WidgetLogin/style.css</file>
+        <file>style/WidgetLogin/title.css</file>
+        <file>images/WidgetLogin/close.png</file>
+        <file>images/WidgetLogin/min.png</file>
+        <file>style/DialogSignUp/style.css</file>
     </qresource>
 </RCC>

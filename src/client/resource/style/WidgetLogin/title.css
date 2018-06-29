@@ -1,0 +1,32 @@
+/* Reference: https://blog.csdn.net/goforwardtostep/article/details/53792702 */
+
+* { font-family: Microsoft YaHei; }
+
+/* 最小化按钮 */
+QPushButton#btnMin {
+    border-image: url(:/images/WidgetLogin/min.png) 0 60 0 0;
+}
+
+QPushButton#btnMin:hover {
+    border-image: url(:/images/WidgetLogin/min.png) 0 30 0 30;
+}
+
+QPushButton#btnMin:pressed {
+    border-image: url(:/images/WidgetLogin/min.png) 0 0 0 60;
+}
+
+/* 关闭按钮 */
+QPushButton#btnClose {
+    border-image: url(:/images/WidgetLogin/close.png) 0 60 0 0;
+    border-top-right-radius: 3;
+}
+
+QPushButton#btnClose:hover {
+    border-image: url(:/images/WidgetLogin/close.png) 0 30 0 30;
+    border-top-right-radius: 3;
+}
+
+QPushButton#btnClose:pressed {
+    border-image: url(:/images/WidgetLogin/close.png) 0 0 0 60;
+    border-top-right-radius: 3;
+}

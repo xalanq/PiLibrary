@@ -1,0 +1,88 @@
+/* Reference: https://blog.csdn.net/goforwardtostep/article/details/53792702 */
+
+* { font-family: Microsoft YaHei; }
+
+/* µÇÂ½°´Å¥ */
+QPushButton#btnLogin {
+	color: white;
+	background-color: rgb(14, 150, 254);
+	border-radius: 5px;
+}
+
+QPushButton#btnLogin:hover {
+	color: white;
+	background-color: rgb(44, 137, 255);
+}
+
+QPushButton#btnLogin:pressed {
+	color: white;
+	background-color: rgb(14, 135, 228);
+	padding-left: 3px;
+	padding-top: 3px;
+}
+
+/* ×¢²áÕËºÅ */
+QPushButton#btnSignUp {
+	color: rgb(38, 133, 227);
+	background-color: transparent;
+}
+
+QPushButton#btnSignUp:hover {
+	color: rgb(97, 179, 246);
+}
+
+QPushButton#btnSignUp:pressed {
+	color: rgb(0, 109, 176);
+}
+
+/* ÏÂÀ­ÁÐ±í¿ò */
+QComboBox#cbboxUsername {
+    background: white;
+    padding-left: 5px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border: 1px solid rgb(209, 209, 209);
+}
+
+QComboBox#cbboxUsername:hover {
+    border: 1px solid rgb(21, 131, 221);
+}
+
+QComboBox#cbboxUsername::down-arrow {
+    border-image: url(:/images/WidgetLogin/drop_down_button.png) 0 34 0 0;
+}
+
+QComboBox#cbboxUsername::down-arrow:hover {
+    border-image: url(:/images/WidgetLogin/drop_down_button.png) 0 17 0 17;
+}
+
+QComboBox#cbboxUsername::down-arrow:on {
+    border-image: url(:/images/WidgetLogin/drop_down_button.png) 0 0 0 34;
+}
+
+QComboBox#cbboxUsername::drop-down {
+    width: 20px;
+    background: transparent;
+    padding-right: 5px;
+}
+
+QComboBox QAbstractItemView::item {
+    font-size: 30sp;
+    height: 50px;
+}
+
+/* ÃÜÂë¿ò */
+QLineEdit#editPassword {
+    background: white;
+    padding-left: 5px;
+    padding-top: 1px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border: 1px solid rgb(209, 209, 209);
+    border-top: transparent;
+}
+
+QLineEdit#editPassword:hover {
+    padding-top: 0px;
+    border: 1px solid rgb(21, 131, 221);
+}

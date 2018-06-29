@@ -1,0 +1,35 @@
+* { font-family: Microsoft YaHei; }
+
+QLineEdit {
+    background: white;
+    padding-left: 5px;
+    padding-top: 1px;
+    border-radius: 3px;
+    border: 1px solid rgb(209, 209, 209);
+}
+
+QLineEdit:hover {
+    border: 1px solid rgb(21, 131, 221);
+}
+
+DialogSignUp {
+    background: white;
+}
+
+QPushButton {
+	color: white;
+	background-color: rgb(14, 150, 254);
+	border-radius: 5px;
+}
+
+QPushButton:hover {
+	color: white;
+	background-color: rgb(44, 137, 255);
+}
+
+QPushButton:pressed {
+	color: white;
+	background-color: rgb(14, 135, 228);
+	padding-left: 3px;
+	padding-top: 3px;
+}
