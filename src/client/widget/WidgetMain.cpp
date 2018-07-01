@@ -68,7 +68,7 @@ void WidgetMain::refresh(bool force) {
 }
 
 void WidgetMain::setUI() {
-    X::loadStyleSheet(listWidget, ":/style/WidgetMain/style.css");
+    X::loadStyleSheet(this, ":/style/WidgetMain/style.css");
 
     initListWidget();
     initPageWidget();
