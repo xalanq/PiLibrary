@@ -22,6 +22,29 @@ Here are the functions:
 * Internationalization(supported en_US, zh_CN until now)
 * etc.
 
+## Interface
+
+
+Log in             |  Sign up
+:-------------------------:|:-------------------------:
+![](./images/login.png)  |  ![](./images/sign-up.png)
+
+
+Newest Book             |  Search
+:-------------------------:|:-------------------------:
+![](./images/newest-book.png)  |  ![](./images/search.png)
+
+
+Book             |  Borrow Book
+:-------------------------:|:-------------------------:
+![](./images/book.png)  |  ![](./images/borrow-book.png)
+
+
+Add book             |  Setting
+:-------------------------:|:-------------------------:
+![](./images/add-book.png)  |  ![](./images/setting.png)
+
+
 ## How to build
 
 **Notice**: You should install some dependent libraries firstly. You can check these following links to install them:
