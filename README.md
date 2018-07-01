@@ -116,7 +116,9 @@ cd ../bin
 
 Now, don't tell me you don't know how to run.
 
-**Note**: Server connects port 23332 to MongoDB. If you want to change that port, edit `config.json` after server's first run.
+**Note**: Server connects port 23332 to MongoDB as default. If you want to change that port, edit `config.json` after server's first run.
+
+**Note**: If you want to run server on silent mode, just redirect `stderr` to a file. For example `./server 2> log`.
 
 ## More information
 
