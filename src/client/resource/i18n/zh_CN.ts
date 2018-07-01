@@ -955,12 +955,12 @@ Time: </source>
     <message>
         <location filename="../../widget/WidgetLogin.cpp" line="138"/>
         <source>&amp;Log in</source>
-        <translation>登录(&amp;L)</translation>
+        <translation>登录</translation>
     </message>
     <message>
         <location filename="../../widget/WidgetLogin.cpp" line="139"/>
         <source>&amp;Sign up</source>
-        <translation>注册(&amp;S)</translation>
+        <translation>注册</translation>
     </message>
 </context>
 <context>
