@@ -30,19 +30,24 @@ Log in             |  Sign up
 ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/login.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/sign-up.png)
 
 
-Newest Book             |  Search
+Newest books             |  Search
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/newest-book.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/search.png)
 
 
-Book             |  Borrow Book
+Book             |  Borrow a book
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/book.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/borrow-book.png)
 
 
-Add book             |  Setting
+Add a book             |  Administer
 :-------------------------:|:-------------------------:
-![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/add-book.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/setting.png)
+![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/add-book.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/administer.png)
+
+
+Setting             |  About
+:-------------------------:|:-------------------------:
+![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/setting.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/about.png)
 
 
 ## How to build
@@ -112,3 +117,7 @@ cd ../bin
 Now, don't tell me you don't know how to run.
 
 **Note**: Server connects port 23332 to MongoDB. If you want to change that port, edit `config.json` after server's first run.
+
+## More information
+
+Go to [Wiki](https://github.com/xalanq/PiLibrary/wiki)
