@@ -87,3 +87,5 @@ cd ../bin
 ```
 
 Now, don't tell me you don't know how to run.
+
+**Note**: Server connects port 23332 to MongoDB. If you want to change that port, edit `config.json` after server's first run.
