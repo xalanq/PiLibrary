@@ -6,12 +6,12 @@
     <message>
         <location filename="../../dialog/DialogBook.cpp" line="24"/>
         <source>&amp;Star</source>
-        <translation>喜爱(&amp;S)</translation>
+        <translation>收藏(&amp;S)</translation>
     </message>
     <message>
         <location filename="../../dialog/DialogBook.cpp" line="25"/>
         <source>Un&amp;star</source>
-        <translation>取消喜欢(&amp;S)</translation>
+        <translation>取消收藏(&amp;S)</translation>
     </message>
     <message>
         <location filename="../../dialog/DialogBook.cpp" line="26"/>
@@ -380,12 +380,12 @@ Please wait a while...</source>
     <message>
         <location filename="../../dialog/DialogSignUp.cpp" line="67"/>
         <source>Password&apos;s length should be in [6, 100]</source>
-        <translation>密码的长度应为1到100个字符</translation>
+        <translation>密码的长度应为6到100个字符</translation>
     </message>
     <message>
         <location filename="../../dialog/DialogSignUp.cpp" line="76"/>
         <source>Email&apos;s length should be in [5, 100]</source>
-        <translation>邮箱的长度应为1到100个字符</translation>
+        <translation>邮箱的长度应为5到100个字符</translation>
     </message>
     <message>
         <location filename="../../dialog/DialogSignUp.cpp" line="78"/>
