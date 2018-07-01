@@ -27,6 +27,6 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${Boost_INCLUDE_DIRS})
 
 file(GLOB_RECURSE client_sources *.cpp *h *.qrc)
-add_executable(client ${client_sources})
+add_executable(client WIN32 ${client_sources})
 
 target_link_libraries(client core ${Boost_LIBRARIES} Qt5::Widgets Qt5::Core Qt5::Gui)
