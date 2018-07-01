@@ -27,22 +27,22 @@ Here are the functions:
 
 Log in             |  Sign up
 :-------------------------:|:-------------------------:
-![](./images/login.png)  |  ![](./images/sign-up.png)
+![](./tree/master/doc/images/login.png)  |  ![](./tree/master/doc/images/sign-up.png)
 
 
 Newest Book             |  Search
 :-------------------------:|:-------------------------:
-![](./images/newest-book.png)  |  ![](./images/search.png)
+![](./tree/master/doc/images/newest-book.png)  |  ![](./tree/master/doc/images/search.png)
 
 
 Book             |  Borrow Book
 :-------------------------:|:-------------------------:
-![](./images/book.png)  |  ![](./images/borrow-book.png)
+![](./tree/master/doc/images/book.png)  |  ![](./tree/master/doc/images/borrow-book.png)
 
 
 Add book             |  Setting
 :-------------------------:|:-------------------------:
-![](./images/add-book.png)  |  ![](./images/setting.png)
+![](./tree/master/doc/images/add-book.png)  |  ![](./tree/master/doc/images/setting.png)
 
 
 ## How to build
