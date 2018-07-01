@@ -210,8 +210,7 @@ void DialogBook::slotMore() {
 }
 
 void DialogBook::setUI() {
-    // X::loadStyleSheet(this, ":/style/DialogBook/style.css");
-    X::loadStyleSheet(this, "E:/CppProjects/PiLibrary/src/client/resource/style/DialogBook/style.css");
+    X::loadStyleSheet(this, ":/style/DialogBook/style.css");
 
     setWindowTitle(tr("Book"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);

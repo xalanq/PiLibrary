@@ -68,8 +68,7 @@ void WidgetMain::refresh(bool force) {
 }
 
 void WidgetMain::setUI() {
-    // X::loadStyleSheet(listWidget, ":/style/WidgetMain/style.css");
-    X::loadStyleSheet(this, "E:/CppProjects/PiLibrary/src/client/resource/style/WidgetMain/style.css");
+    X::loadStyleSheet(listWidget, ":/style/WidgetMain/style.css");
 
     initListWidget();
     initPageWidget();
@@ -141,8 +140,7 @@ void WidgetMain::setConnection() {
 }
 
 void WidgetMain::initListWidget() {
-    // X::loadStyleSheet(listWidget, ":/style/ListWidgetNavigation/style.css");
-    X::loadStyleSheet(listWidget, "E:/CppProjects/PiLibrary/src/client/resource/style/ListWidgetNavigation/style.css");
+    X::loadStyleSheet(listWidget, ":/style/ListWidgetNavigation/style.css");
     listWidget->setFrameStyle(QFrame::NoFrame);
     QStringList items;
     items.append(tr("Browse"));
