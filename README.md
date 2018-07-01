@@ -27,22 +27,22 @@ Here are the functions:
 
 Log in             |  Sign up
 :-------------------------:|:-------------------------:
-![](./blob/master/doc/images/login.png)  |  ![](./blob/master/doc/images/sign-up.png)
+![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/login.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/sign-up.png)
 
 
 Newest Book             |  Search
 :-------------------------:|:-------------------------:
-![](./blob/master/doc/images/newest-book.png)  |  ![](./blob/master/doc/images/search.png)
+![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/newest-book.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/search.png)
 
 
 Book             |  Borrow Book
 :-------------------------:|:-------------------------:
-![](./blob/master/doc/images/book.png)  |  ![](./blob/master/doc/images/borrow-book.png)
+![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/book.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/borrow-book.png)
 
 
 Add book             |  Setting
 :-------------------------:|:-------------------------:
-![](./blob/master/doc/images/add-book.png)  |  ![](./blob/master/doc/images/setting.png)
+![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/add-book.png)  |  ![](https://raw.githubusercontent.com/xalanq/PiLibrary/master/doc/images/setting.png)
 
 
 ## How to build
