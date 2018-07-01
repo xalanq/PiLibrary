@@ -3,6 +3,7 @@
         <file>images/WidgetLogin/drop_down_button.png</file>
         <file>images/WidgetLogin/head.jpg</file>
         <file>i18n/zh_CN.qm</file>
+        <file>i18n/qt_zh_CN.qm</file>
         <file>style/WidgetLogin/style.css</file>
         <file>style/WidgetLogin/title.css</file>
         <file>images/WidgetLogin/close.png</file>
