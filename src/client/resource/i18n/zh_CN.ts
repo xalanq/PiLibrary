@@ -4,111 +4,121 @@
 <context>
     <name>DialogBook</name>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="24"/>
+        <location filename="../../dialog/DialogBook.cpp" line="26"/>
         <source>&amp;Star</source>
         <translation>收藏(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="25"/>
+        <location filename="../../dialog/DialogBook.cpp" line="27"/>
         <source>Un&amp;star</source>
         <translation>取消收藏(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="26"/>
+        <location filename="../../dialog/DialogBook.cpp" line="28"/>
         <source>&amp;Borrow</source>
         <translation>借阅(&amp;B)</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="27"/>
+        <location filename="../../dialog/DialogBook.cpp" line="29"/>
         <source>Borrowed</source>
         <translation>已借阅</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="70"/>
+        <location filename="../../dialog/DialogBook.cpp" line="76"/>
         <source>Bookid: </source>
         <translation>书籍ID： </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="71"/>
+        <location filename="../../dialog/DialogBook.cpp" line="77"/>
         <source>Publisher: </source>
         <translation>出版社： </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="72"/>
+        <location filename="../../dialog/DialogBook.cpp" line="78"/>
         <source>ISBN: </source>
         <translation>ISBN： </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="73"/>
+        <location filename="../../dialog/DialogBook.cpp" line="79"/>
         <source>Amount: </source>
         <translation>馆藏数： </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="79"/>
+        <location filename="../../dialog/DialogBook.cpp" line="85"/>
         <source>MaxKeepTime: </source>
         <translation>最大借阅时间： </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="80"/>
+        <location filename="../../dialog/DialogBook.cpp" line="86"/>
         <source>d </source>
         <translation>天 </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="81"/>
+        <location filename="../../dialog/DialogBook.cpp" line="87"/>
         <source>h </source>
         <translation>小时 </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="82"/>
+        <location filename="../../dialog/DialogBook.cpp" line="88"/>
         <source>m </source>
         <translation>分钟 </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="125"/>
+        <location filename="../../dialog/DialogBook.cpp" line="134"/>
         <source>Failed to star</source>
         <translation>添加喜爱失败</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="157"/>
+        <location filename="../../dialog/DialogBook.cpp" line="166"/>
         <source>Failed to borrow</source>
         <translation>借阅失败</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="164"/>
+        <location filename="../../dialog/DialogBook.cpp" line="173"/>
         <source>Borrow book</source>
         <translation>借阅书籍</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="165"/>
+        <location filename="../../dialog/DialogBook.cpp" line="174"/>
         <source>Successfully borrow a book: 
 </source>
         <translation>借书成功： 
 </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="167"/>
+        <location filename="../../dialog/DialogBook.cpp" line="176"/>
         <source>
 Please go to </source>
         <translation>
 请前往 </translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="169"/>
+        <location filename="../../dialog/DialogBook.cpp" line="178"/>
         <source> to get the book</source>
         <translation> 来获取书籍</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="202"/>
+        <location filename="../../dialog/DialogBook.cpp" line="198"/>
+        <source>L&amp;ess</source>
+        <translation>折叠(&amp;E)</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/DialogBook.cpp" line="204"/>
+        <source>Mor&amp;e</source>
+        <translation>更多(&amp;E)</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/DialogBook.cpp" line="215"/>
         <source>Book</source>
         <translation>图书</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="209"/>
+        <location filename="../../dialog/DialogBook.cpp" line="225"/>
         <source>&amp;Modify</source>
         <translation>编辑(&amp;M)</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogBook.cpp" line="212"/>
+        <location filename="../../dialog/DialogBook.cpp" line="228"/>
         <source>Mo&amp;re</source>
         <translation>更多(&amp;R)</translation>
     </message>
@@ -176,39 +186,32 @@ Note: you can not return this book yourself.</source>
 <context>
     <name>DialogLogin</name>
     <message>
-        <location filename="../../dialog/DialogLogin.cpp" line="90"/>
         <source>Connecting...</source>
-        <translation>连接中...</translation>
+        <translation type="vanished">连接中...</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogLogin.cpp" line="108"/>
         <source>Wrong username or password</source>
-        <translation>错误的用户名或密码</translation>
+        <translation type="vanished">错误的用户名或密码</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogLogin.cpp" line="110"/>
         <source>Login failed, check network</source>
-        <translation>登录失败，请检查网络</translation>
+        <translation type="vanished">登录失败，请检查网络</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogLogin.cpp" line="130"/>
         <source>Username</source>
-        <translation>用户名</translation>
+        <translation type="vanished">用户名</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogLogin.cpp" line="135"/>
         <source>Password</source>
-        <translation>密码</translation>
+        <translation type="vanished">密码</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogLogin.cpp" line="139"/>
         <source>&amp;Log in</source>
-        <translation>登录(&amp;L)</translation>
+        <translation type="vanished">登录(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogLogin.cpp" line="140"/>
         <source>&amp;Sign up</source>
-        <translation>注册(&amp;S)</translation>
+        <translation type="vanished">注册(&amp;S)</translation>
     </message>
 </context>
 <context>
@@ -342,12 +345,12 @@ Note: you can not return this book yourself.</source>
 <context>
     <name>DialogRefresh</name>
     <message>
-        <location filename="../../dialog/DialogRefresh.cpp" line="17"/>
+        <location filename="../../dialog/DialogRefresh.cpp" line="19"/>
         <source>Refreshing</source>
         <translation>正在刷新</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogRefresh.cpp" line="20"/>
+        <location filename="../../dialog/DialogRefresh.cpp" line="22"/>
         <source>Refreshing...
 Please wait a while...</source>
         <translation>正在刷新...
@@ -357,105 +360,105 @@ Please wait a while...</source>
 <context>
     <name>DialogSignUp</name>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="41"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="42"/>
         <source>Username&apos;s length should be in [1, 100]</source>
         <translation>用户名的长度应为1到100个字符</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="43"/>
-        <location filename="../../dialog/DialogSignUp.cpp" line="113"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="44"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="114"/>
         <source>Invalid username</source>
         <translation>无效的用户名</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="51"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="52"/>
         <source>Nickname&apos;s length should be in [1, 100]</source>
         <translation>昵称的长度应为1到100个字符</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="60"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="61"/>
         <source>Different passwords</source>
         <translation>两次输入的密码不同</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="67"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="68"/>
         <source>Password&apos;s length should be in [6, 100]</source>
         <translation>密码的长度应为6到100个字符</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="76"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="77"/>
         <source>Email&apos;s length should be in [5, 100]</source>
         <translation>邮箱的长度应为5到100个字符</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="78"/>
-        <location filename="../../dialog/DialogSignUp.cpp" line="122"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="79"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="123"/>
         <source>Invalid email</source>
         <translation>无效的邮箱</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="102"/>
-        <location filename="../../dialog/DialogSignUp.cpp" line="131"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="103"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="132"/>
         <source>Sign up</source>
         <translation>注册</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="103"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="104"/>
         <source>Sign up successfully!</source>
         <translation>注册成功！</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="108"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="109"/>
         <source>Sign up failed, check network</source>
         <translation>注册失败，请检查网络</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="110"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="111"/>
         <source>Username has already been registered</source>
         <translation>该用户名已经被注册过了</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="116"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="117"/>
         <source>Invalid nickname</source>
         <translation>无效的昵称</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="119"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="120"/>
         <source>Invalid password</source>
         <translation>无效的密码</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="134"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="138"/>
         <source>Username</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="135"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="140"/>
         <source>Nickname</source>
         <translation>昵称</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="136"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="142"/>
         <source>Password</source>
         <translation>密码</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="138"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="146"/>
         <source>Confirm password</source>
         <translation>确认密码</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="140"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="149"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="152"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="155"/>
         <source>Con&amp;firm</source>
         <translation>确认(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../dialog/DialogSignUp.cpp" line="153"/>
+        <location filename="../../dialog/DialogSignUp.cpp" line="156"/>
         <source>&amp;Cancel</source>
         <translation>取消(&amp;C)</translation>
     </message>
@@ -476,54 +479,51 @@ Please wait a while...</source>
 <context>
     <name>MainWidget</name>
     <message>
-        <location filename="../../widget/MainWidget.cpp" line="133"/>
         <source>Browse</source>
-        <translation>浏览</translation>
+        <translation type="vanished">浏览</translation>
     </message>
     <message>
-        <location filename="../../widget/MainWidget.cpp" line="134"/>
         <source>Favorite</source>
-        <translation>收藏</translation>
+        <translation type="vanished">收藏</translation>
     </message>
     <message>
-        <location filename="../../widget/MainWidget.cpp" line="135"/>
         <source>Record</source>
-        <translation>记录</translation>
+        <translation type="vanished">记录</translation>
     </message>
     <message>
-        <location filename="../../widget/MainWidget.cpp" line="137"/>
         <source>Add Book</source>
-        <translation>添加书籍</translation>
+        <translation type="vanished">添加书籍</translation>
     </message>
     <message>
-        <location filename="../../widget/MainWidget.cpp" line="139"/>
         <source>Administer</source>
-        <translation>管理员</translation>
+        <translation type="vanished">管理员</translation>
     </message>
     <message>
         <source>Return</source>
         <translation type="vanished">还书</translation>
     </message>
     <message>
-        <location filename="../../widget/MainWidget.cpp" line="140"/>
         <source>Setting</source>
-        <translation>设置</translation>
+        <translation type="vanished">设置</translation>
     </message>
     <message>
-        <location filename="../../widget/MainWidget.cpp" line="141"/>
         <source>About</source>
-        <translation>关于</translation>
+        <translation type="vanished">关于</translation>
     </message>
 </context>
 <context>
     <name>PageAbout</name>
     <message>
-        <location filename="../../page/PageAbout.cpp" line="37"/>
         <source>&lt;center&gt;&lt;b&gt; %1 v%2&lt;/b&gt;&lt;/center&gt;          &lt;p&gt;Copyright &amp;copy; 2018 by %3.&lt;/p&gt;          &lt;p&gt;Email: %4&lt;/p&gt;          &lt;p&gt;Website: &lt;a href=&apos;http://%5&apos;&gt;%6&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Github: &lt;a href=&apos;https://%7&apos;&gt;%8&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Lisence: LGPL v3.0&lt;/p&gt;</source>
-        <translation>&lt;center&gt;&lt;b&gt; %1 v%2&lt;/b&gt;&lt;/center&gt;          &lt;p&gt;Copyright &amp;copy; 2018 by %3.&lt;/p&gt;          &lt;p&gt;邮箱： %4&lt;/p&gt;          &lt;p&gt;网址： &lt;a href=&apos;http://%5&apos;&gt;%6&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Github: &lt;a href=&apos;https://%7&apos;&gt;%8&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Lisence: LGPL v3.0&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;center&gt;&lt;b&gt; %1 v%2&lt;/b&gt;&lt;/center&gt;          &lt;p&gt;Copyright &amp;copy; 2018 by %3.&lt;/p&gt;          &lt;p&gt;邮箱： %4&lt;/p&gt;          &lt;p&gt;网址： &lt;a href=&apos;http://%5&apos;&gt;%6&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Github: &lt;a href=&apos;https://%7&apos;&gt;%8&lt;/a&gt;&lt;/p&gt;          &lt;p&gt;Lisence: LGPL v3.0&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../page/PageAbout.cpp" line="57"/>
+        <location filename="../../page/PageAbout.cpp" line="43"/>
+        <source>&lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;&lt;center&gt;&lt;b&gt;&lt;font size=24&gt; %1 v%2&lt;/font&gt;&lt;/b&gt;&lt;/center&gt;&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;Copyright &amp;copy; 2018 by %3.&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;Email: %4&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;Website: &lt;a href=&apos;http://%5&apos;&gt;%6&lt;/a&gt;&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;Github: &lt;a href=&apos;https://%7&apos;&gt;%8&lt;/a&gt;&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;Lisence: LGPL v3.0&lt;/p&gt;</source>
+        <translation>&lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;&lt;center&gt;&lt;b&gt;&lt;font size=24&gt; %1 v%2&lt;/font&gt;&lt;/b&gt;&lt;/center&gt;&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;Copyright &amp;copy; 2018 by %3.&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;邮箱: %4&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;网址: &lt;a href=&apos;http://%5&apos;&gt;%6&lt;/a&gt;&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;Github: &lt;a href=&apos;https://%7&apos;&gt;%8&lt;/a&gt;&lt;/p&gt;          &lt;p style=&apos;font-family: Microsoft YaHei&apos;&gt;Lisence: LGPL v3.0&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../page/PageAbout.cpp" line="63"/>
         <source>Check update</source>
         <translation>检查更新</translation>
     </message>
@@ -614,17 +614,17 @@ Please wait a while...</source>
 <context>
     <name>PageBrowse</name>
     <message>
-        <location filename="../../page/PageBrowse.cpp" line="69"/>
+        <location filename="../../page/PageBrowse.cpp" line="73"/>
         <source>Newest Book</source>
         <translation>最新书籍</translation>
     </message>
     <message>
-        <location filename="../../page/PageBrowse.cpp" line="70"/>
+        <location filename="../../page/PageBrowse.cpp" line="74"/>
         <source>Top Book</source>
         <translation>排行榜</translation>
     </message>
     <message>
-        <location filename="../../page/PageBrowse.cpp" line="78"/>
+        <location filename="../../page/PageBrowse.cpp" line="83"/>
         <source>Search Book</source>
         <translation>查询书籍</translation>
     </message>
@@ -632,22 +632,22 @@ Please wait a while...</source>
 <context>
     <name>PageRecord</name>
     <message>
-        <location filename="../../page/PageRecord.cpp" line="143"/>
+        <location filename="../../page/PageRecord.cpp" line="148"/>
         <source>Brows&amp;e Record</source>
         <translation>浏览记录(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../../page/PageRecord.cpp" line="144"/>
+        <location filename="../../page/PageRecord.cpp" line="149"/>
         <source>&amp;Keep Record</source>
         <translation>待还书籍(&amp;K)</translation>
     </message>
     <message>
-        <location filename="../../page/PageRecord.cpp" line="145"/>
+        <location filename="../../page/PageRecord.cpp" line="150"/>
         <source>Borro&amp;w Record</source>
         <translation>借阅历史(&amp;W)</translation>
     </message>
     <message>
-        <location filename="../../page/PageRecord.cpp" line="146"/>
+        <location filename="../../page/PageRecord.cpp" line="151"/>
         <source>&amp;Login Record</source>
         <translation>登录历史(&amp;L)</translation>
     </message>
@@ -752,7 +752,7 @@ returnTime: </source>
         <translation>未被归还</translation>
     </message>
     <message>
-        <location filename="../../listwidget/ListWidgetBrowseBook.cpp" line="41"/>
+        <location filename="../../listwidget/ListWidgetBrowseBook.cpp" line="42"/>
         <source>k</source>
         <translation>千</translation>
     </message>
@@ -765,142 +765,142 @@ Time: </source>
 时间： </translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="12"/>
+        <location filename="../../utils.cpp" line="13"/>
         <source>No Error</source>
         <translation>无错误</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="14"/>
+        <location filename="../../utils.cpp" line="15"/>
         <source>Unknown Error</source>
         <translation>未知错误</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="16"/>
+        <location filename="../../utils.cpp" line="17"/>
         <source>Invalid Body</source>
         <translation>无效的内容</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="18"/>
+        <location filename="../../utils.cpp" line="19"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="20"/>
+        <location filename="../../utils.cpp" line="21"/>
         <source>No Such User</source>
         <translation>没有该用户</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="22"/>
+        <location filename="../../utils.cpp" line="23"/>
         <source>Already Login</source>
         <translation>已经登录</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="24"/>
+        <location filename="../../utils.cpp" line="25"/>
         <source>Register Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="26"/>
+        <location filename="../../utils.cpp" line="27"/>
         <source>Invalid Username</source>
         <translation>无效的用户名</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="28"/>
+        <location filename="../../utils.cpp" line="29"/>
         <source>Invalid Nickname</source>
         <translation>无效的昵</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="30"/>
+        <location filename="../../utils.cpp" line="31"/>
         <source>Invalid Password</source>
         <translation>无效的密码</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="32"/>
+        <location filename="../../utils.cpp" line="33"/>
         <source>Invalid Email</source>
         <translation>无效的邮箱</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="34"/>
+        <location filename="../../utils.cpp" line="35"/>
         <source>Already Register</source>
         <translation>已经注册</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="36"/>
+        <location filename="../../utils.cpp" line="37"/>
         <source>Modify Failed</source>
         <translation>编辑失败</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="38"/>
+        <location filename="../../utils.cpp" line="39"/>
         <source>Invalid New Password</source>
         <translation>无效的新密码</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="40"/>
+        <location filename="../../utils.cpp" line="41"/>
         <source>No Login</source>
         <translation>未登录</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="42"/>
+        <location filename="../../utils.cpp" line="43"/>
         <source>Invalid Token</source>
         <translation>无效的获取</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="44"/>
+        <location filename="../../utils.cpp" line="45"/>
         <source>Invalid Book</source>
         <translation>无效的书籍</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="46"/>
+        <location filename="../../utils.cpp" line="47"/>
         <source>No Such Book</source>
         <translation>不存在该书籍</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="48"/>
+        <location filename="../../utils.cpp" line="49"/>
         <source>No Rest Book</source>
         <translation>没有剩余的书籍</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="50"/>
+        <location filename="../../utils.cpp" line="51"/>
         <source>Already Have</source>
         <translation>已经持有</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="52"/>
+        <location filename="../../utils.cpp" line="53"/>
         <source>No Have</source>
         <translation>没有</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="54"/>
+        <location filename="../../utils.cpp" line="55"/>
         <source>Invalid Time</source>
         <translation>无效的时间</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="56"/>
+        <location filename="../../utils.cpp" line="57"/>
         <source>Already Star</source>
         <translation>已经收藏</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="58"/>
+        <location filename="../../utils.cpp" line="59"/>
         <source>No Such Star</source>
         <translation>收藏中没有</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="60"/>
+        <location filename="../../utils.cpp" line="61"/>
         <source>No Permission</source>
         <translation>没有权限</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="62"/>
+        <location filename="../../utils.cpp" line="63"/>
         <source>Invalid Resource</source>
         <translation>无效的资源</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="64"/>
+        <location filename="../../utils.cpp" line="65"/>
         <source>No Such Resource</source>
         <translation>不存在该资源</translation>
     </message>
     <message>
-        <location filename="../../utils.cpp" line="66"/>
+        <location filename="../../utils.cpp" line="67"/>
         <source>No Such Error</source>
         <translation>不存在该错误</translation>
     </message>
@@ -913,6 +913,92 @@ Time: </source>
 </source>
         <translation>欢迎
 </translation>
+    </message>
+</context>
+<context>
+    <name>WidgetLogin</name>
+    <message>
+        <location filename="../../widget/WidgetLogin.ui" line="20"/>
+        <source>Login</source>
+        <translation>登录</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetLogin.ui" line="140"/>
+        <source>login_username</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetLogin.cpp" line="83"/>
+        <source>Connecting...</source>
+        <translation>连接中...</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetLogin.cpp" line="101"/>
+        <source>Wrong username or password</source>
+        <translation>错误的用户名或密码</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetLogin.cpp" line="103"/>
+        <source>Login failed, check network</source>
+        <translation>登录失败，请检查网络</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetLogin.cpp" line="133"/>
+        <source>Username</source>
+        <translation>用户名</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetLogin.cpp" line="136"/>
+        <source>Password</source>
+        <translation>密码</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetLogin.cpp" line="138"/>
+        <source>&amp;Log in</source>
+        <translation>登录(&amp;L)</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetLogin.cpp" line="139"/>
+        <source>&amp;Sign up</source>
+        <translation>注册(&amp;S)</translation>
+    </message>
+</context>
+<context>
+    <name>WidgetMain</name>
+    <message>
+        <location filename="../../widget/WidgetMain.cpp" line="146"/>
+        <source>Browse</source>
+        <translation>浏览</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetMain.cpp" line="147"/>
+        <source>Favorite</source>
+        <translation>收藏</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetMain.cpp" line="148"/>
+        <source>Record</source>
+        <translation>记录</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetMain.cpp" line="150"/>
+        <source>Add Book</source>
+        <translation>添加书籍</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetMain.cpp" line="152"/>
+        <source>Administer</source>
+        <translation>管理员</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetMain.cpp" line="153"/>
+        <source>Setting</source>
+        <translation>设置</translation>
+    </message>
+    <message>
+        <location filename="../../widget/WidgetMain.cpp" line="154"/>
+        <source>About</source>
+        <translation>关于</translation>
     </message>
 </context>
 <context>
