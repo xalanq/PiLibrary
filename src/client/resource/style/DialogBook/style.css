@@ -1,0 +1,19 @@
+* { font-family: Microsoft YaHei; }
+
+QDialog {
+    background: white;
+}
+
+QPushButton#btnMore {
+    text-align:left;
+	color: rgb(38, 133, 227);
+	background-color: transparent;
+}
+
+QPushButton#btnMore:hover {
+	color: rgb(97, 179, 246);
+}
+
+QPushButton#btnMore:pressed {
+	color: rgb(0, 109, 176);
+}

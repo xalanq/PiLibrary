@@ -67,7 +67,6 @@ QComboBox#cbboxUsername::drop-down {
 }
 
 QComboBox QAbstractItemView::item {
-    font-size: 30sp;
     height: 50px;
 }
 

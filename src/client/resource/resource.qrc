@@ -8,5 +8,8 @@
         <file>images/WidgetLogin/close.png</file>
         <file>images/WidgetLogin/min.png</file>
         <file>style/DialogSignUp/style.css</file>
+        <file>style/ListWidgetNavigation/style.css</file>
+        <file>style/WidgetMain/style.css</file>
+        <file>style/DialogBook/style.css</file>
     </qresource>
 </RCC>

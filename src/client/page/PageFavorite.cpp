@@ -65,9 +65,13 @@ void PageFavorite::refresh() {
 }
 
 void PageFavorite::setUI() {
+    listWidgetStarRecord->setFrameStyle(QFrame::NoFrame);
+
     auto layout = new QVBoxLayout;
     layout->addWidget(listWidgetStarRecord);
     setLayout(layout);
+
+    layout->setContentsMargins(0, 0, 0, 0);
 }
 
 void PageFavorite::setConnection() {

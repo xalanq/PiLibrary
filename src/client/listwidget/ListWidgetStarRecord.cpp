@@ -24,14 +24,14 @@ void ListWidgetItemStarRecord::update(const BookBrief &book, const StarRecord &r
 }
 
 void ListWidgetItemStarRecord::setUI() {
-    QPixmap p(QSize(114, 160));
+    QPixmap p(QSize(148, 208));
     if (book.getCover().getSize())
         p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
     else
         p.fill(Qt::black);
 
     QIcon icon;
-    icon.addPixmap(p.scaled(QSize(114, 160)));
+    icon.addPixmap(p.scaled(QSize(148, 208)));
     setIcon(icon);
 
     setText(QObject::tr("Title: ") +
@@ -58,7 +58,7 @@ void ListWidgetStarRecord::update(const BookBrief &book, const StarRecord &recor
 
 void ListWidgetStarRecord::setUI() {
     setMovement(QListView::Static);
-    setIconSize(QSize(114, 160));
+    setIconSize(QSize(148, 208));
     setUniformItemSizes(true);
     setResizeMode(QListWidget::Adjust);
 }

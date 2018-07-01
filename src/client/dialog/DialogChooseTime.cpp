@@ -124,6 +124,13 @@ void DialogChooseTime::setConnection() {
     );
 
     connect(
+        btns->button(QDialogButtonBox::Cancel),
+        &QPushButton::clicked,
+        this,
+        &QDialog::close
+    );
+
+    connect(
         spinDay,
         QOverload<int>::of(&QSpinBox::valueChanged),
         this,

@@ -200,8 +200,6 @@
  <tabstops>
   <tabstop>cbboxUsername</tabstop>
   <tabstop>editPassword</tabstop>
-  <tabstop>btnLogin</tabstop>
-  <tabstop>btnSignUp</tabstop>
  </tabstops>
  <resources/>
  <connections/>

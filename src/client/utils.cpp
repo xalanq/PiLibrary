@@ -1,6 +1,7 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <QFile>
 #include <QObject>
 
 #include <client/utils.h>
@@ -66,4 +67,15 @@ namespace X {
             return QObject::tr("No Such Error");
         }
     }
+
+    bool loadStyleSheet(QWidget *w, const QString &filename) {
+        QFile f(filename);
+        f.open(QFile::ReadOnly);
+        if (f.isOpen()) {
+            w->setStyleSheet(f.readAll());
+            return true;
+        }
+        return false;
+    }
+
 }

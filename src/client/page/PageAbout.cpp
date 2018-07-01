@@ -18,29 +18,35 @@ PageAbout::PageAbout(QWidget *parent) :
 }
 
 void PageAbout::setUI() {
+    auto lblLayout = new QHBoxLayout;
     auto btnLayout = new QHBoxLayout;
     auto layout = new QVBoxLayout;
+
+    lblLayout->addStretch();
+    lblLayout->addWidget(label);
+    lblLayout->addStretch();
 
     btnLayout->addStretch();
     btnLayout->addWidget(btnUpdate);
     btnLayout->addStretch();
 
     layout->addStretch();
-    layout->addWidget(label);
+    layout->addLayout(lblLayout);
     layout->addLayout(btnLayout);
     layout->addStretch();
 
     setLayout(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
 }
 
 void PageAbout::setConnection() {
     label->setText(tr(
-        "<center><b> %1 v%2</b></center> \
-         <p>Copyright &copy; 2018 by %3.</p> \
-         <p>Email: %4</p> \
-         <p>Website: <a href=\'http://%5\'>%6</a></p> \
-         <p>Github: <a href=\'https://%7\'>%8</a></p> \
-         <p>Lisence: LGPL v3.0</p>").
+        "<p style='font-family: Microsoft YaHei'><center><b><font size=24> %1 v%2</font></b></center></p> \
+         <p style='font-family: Microsoft YaHei'>Copyright &copy; 2018 by %3.</p> \
+         <p style='font-family: Microsoft YaHei'>Email: %4</p> \
+         <p style='font-family: Microsoft YaHei'>Website: <a href=\'http://%5\'>%6</a></p> \
+         <p style='font-family: Microsoft YaHei'>Github: <a href=\'https://%7\'>%8</a></p> \
+         <p style='font-family: Microsoft YaHei'>Lisence: LGPL v3.0</p>").
         arg(QString::fromStdString(X::APP_NAME).toHtmlEscaped()).
         arg(QString::fromStdString(X::VERSION).toHtmlEscaped()).
         arg(QString::fromStdString(X::AUTHOR[0] + ", " + X::AUTHOR[1]).toHtmlEscaped()).
@@ -51,8 +57,8 @@ void PageAbout::setConnection() {
         arg(QString::fromStdString(X::GITHUB).toHtmlEscaped())
     );
     label->setOpenExternalLinks(true);
-    label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     label->setWordWrap(true);
+    label->setFixedWidth(600);
 
     btnUpdate->setText(tr("Check update"));
 }

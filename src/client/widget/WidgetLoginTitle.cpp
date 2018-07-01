@@ -5,6 +5,7 @@
 #include <QHBoxLayout>
 #include <QMouseEvent>
 
+#include <client/utils.h>
 #include <client/widget/WidgetLoginTitle.h>
 
 WidgetLoginTitle::WidgetLoginTitle(QWidget *moveWidget, QWidget *parent) :
@@ -24,10 +25,7 @@ void WidgetLoginTitle::setUI() {
     static const int W = 50;
     static const int H = 50;
 
-    QFile f(":/style/WidgetLogin/title.css");
-    f.open(QFile::ReadOnly);
-    if (f.isOpen())
-        setStyleSheet(f.readAll());
+    X::loadStyleSheet(this, ":/style/WidgetLogin/title.css");
     
     btnMin->setFixedSize(QSize(W, H));
     btnMin->setFocusPolicy(Qt::NoFocus);

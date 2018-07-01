@@ -3,6 +3,8 @@
 
 #include <functional>
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QHBoxLayout>
 #include <QMessageBox>
 #include <QPainter>
@@ -42,6 +44,7 @@ DialogBook::DialogBook(UserManager &userManager, BookManager &bookManager, const
     btnBorrow = new QPushButton(this);
     btnModify = new QPushButton(this);
     btnMore = new QPushButton(this);
+    btnMore->setObjectName("btnMore");
 
     setUI();
     setConnection();
@@ -55,14 +58,17 @@ void DialogBook::setBook(const Book &book) {
     setWindowTitle(QString::fromStdString(book.getTitle()) + " - " + QString::fromStdString(book.getAuthor()));
 
     auto cover = book.getCover();
-    QPixmap p(QSize(172, 237));
+    QPixmap p(QSize(258, 355));
     if (cover.getSize())
         p.loadFromData((uchar *)cover.getData(), cover.getSize());
     else
         p.fill(Qt::black);
-    lblCover->setPixmap(p.scaled(QSize(172, 237)));
+    lblCover->setPixmap(p.scaled(QSize(258, 355)));
 
-    lblTitle->setText(QString::fromStdString(book.getTitle()));
+    lblTitle->setText("<p style='font-family: Microsoft YaHei; font-size: 32px;'>" + 
+                      QString::fromStdString(book.getTitle()) +
+                      "</p>"
+    );
     lblAuthor->setText(QString::fromStdString(book.getAuthor()));
     lblIntroduction->setText(QString::fromStdString(book.getIntroduction()));
     lblPosition->setText(QString::fromStdString(book.getPosition()));
@@ -102,6 +108,9 @@ void DialogBook::setBook(const Book &book) {
             btnModify->show();
         }
     }
+
+    adjustSize();
+    move(QApplication::desktop()->screen()->rect().center() - rect().center());
 }
 
 void DialogBook::slotStarBegin() {
@@ -186,12 +195,14 @@ void DialogBook::slotModify() {
 
 void DialogBook::slotMore() {
     if (lblBookid->isHidden()) {
+        btnMore->setText(tr("L&ess"));
         lblBookid->show();
         lblPublisher->show();
         lblISBN->show();
         lblAmount->show();
     } else {
-        lblBookid->hide();;
+        btnMore->setText(tr("Mor&e"));
+        lblBookid->hide();
         lblPublisher->hide();
         lblISBN->hide();
         lblAmount->hide();
@@ -199,8 +210,14 @@ void DialogBook::slotMore() {
 }
 
 void DialogBook::setUI() {
+    // X::loadStyleSheet(this, ":/style/DialogBook/style.css");
+    X::loadStyleSheet(this, "E:/CppProjects/PiLibrary/src/client/resource/style/DialogBook/style.css");
+
     setWindowTitle(tr("Book"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+    lblIntroduction->setMargin(10);
+    lblCover->setMargin(10);
 
     btnBorrow->setText(strBorrow);
     btnBorrow->setDisabled(true);
@@ -222,6 +239,9 @@ void DialogBook::setUI() {
     layoutInfo->addWidget(lblPublisher);
     layoutInfo->addWidget(lblISBN);
     layoutInfo->addWidget(lblAmount);
+
+    layoutInfo->addWidget(btnMore);
+    layoutInfo->addStretch();
     slotMore();
 
     auto layoutUp = new QHBoxLayout;
@@ -234,10 +254,10 @@ void DialogBook::setUI() {
     w->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     auto layoutButton = new QHBoxLayout;
+    layoutButton->addStretch();
     layoutButton->addWidget(btnStar);
     layoutButton->addWidget(btnBorrow);
     layoutButton->addWidget(btnModify);
-    layoutButton->addWidget(btnMore);
 
     auto layout = new QVBoxLayout;
     layout->addWidget(w);

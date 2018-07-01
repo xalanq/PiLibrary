@@ -66,6 +66,10 @@ void PageBrowse::slotSearch(const X::ptree &pt) {
 }
 
 void PageBrowse::setUI() {
+    listWidgetNewBook->setFrameStyle(QFrame::NoFrame);
+    listWidgetTopBook->setFrameStyle(QFrame::NoFrame);
+    listWidgetSearchBook->setFrameStyle(QFrame::NoFrame);
+
     tabWidget->addTab(listWidgetNewBook, tr("Newest Book"));
     tabWidget->addTab(listWidgetTopBook, tr("Top Book"));
 
@@ -74,12 +78,17 @@ void PageBrowse::setUI() {
     layoutSearch->addWidget(widgetSearchBook);
     layoutSearch->addWidget(listWidgetSearchBook);
     w->setLayout(layoutSearch);
+    w->setContentsMargins(0, 0, 0, 0);
 
     tabWidget->addTab(w, tr("Search Book"));
+    tabWidget->setContentsMargins(0, 0, 0, 0);
+    layoutSearch->setContentsMargins(0, 0, 0, 0);
 
     auto layout = new QVBoxLayout;
     layout->addWidget(tabWidget);
     setLayout(layout);
+
+    layout->setContentsMargins(0, 10, 0, 0);
 }
 
 void PageBrowse::setConnection() {

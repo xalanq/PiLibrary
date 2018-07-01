@@ -10,7 +10,10 @@
 #include <QString>
 #include <QVBoxLayout>
 
+#include <client/utils.h>
 #include <client/widget/WidgetMain.h>
+
+#define NoMargin(w) w->setContentsMargins(0, 0, 0, 0)
 
 WidgetMain::WidgetMain(UserManager &userManager, BookManager &bookManager, QWidget *parent) :
     QWidget(parent),
@@ -65,8 +68,12 @@ void WidgetMain::refresh(bool force) {
 }
 
 void WidgetMain::setUI() {
+    // X::loadStyleSheet(listWidget, ":/style/WidgetMain/style.css");
+    X::loadStyleSheet(this, "E:/CppProjects/PiLibrary/src/client/resource/style/WidgetMain/style.css");
+
     initListWidget();
     initPageWidget();
+
     scrollArea->setWidget(pageWidget);
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameStyle(QFrame::NoFrame);
@@ -76,15 +83,20 @@ void WidgetMain::setUI() {
     layoutLeft->addWidget(widgetHead);
     layoutLeft->addWidget(listWidget);
     widgetHead->setMaximumHeight(150);
-    widgetHead->setMaximumWidth(200);
-    listWidget->setMaximumWidth(200);
+    widgetHead->setMaximumWidth(150);
+    listWidget->setMaximumWidth(150);
 
     auto layout = new QHBoxLayout;
 
     layout->addLayout(layoutLeft);
     layout->addWidget(scrollArea);
+    layout->setSpacing(5);
 
     setLayout(layout);
+
+    NoMargin(layoutLeft);
+    NoMargin(scrollArea);
+    NoMargin(layout);
 }
 
 void WidgetMain::setConnection() {
@@ -129,6 +141,9 @@ void WidgetMain::setConnection() {
 }
 
 void WidgetMain::initListWidget() {
+    // X::loadStyleSheet(listWidget, ":/style/ListWidgetNavigation/style.css");
+    X::loadStyleSheet(listWidget, "E:/CppProjects/PiLibrary/src/client/resource/style/ListWidgetNavigation/style.css");
+    listWidget->setFrameStyle(QFrame::NoFrame);
     QStringList items;
     items.append(tr("Browse"));
     items.append(tr("Favorite"));
@@ -140,7 +155,12 @@ void WidgetMain::initListWidget() {
     items.append(tr("Setting"));
     items.append(tr("About"));
 
-    listWidget->addItems(items);
+    for (auto &s : items) {
+        auto item = new QListWidgetItem(s, listWidget);
+        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+        item->setTextAlignment(Qt::AlignCenter);
+        listWidget->addItem(item);
+    }
     listWidget->setCurrentRow(0);
 }
 
@@ -148,12 +168,24 @@ void WidgetMain::initPageWidget() {
     pageWidget->addWidget(pageBrowse = new PageBrowse(userManager, bookManager, this));
     pageWidget->addWidget(pageFavorite = new PageFavorite(userManager, bookManager, this));
     pageWidget->addWidget(pageRecord = new PageRecord(userManager, bookManager, this));
-    if (userManager.isAdminister())
+    if (userManager.isAdminister()) {
         pageWidget->addWidget(pageAddBook = new PageAddBook(userManager, bookManager, this));
-    if (userManager.isAdminister())
         pageWidget->addWidget(pageAdminister = new PageAdminister(userManager, bookManager, this));
+    }
     pageWidget->addWidget(pageSetting = new PageSetting(userManager, this));
     pageWidget->addWidget(pageAbout = new PageAbout(this));
 
     pageWidget->setCurrentIndex(0);
+
+    NoMargin(pageWidget);
+    NoMargin(pageBrowse);
+    NoMargin(pageFavorite);
+    NoMargin(pageRecord);
+    NoMargin(pageSetting);
+    NoMargin(pageAbout);
+
+    if (userManager.isAdminister()) {
+        NoMargin(pageAddBook);
+        NoMargin(pageAdminister);
+    }
 }

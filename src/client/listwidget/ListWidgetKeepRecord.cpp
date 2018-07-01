@@ -24,14 +24,14 @@ void ListWidgetItemKeepRecord::update(const BookBrief &book, const KeepRecord &r
 }
 
 void ListWidgetItemKeepRecord::setUI() {
-    QPixmap p(QSize(114, 160));
+    QPixmap p(QSize(148, 208));
     if (book.getCover().getSize())
         p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
     else
         p.fill(Qt::black);
 
     QIcon icon;
-    icon.addPixmap(p.scaled(QSize(114, 160)));
+    icon.addPixmap(p.scaled(QSize(148, 208)));
     setIcon(icon);
 
     setText(QObject::tr("Bookid: ") + 
@@ -62,7 +62,7 @@ void ListWidgetKeepRecord::update(const BookBrief &book, const KeepRecord &recor
 
 void ListWidgetKeepRecord::setUI() {
     setMovement(QListView::Static);
-    setIconSize(QSize(114, 160));
+    setIconSize(QSize(148, 208));
     setUniformItemSizes(true);
     setResizeMode(QListWidget::Adjust);
 }

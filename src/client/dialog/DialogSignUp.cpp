@@ -12,8 +12,8 @@
 
 #include <client/dialog/DialogSignUp.h>
 #include <client/thread/ThreadSignUp.h>
-#include <client/values.h>
 #include <client/utils.h>
+#include <client/values.h>
 
 DialogSignUp::DialogSignUp(QWidget *parent) : 
     QDialog(parent) {
@@ -132,10 +132,8 @@ void DialogSignUp::setUI() {
     setWindowTitle(tr("Sign up"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-    QFile f(":/style/DialogSignUp/style.css");
-    f.open(QFile::ReadOnly);
-    if (f.isOpen())
-        setStyleSheet(f.readAll());
+
+    X::loadStyleSheet(this, ":/style/DialogSignUp/style.css");
 
     editUsername->setPlaceholderText(tr("Username"));
     editUsername->setFixedHeight(50);

@@ -1,6 +1,8 @@
 // Copyright 2018 xalanq, chang-ran
 // License: LGPL v3.0
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QVBoxLayout>
 
 #include <client/dialog/DialogRefresh.h>
@@ -25,4 +27,7 @@ void DialogRefresh::setUI() {
 
     layout->addWidget(lblRefresh);
     setLayout(layout);
+
+    adjustSize();
+    move(QApplication::desktop()->screen()->rect().center() - rect().center());
 }

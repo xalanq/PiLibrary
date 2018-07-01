@@ -12,11 +12,11 @@
 #include <QStringList>
 #include <QVBoxLayout>
 
-#include <client/widget/WidgetLogin.h>
 #include <client/dialog/DialogSignUp.h>
 #include <client/thread/ThreadLogin.h>
-#include <client/values.h>
 #include <client/utils.h>
+#include <client/values.h>
+#include <client/widget/WidgetLogin.h>
 
 WidgetLogin::WidgetLogin(UserManager &userManager, QWidget *parent) :
     QWidget(parent),
@@ -47,7 +47,7 @@ void WidgetLogin::loadSetting() {
     }
     if (pos != -1) {
         cbboxUsername->setCurrentIndex(pos);
-        editPassword->setFocus();
+        QWidget::setTabOrder(editPassword, cbboxUsername);
     }
 
     setting.endGroup();
@@ -115,10 +115,7 @@ void WidgetLogin::slotRegister() {
 void WidgetLogin::setUI() {
     setupUi(this);
 
-    QFile f(":/style/WidgetLogin/style.css");
-    f.open(QFile::ReadOnly);
-    if (f.isOpen())
-        setStyleSheet(f.readAll());
+    X::loadStyleSheet(this, ":/style/WidgetLogin/style.css");
 
     QImage img(":/images/WidgetLogin/head.jpg");
     lblHead->setFrameStyle(QFrame::NoFrame);
@@ -140,7 +137,6 @@ void WidgetLogin::setUI() {
 
     btnLogin->setText(tr("&Log in"));
     btnSignUp->setText(tr("&Sign up"));
-    btnLogin->setFocus();
 
     title->setFixedWidth(this->width());
     title->move(0, 0);

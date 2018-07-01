@@ -140,6 +140,11 @@ void PageRecord::refreshLoginRecord() {
 }
 
 void PageRecord::setUI() {
+    listWidgetBrowseRecord->setFrameStyle(QFrame::NoFrame);
+    listWidgetKeepRecord->setFrameStyle(QFrame::NoFrame);
+    listWidgetBorrowRecord->setFrameStyle(QFrame::NoFrame);
+    listWidgetLoginRecord->setFrameStyle(QFrame::NoFrame);
+
     tabWidget->addTab(listWidgetBrowseRecord, tr("Brows&e Record"));
     tabWidget->addTab(listWidgetKeepRecord, tr("&Keep Record"));
     tabWidget->addTab(listWidgetBorrowRecord, tr("Borro&w Record"));
@@ -149,6 +154,8 @@ void PageRecord::setUI() {
     layout->addWidget(tabWidget);
 
     setLayout(layout);
+
+    layout->setContentsMargins(0, 10, 0, 0);
 }
 
 void PageRecord::setConnection() {

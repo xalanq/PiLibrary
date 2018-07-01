@@ -25,14 +25,14 @@ void ListWidgetItemBorrowRecord::update(const BookBrief &book, const BorrowRecor
 }
 
 void ListWidgetItemBorrowRecord::setUI() {
-    QPixmap p(QSize(114, 160));
+    QPixmap p(QSize(148, 208));
     if (book.getCover().getSize())
         p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
     else
         p.fill(Qt::black);
 
     QIcon icon;
-    icon.addPixmap(p.scaled(QSize(114, 160)));
+    icon.addPixmap(p.scaled(QSize(148, 208)));
     setIcon(icon);
 
     auto beginTime = record.getBeginTime();
@@ -68,7 +68,7 @@ void ListWidgetBorrowRecord::update(const BookBrief &book, const BorrowRecord &r
 
 void ListWidgetBorrowRecord::setUI() {
     setMovement(QListView::Static);
-    setIconSize(QSize(114, 160));
+    setIconSize(QSize(148, 208));
     setUniformItemSizes(true);
     setResizeMode(QListWidget::Adjust);
 }

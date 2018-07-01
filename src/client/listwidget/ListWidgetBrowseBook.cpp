@@ -10,6 +10,7 @@
 
 #include <client/dialog/DialogBook.h>
 #include <client/listwidget/ListWidgetBrowseBook.h>
+#include <client/utils.h>
 
 ListWidgetItemBook::ListWidgetItemBook(const BookBrief &book, bool star) :
     book(book),
@@ -29,7 +30,7 @@ void ListWidgetItemBook::update(const BookBrief &book, bool star) {
 }
 
 void ListWidgetItemBook::setUI() {
-    QPixmap p(QSize(114, 160));
+    QPixmap p(QSize(148, 208));
     if (book.getCover().getSize())
         p.loadFromData((uchar *)book.getCover().getData(), book.getCover().getSize());
     else
@@ -46,7 +47,7 @@ void ListWidgetItemBook::setUI() {
     font.setFamily("Microsoft YaHei");
     font.setPointSize(9);
 
-    p = p.scaled(QSize(114, 160));
+    p = p.scaled(QSize(148, 208));
 
     QPainter painter(&p);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -127,9 +128,10 @@ void ListWidgetBrowseBook::slotItemClicked(QListWidgetItem *item) {
 void ListWidgetBrowseBook::setUI() {
     setViewMode(QListView::IconMode);
     setMovement(QListView::Static);
-    setIconSize(QSize(114, 160));
+    setIconSize(QSize(148, 208));
     setUniformItemSizes(true);
     setResizeMode(QListWidget::Adjust);
+    setStyleSheet("QListWidget::Item{padding-bottom:10px;}");
 }
 
 void ListWidgetBrowseBook::setConnection() {
